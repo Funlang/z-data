@@ -1,0 +1,32 @@
+
+2021-04-18
+  性能优化告一段落 (插入 1万条数据维持在 五六百毫秒, 更新 一百多毫秒)
+  写 CHANGE.txt
+  写 README.cn.txt
+  发布 z-data 0.1, z-template 1.0
+
+2021-04-17
+  继续优化性能 (尝试第三方案)
+
+2021-04-16
+  继续优化性能 (尝试第二方案)
+
+2021-04-15
+  优化性能 (超过 Alpine), 优化 minify 和 语法糖
+
+2021-04-14
+  支持 template if/else
+  测性能 https://github.com/krausest/js-framework-benchmark
+
+2021-04-13
+  支持 class 和 style 简写语法
+  z-data 和 z-template 分开启动
+
+2021-04-12
+  凌晨 1:59 提交第一份代码
+  支持 template for, : 和 ${...} 属性名/值(包括文本内容)
+
+2021-04-11
+  z-data 项目启动
+----------------
+EOF

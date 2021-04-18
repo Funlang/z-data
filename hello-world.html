@@ -1,0 +1,27 @@
+<script src='./src/z-template.js'></script>
+
+<div z-data={name:'hello-world.html',items:{i:1,j:2,k:3}}
+     #background=`silver`
+>
+    <template for='k:v,i in items' key=k>
+        <template if=!i>
+            <div :text=name
+                 :style={fontSize:`200%`}
+                 #color=`#fa0a`
+            ></div>
+            <div class=t0
+                 :class={t1:true}
+                 .t2
+                 :k=k
+            >[if !i] i=${i}</div>
+        </template>
+        <template else if='k=="j"'>
+            <div :css.font-size=`120%`>[if k=="j"] k=${k}</div>
+        </template>
+        <template else>
+            <div #font-weight=`bold`>[else] k=${k}</div>
+        </template>
+    </template>
+</div>
+
+<script>ZData.start()</script>
