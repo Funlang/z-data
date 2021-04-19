@@ -21,6 +21,7 @@ const ZData = (() => {
     const insert = "insertBefore";
     const forEach = "forEach";
     const includes = "includes";
+    const startsWith = "startsWith";
     const length = "length";
     const test = "test";
     const last = "last";
@@ -38,6 +39,9 @@ const ZData = (() => {
     const re_attr = /^(?:(:)(:?)|(@)|([.#]))?([^.]*)(?:[.]([^.].*))?$/;
     const re_text = /\$\{/;
     const re_bind = /^[:@.#]./;
+    const re_2camel = /-([a-z])/g;
+    const re_kebab = /[-_ ]+/g;
+    const re_modifiers = /^(?:camel|prevent|stop|debounce|\d+(?:m?s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
     let age = 0;
     let _n_;
 
@@ -193,13 +197,20 @@ const ZData = (() => {
                 );
                 delete keys[k];
             });
+        args.next = cur[nextEL];
     };
 
+    let toCamel = (name) => name.replace(re_2camel, (m, c) => c.toUpperCase());
+    let classNames = {};
     let setAttrs = (el, data, env, attrNames) => {
         let props = el[_z_d].ps;
         if (!props) {
             props = el[_z_d].ps = { ps: [], ocl: {} };
-            el.className.split(" ")[forEach]((name) => (props.ocl[name] = true));
+            let c = el.className;
+            if (c) {
+                c = classNames[c] || (classNames[c] = c.split(" "));
+                c[forEach]((name) => (props.ocl[name] = true));
+            }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
                 if (!re_bind[test](a) && !re_text[test](v)) return;
@@ -208,13 +219,13 @@ const ZData = (() => {
                 if (k) {
                     let modifiers = ms[6] && ms[6].split(".");
                     let ps = {
-                        k,
+                        k: k === c_lass || !modifiers || !modifiers[includes]("camel") ? k : toCamel(k),
                         b: (ms[3] && 3) || (ms[2] && 2) || ((ms[1] || ms[4]) && 1) || nil, // bind 1 2, event 3
                         m: ms[4] && ms[5] ? [ms[5]].concat(modifiers || []) : modifiers, // modifiers
                         e: v, // exp
                     };
-                    props.ps.push(ps);
                     if (!ps.b) ps.e = "`" + ps.e + "`";
+                    props.ps.push(ps);
                 }
             });
             let f, t;
@@ -228,7 +239,7 @@ const ZData = (() => {
         let oldcls = { ...props.ocl };
         let clsChanged = false;
         props.ps[forEach]((ps) => {
-            if (ps.b === 3) setEvent();
+            if (ps.b === 3) setEvent(el, ps, data, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, data, env);
                 if (ps.v !== v) {
@@ -248,7 +259,7 @@ const ZData = (() => {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v === "boolean" || !/-$/[test](name)) {
+                    if (typeof v === "boolean" || "-" === name[name[length]]) {
                         v ? (cls[name] = true) : delete cls[name];
                     } else cls[name + v] = true;
                 });
@@ -276,20 +287,63 @@ const ZData = (() => {
         }
     };
 
-    let setEvent = () => {};
+    let keyMaps = { slash: "/", space: " " };
+    let setEvent = (el, { k: name, e: exp, m: ms = [] }, data, env = {}) => {
+        if (el[_z_d]["@" + name]) return;
+        let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
+        let fn = (...args) => (e) => {
+            // away, self
+            if (ms[includes]("self") && el !== e.target) return;
+            if (ms[includes]("away") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
+            // key and mouse (ctrl, alt, shift, meta, cmd, super)
+            if (name[startsWith]("key") || name[startsWith]("mouse")) {
+                for (let modifier of ms) {
+                    let m = re_modifiers.exec(modifier);
+                    if (m && (m[1] || m[2])) {
+                        let key = m[1] || (m[2] && "meta");
+                        if (!key || !e[key + "Key"]) return;
+                    }
+                }
+                // key
+                if (name[startsWith]("key")) {
+                    let keys = ms.filter((m) => !re_modifiers[test](m));
+                    if (keys[length] === 1) {
+                        let key = e.key.toLowerCase().replace(re_kebab, "");
+                        key = keyMaps[key] || key;
+                        if (key !== keys[0].replace(re_kebab, "")) return;
+                    }
+                }
+            }
+            if (ms[includes]("prevent")) e.preventDefault();
+            if (ms[includes]("stop")) e.stopPropagation();
+            return newFun(exp, env)(...args);
+        };
+        // debounce
+        // todo
+        let options = ms && {
+            capture: ms[includes]("capture"),
+            once: ms[includes]("once"), // todo
+            passive: ms[includes]("passive"),
+        };
+        target.addEventListener(name, fn(data, ...Object.values(env)), options);
+        el[_z_d]["@" + name] = true;
+    };
 
     let Functions = {};
+    let newFun = (exp, env) => {
+        return (
+            Functions[exp] || // todo
+            (Functions[exp] = new Function(
+                ["$z_d", ...Obj_keys(env)],
+                "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"
+            ))
+        );
+    };
     let tryEval = (el, exp, data = {}, env = {}) => {
         return tryCatch(
             () => {
                 if (typeof exp === "function") return exp.call(data);
-                let f =
-                    Functions[exp] ||
-                    (Functions[exp] = new Function(
-                        ["$data", ...Obj_keys(env)],
-                        `let re$u1T;with($data){re$u1T=${exp}};return re$u1T`
-                    ));
-                return f(data, ...Object.values(env));
+                return newFun(exp, env)(data, ...Object.values(env));
             },
             { el, exp }
         );

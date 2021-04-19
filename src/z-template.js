@@ -109,9 +109,14 @@ const ZData = (() => {
         }
     };
 
+    let classNames = {};
     let setAttrs = (el, data, env, attrNames) => {
         let oldc = {};
-        el.className.split(" ")[forEach]((name) => (oldc[name] = true));
+        let c = el.className;
+        if (c) {
+            c = classNames[c] || (classNames[c] = c.split(" "));
+            c[forEach]((name) => (oldc[name] = true));
+        }
         let f, t, clsChanged;
         attrNames[forEach]((a) => {
             let v = el[getAttribute](a);
@@ -144,7 +149,7 @@ const ZData = (() => {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v === "boolean" || !/-$/[test](name)) {
+                    if (typeof v === "boolean" || "-" === name[name[length]]) {
                         v ? (cls[name] = true) : delete cls[name];
                     } else cls[name + v] = true;
                 });
@@ -182,8 +187,8 @@ const ZData = (() => {
                 let f =
                     Functions[exp] ||
                     (Functions[exp] = new Function(
-                        ["$data", ...Obj_keys(env)],
-                        `let re$u1T;with($data){re$u1T=${exp}};return re$u1T`
+                        ["$z_d", ...Obj_keys(env)],
+                        "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"
                     ));
                 return f(data, ...Object.values(env));
             },
