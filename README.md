@@ -2,6 +2,7 @@
 
 
 ## Z-data 是一个超轻量级的零配置嵌入式前端框架.
+
 Z-data is an extremely lightweight zero configuration embedded front-end framework.
 
 - Z-Data 灵感来自于 Alpine, https://github.com/alpinejs/alpine
@@ -61,22 +62,29 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 * 当下(0.1版)需用户自动, 执行 ZData.start() 即可.
 
 ### 作用域
+
     - z-data 开启 ZData 作用域, 其内部节点为 ZData 组件
+
       <tag z-data=...
 
     - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
+
       <tag z-none
 
     - 与其他框架共存
+
       在 ZData 根节点用类似以下的方式处理 (x-ignore 改为其他框架关闭作用域的属性名):
       <tag z-data=... x-ignore
       在其他框架根节点加 z-none 即可
 
 ### 模板
+
     - template for
+
       <template for='k:v,i in ...' key=...
       ZData 依赖 key, 如果没有指定 key, 则优先选用 k 做 key, 否则用 v 做 key 键
       k : v , i 可以部分可选, 如
+
         <template for='k:v,i in items'
         <template for='  v   in items'
         <template for='k:    in items'
@@ -86,12 +94,15 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
         <template for=items
 
     - template if/else
+
       <template if=...
       <template else if=...
       <template else
 
 ### 绑定
+
     - : 用来做属性绑定, 其中 :: 是双向绑定
+
       <tag :attr-name1=... ::attr-name2=...
 
     - :text :html 分别对应 textContent 和 innerHTML
@@ -99,6 +110,7 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     - :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
 
     - :class 支持 :class.name1.name2=...
+
       可以简写为 .name1.name2=...
       如果 classname 后面为 -, 且返回值不是 boolean, 则将其值加入到 classname, 如:
         .p-=1 则 classList 里会增加 p-1
@@ -106,6 +118,7 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     - :style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
 
     - :style 支持 :style.name.value=...
+
       :style.name=value / :css.name=value
       :style.name.value=条件 / :css.name.value=...
       可以简写为 ..name 和 #name, 如下:
@@ -115,6 +128,35 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     - :attr.camel 支持驼峰表示法
 
     - @ 用来绑定事件, 支持 modifiers
+
+      * 全局 modifier
+
+        camel     事件名驼峰表示法
+        prevent   preventDefault
+        stop      stopPropagation
+        debounce  debounce 模式, 后面可以带一个时间, 如
+                  debounce.750ms, debounce.2s, 默认 250ms
+        capture   capture 模式
+        once      once 模式, 只调用一次
+        passive   passive 模式
+
+      * 范围 modifier
+
+        self      只自己
+        away      自己之外的
+        window
+        document
+
+      * 键鼠 modifier
+
+        shift
+        ctrl
+        alt
+        meta      或 cmd, super
+
+      * 键盘 modifier
+
+        <key>     enter, escape, space, f1 等
 
 ## 加入我们
 
