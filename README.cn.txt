@@ -1,5 +1,5 @@
 
-Z-data 是一个极度轻量级的零配置嵌入式前端框架.
+Z-data 是一个超轻量级的零配置嵌入式前端框架.
 Z-data is an extremely lightweight zero configuration embedded front-end framework.
 
 Z-Data 灵感来自于 Alpine, https://github.com/alpinejs/alpine
@@ -9,7 +9,7 @@ Z-Data 灵感来自于 Alpine, https://github.com/alpinejs/alpine
 特性:
 
 - 无 VDom, 采用 H5 template 技术
-- 极简, 极度轻量级, z-data minify < 4K, z-template minify < 3K
+- 极简, 超轻量级, z-data minify < 4K, z-template minify < 3K
 - 符合 H5 趋势, 技术简单, z-data 0.1 约300行代码, z-template 1.0 约200行代码
 - template 支持 for, if else
 - template 内支持多根
