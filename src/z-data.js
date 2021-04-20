@@ -22,6 +22,7 @@ const ZData = (() => {
     const forEach = "forEach";
     const includes = "includes";
     const startsWith = "startsWith";
+    const textC = "textContent";
     const length = "length";
     const test = "test";
     const last = "last";
@@ -46,19 +47,21 @@ const ZData = (() => {
     let _n_;
 
     let initComponent = (el, data, env) => {
-        if (el[_z_d] && age < el[_z_d].age) return;
+        if (el[_z_d] && (age < el[_z_d].age || el[_z_d].ing)) return;
         (el[_z_d] = el[_z_d] || {}).age = age;
-        log(now(), `${zdata} component`, now() - _n_);
-        let zd = tryEval(el, el[getAttribute](zdata) || "{}", data, env);
-        goAnode({ p: el[parentEL], el }, zd, env, true);
+        el[_z_d].ing = true;
+        // log(now(), `${zdata} component`, now() - _n_);
+        el[_z_d].zd = el[_z_d].zd || tryEval(el, el[getAttribute](zdata) || "{}", data, env);
+        goAnode({ r: el, p: el[parentEL], el }, el[_z_d].zd, env, true);
+        el[_z_d].ing = false;
     };
 
     let goAnode = (args, data, env, self) => {
         let { el } = args;
-        let attrs = el[getAttributeNames]();
+        el[_z_d] = el[_z_d] || {};
+        let attrs = el[_z_d].as || (el[_z_d].as = el[getAttributeNames]());
         if (attrs[includes](znone)) return;
 
-        el[_z_d] = el[_z_d] || {};
         if (!self && attrs[includes](zdata)) initComponent(el, data, env);
         else if ("template" === el.localName) {
             let exp;
@@ -68,8 +71,8 @@ const ZData = (() => {
                 goIf(args, exp, data, env);
             }
         } else {
-            setAttrs(el, data, env, attrs);
-            goNodes({ p: el, el: el[firstEL] }, data, env);
+            setAttrs(args, data, env, attrs);
+            goNodes({ r: args.r, p: el, el: el[firstEL] }, data, env);
         }
     };
 
@@ -92,14 +95,14 @@ const ZData = (() => {
                     args,
                     data,
                     env,
-                    ({ el }) => el[attributes][zelse],
+                    ({ el }) => !!el[attributes][zelse],
                     () => {}
                 );
             } else {
                 expand(args);
                 args.el = args.el[nextEL];
                 goNodes(args, data, env, ({ el }) => el !== next);
-                goNodes(args, data, env, ({ el }) => el[attributes][zelse], fold);
+                goNodes(args, data, env, ({ el }) => !!el[attributes][zelse], fold);
             }
             el[_z_d][last] = next ? next[prevEL] : p[lastEL];
         } else fold(args, data, env);
@@ -202,7 +205,9 @@ const ZData = (() => {
 
     let toCamel = (name) => name.replace(re_2camel, (m, c) => c.toUpperCase());
     let classNames = {};
-    let setAttrs = (el, data, env, attrNames) => {
+    let attrMaps = { css: "style", text: textC, html: "innerHTML" };
+    let setAttrs = (args, data, env, attrNames) => {
+        let { el } = args;
         let props = el[_z_d].ps;
         if (!props) {
             props = el[_z_d].ps = { ps: [], ocl: {} };
@@ -216,6 +221,7 @@ const ZData = (() => {
                 if (!re_bind[test](a) && !re_text[test](v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
                 let k = ms[4] ? (ms[4] === "#" || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
+                k = attrMaps[k] ? attrMaps[k] : k;
                 if (k) {
                     let modifiers = ms[6] && ms[6].split(".");
                     let ps = {
@@ -231,7 +237,7 @@ const ZData = (() => {
             let f, t;
             if ((f = el.firstChild) && f === el.lastChild && f.nodeType === 3 && re_text[test]((t = f.nodeValue))) {
                 props.ps.push({
-                    k: "text",
+                    k: textC,
                     e: "`" + t + "`",
                 });
             }
@@ -239,27 +245,41 @@ const ZData = (() => {
         let oldcls = { ...props.ocl };
         let clsChanged = false;
         props.ps[forEach]((ps) => {
-            if (ps.b === 3) setEvent(el, ps, data, env);
+            if (ps.b === 3) setEvent(args, ps, data, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, data, env);
                 if (ps.v !== v) {
                     ps.v = v;
                     clsChanged = setValue(el, ps, v, oldcls) || clsChanged;
                 }
+                if (ps.b === 2) {
+                    let ps2 = { ...ps };
+                    ps2.e = ps.e + "=$event.target." + ps.k;
+                    let key = "@" + ps.k;
+                    if (ps.k === s_tyle && ps.m && ps.m[length] > 0) {
+                        ps2.e += "['" + ps.m[0] + "']";
+                        key += ps.m[0];
+                    }
+                    // ps2.e += ";ZData.start()"; // todo
+                    let event = "change";
+                    if (el.type === "text" || (ps.m && ps.m[includes]("input") && !ps.m[includes](event))) event = "input";
+                    ps2.key = key + event;
+                    ps2.k = event;
+                    setEvent(args, ps2, data, env);
+                    el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || event)));
+                }
             }
         });
         let cls = Obj_keys(oldcls).join(" ");
-        if (props.oc !== cls) ((props.oc = cls) && 0) || (clsChanged && (el.className = cls));
+        if (clsChanged && props.oc !== cls) el.className = props.oc = cls;
     };
 
     let setValue = (el, ps, value, cls) => {
-        if (ps.k === "text") el.textContent = value;
-        else if (ps.k === "html") el.innerHTML = value;
-        else if (ps.k === c_lass) {
+        if (ps.k === c_lass) {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v === "boolean" || "-" === name[name[length]]) {
+                    if (typeof v === "boolean" || !name.endsWith("-")) {
                         v ? (cls[name] = true) : delete cls[name];
                     } else cls[name + v] = true;
                 });
@@ -273,7 +293,7 @@ const ZData = (() => {
             }
             return true;
         } else {
-            if (ps.k === s_tyle || ps.k === "css") {
+            if (ps.k === s_tyle) {
                 if (ps.m && ps.m[length] > 0) {
                     if (ps.m[length] === 1) value = { [ps.m[0]]: value };
                     else value = { [ps.m[0]]: value && ps.m[1] };
@@ -288,8 +308,9 @@ const ZData = (() => {
     };
 
     let keyMaps = { slash: "/", space: " " };
-    let setEvent = (el, { k: name, e: exp, m: ms = [] }, data, env = {}) => {
-        if (el[_z_d]["@" + name]) return;
+    let setEvent = ({ r, el }, { k: name, e: exp, m: ms = [], key }, data, env = {}) => {
+        key = key || "@" + name;
+        if (el[_z_d][key]) return;
         let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
         let fn = (...args) => (e) => {
             // away, self
@@ -316,7 +337,7 @@ const ZData = (() => {
             }
             if (ms[includes]("prevent")) e.preventDefault();
             if (ms[includes]("stop")) e.stopPropagation();
-            return newFun(exp, env)(...args);
+            return newFun(exp, { ...env, $el: "", $event: "" })(...args, e);
         };
         // debounce
         // todo
@@ -325,8 +346,8 @@ const ZData = (() => {
             once: ms[includes]("once"), // todo
             passive: ms[includes]("passive"),
         };
-        target.addEventListener(name, fn(data, ...Object.values(env)), options);
-        el[_z_d]["@" + name] = true;
+        target.addEventListener(name, fn(data, ...Object.values(env), r), options);
+        el[_z_d][key] = true;
     };
 
     let Functions = {};
@@ -360,7 +381,7 @@ const ZData = (() => {
     };
 
     return {
-        start: (env) => {
+        start: (env = {}) => {
             log((_n_ = now()), `${zdata} start`, ++age);
             $(qdata)[forEach]((el) => initComponent(el, env, env));
             log(now(), `${zdata} ended`, now() - _n_);

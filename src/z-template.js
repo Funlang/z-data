@@ -149,7 +149,7 @@ const ZData = (() => {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v === "boolean" || "-" === name[name[length]]) {
+                    if (typeof v === "boolean" || !name.endsWith("-")) {
                         v ? (cls[name] = true) : delete cls[name];
                     } else cls[name + v] = true;
                 });
