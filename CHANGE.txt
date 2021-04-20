@@ -1,7 +1,17 @@
 
+2021-04-20
+  ::style.value=... 双向绑定支持
+  ::css.value=...   双向绑定支持
+  支持 input values <=> style values <=> data values
+        属性编辑器         图形设计器         数据存储
+  + el.fireChange() 支持
+  $event 支持
+
 2021-04-19
   .camel 支持
   @event 支持
+  ::value=... 双向绑定支持
+  $el 支持
 
 2021-04-18
   性能优化告一段落 (插入 1万条数据维持在 五六百毫秒, 更新 一百多毫秒)

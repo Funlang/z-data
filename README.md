@@ -127,6 +127,12 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 
     - :attr.camel 支持驼峰表示法
 
+    - ::value=propName, ::style.value=propName, ::css.value=propName
+
+      其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
+      双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
+      可以增加 .input / .change 强制在 input / change 中回写
+
     - @ 用来绑定事件, 支持 modifiers
 
       * 全局 modifier
