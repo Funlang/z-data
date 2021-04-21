@@ -12,7 +12,7 @@ Z-data is an extremely lightweight zero configuration embedded front-end framewo
 ## 特性:
 
 - 无 VDom, 采用 H5 template 技术
-- 极简, 超轻量级, z-data minify < 4K, z-template minify < 3K
+- 极简, 超轻量级, z-data minify < 6K, z-template minify < 3K
 - 符合 H5 趋势, 技术简单, z-data 0.1 约300行代码, z-template 1.0 约200行代码
 - template 支持 for, if else
 - template 内支持多根
@@ -59,13 +59,29 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 或
 - 仅渲染  https://funlang.org/zdata/z-template.min.js
 
-* 当下(0.1版)需用户自动, 执行 ZData.start() 即可.
+* z-template 需用户执行 ZData.start(), z-data 不需要.
+
+* ZData 与 ZDataProxy 配合使用, 请自行加载 ZDataProxy
+
+```js
+  ZDataProxy = (target, handler) => ...
+
+  // 其中:
+
+    handler = (obj, prop, value, rec, isOuterProxy) => {
+      if (! isOuterProxy) obj[prop] = value
+    }
+```
 
 ### 作用域
 
     - z-data 开启 ZData 作用域, 其内部节点为 ZData 组件
 
       <tag z-data=...
+
+      z-data 支持一个 init 函数, 在组件初始化时执行
+
+      <tag z-data=... init=...
 
     - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
 
