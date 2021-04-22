@@ -12,18 +12,18 @@ Z-data is an extremely lightweight zero configuration embedded front-end framewo
 ## 特性:
 
 - 无 VDom, 采用 H5 template 技术
-- 极简, 超轻量级, z-data minify < 6K, z-template minify < 3K
-- 符合 H5 趋势, 技术简单, z-data 0.1 约300行代码, z-template 1.0 约200行代码
+- 极简, 超轻量级, z-data minify ~ 6K, z-template minify ~ 3K
+- 符合 H5 趋势, 技术简单, z-data 0.5 ~400多行代码, z-template 1.0 ~200多行代码
 - template 支持 for, if else
 - template 内支持多根
 - 嵌入式, 可以和其他框架无缝嵌入
 - 更多语法糖, 特别对 class 和 style 友好
-- 可很好配合 tailwind, https://tailwindcss.com/, 以 H5 DOM 为中心的生产方式
+- 可很好配合 tailwind, https://tailwindcss.com/, 支持以 H5 DOM 为中心的生产方式
 
 ## 例子:
 
 ```html
-<div z-data={name:'hello-world.html',items:{i:1,j:2,k:3}}
+<div z-data="{name:'hello-world.html',items:{i:1,j:2,k:3}}"
      #background=`silver`
 >
     <template for='k:v,i in items' key=k>
@@ -48,6 +48,14 @@ Z-data is an extremely lightweight zero configuration embedded front-end framewo
 </div>
 ```
 
+在线 demo:
+
+* https://codepen.io/funlang/pen/NWdOQye
+
+TodoMVC:
+
+* https://codepen.io/funlang/pen/ExZOGJy
+
 ## 用法:
 
 ### 安装
@@ -61,9 +69,9 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 
 * z-template 需用户执行 ZData.start(), z-data 不需要.
 
-* ZData 与 ZDataProxy 配合使用, 请自行加载 ZDataProxy
+* ZData 与 ZDataProxy 可以配合使用, 请自行加载 ZDataProxy
 
-```js
+  ```js
   ZDataProxy = (target, handler) => ...
 
   // 其中:
@@ -71,114 +79,141 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     handler = (obj, prop, value, rec, isOuterProxy) => {
       if (! isOuterProxy) obj[prop] = value
     }
-```
+  ```
 
 ### 作用域
 
-    - z-data 开启 ZData 作用域, 其内部节点为 ZData 组件
+  - z-data 开启 ZData 作用域, 其内部节点为 ZData 组件
 
-      <tag z-data=...
+    ```html
+    <tag z-data=...>
+    ````
+    z-data 支持一个 init 函数, 在组件初始化时执行
 
-      z-data 支持一个 init 函数, 在组件初始化时执行
+    ```html
+    <tag z-data=... init=...>
+    ````
 
-      <tag z-data=... init=...
+  - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
 
-    - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
+    ```html
+    <tag z-none>
+    ````
 
-      <tag z-none
+  - 与其他框架共存
 
-    - 与其他框架共存
-
-      在 ZData 根节点用类似以下的方式处理 (x-ignore 改为其他框架关闭作用域的属性名):
-      <tag z-data=... x-ignore
-      在其他框架根节点加 z-none 即可
+    在 ZData 根节点用类似以下的方式处理 (x-ignore 改为其他框架关闭作用域的属性名):
+    ```html
+    <tag z-data=... x-ignore>
+    ````
+    在其他框架根节点加 z-none 即可
 
 ### 模板
 
-    - template for
+  - template for
 
-      <template for='k:v,i in ...' key=...
-      ZData 依赖 key, 如果没有指定 key, 则优先选用 k 做 key, 否则用 v 做 key 键
-      k : v , i 可以部分可选, 如
+    ```html
+    <template for='k:v,i in ...' key=...>
+    ````
+    ZData 依赖 key, 如果没有指定 key, 则优先选用 k 做 key, 否则用 v 做 key 键
+    k : v , i 可以部分可选, 如
 
-        <template for='k:v,i in items'
-        <template for='  v   in items'
-        <template for='k:    in items'
-        <template for='   ,i in items'
-        <template for='k:v   in items'
-        <template for='  v,i in items'
-        <template for=items
+    ```html
+      <template for='k:v,i in items'>
+      <template for='  v   in items'>
+      <template for='k:    in items'>
+      <template for='   ,i in items'>
+      <template for='k:v   in items'>
+      <template for='  v,i in items'>
+      <template for=items>
+    ````
 
-    - template if/else
+  - template if/else
 
-      <template if=...
-      <template else if=...
-      <template else
+    ```html
+    <template if=...>
+    <template else if=...>
+    <template else>
+    ````
 
 ### 绑定
 
-    - : 用来做属性绑定, 其中 :: 是双向绑定
+  - : 用来做属性绑定, 其中 :: 是双向绑定
 
-      <tag :attr-name1=... ::attr-name2=...
+    ```html
+    <tag :attr-name1=... ::attr-name2=...>
+    ````
 
-    - :text :html 分别对应 textContent 和 innerHTML
+  - :text :html 分别对应 textContent 和 innerHTML
 
-    - :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
+  - :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
 
-    - :class 支持 :class.name1.name2=...
+  - :class 支持 :class.name1.name2=...
+    ```
+    可以简写为 .name1.name2=...
+    如果 classname 后面为 -, 且返回值不是 boolean, 则将其值加入到 classname, 如:
+      .p-=1 则 classList 里会增加 p-1
+    ```
+  - :style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
 
-      可以简写为 .name1.name2=...
-      如果 classname 后面为 -, 且返回值不是 boolean, 则将其值加入到 classname, 如:
-        .p-=1 则 classList 里会增加 p-1
+  - :style 支持 :style.name.value=...
+    ```
+    :style.name=value / :css.name=value
+    :style.name.value=条件 / :css.name.value=...
+    可以简写为 ..name 和 #name, 如下:
+      ..width=100
+      #border-width=4
+    ```
+  - :attr.camel 支持驼峰表示法
 
-    - :style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
+  - ::value=propName, ::style.value=propName, ::css.value=propName
+    ```
+    其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
+    双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
+    可以增加 .input / .change 强制在 input / change 中回写
+    ```
+    ```
+    目前有些属性如 style.value 修改, 不会自动触发响应式, 需要在当前执行 el 执行 el.fireChange()
+    ```
 
-    - :style 支持 :style.name.value=...
+  - @ 用来绑定事件, 支持 modifiers
 
-      :style.name=value / :css.name=value
-      :style.name.value=条件 / :css.name.value=...
-      可以简写为 ..name 和 #name, 如下:
-        ..width=100
-        #border-width=4
+    * 全局 modifier
+      ```
+      camel     事件名驼峰表示法
+      prevent   preventDefault
+      stop      stopPropagation
+      debounce  debounce 模式, 后面可以带一个时间, 如
+                debounce.750ms, debounce.2s, 默认 250ms
+      capture   capture 模式
+      once      once 模式, 只调用一次
+      passive   passive 模式
+      ```
+    * 范围 modifier
+      ```
+      self      只自己
+      away      自己之外的
+      window
+      document
+      ```
+    * 键鼠 modifier
+      ```
+      shift
+      ctrl
+      alt
+      meta      或 cmd, super
+      ```
+    * 键盘 modifier
+      ```
+      <key>     enter, escape, space, f1 等
+      ```
+### 变量
 
-    - :attr.camel 支持驼峰表示法
-
-    - ::value=propName, ::style.value=propName, ::css.value=propName
-
-      其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
-      双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
-      可以增加 .input / .change 强制在 input / change 中回写
-
-    - @ 用来绑定事件, 支持 modifiers
-
-      * 全局 modifier
-
-        camel     事件名驼峰表示法
-        prevent   preventDefault
-        stop      stopPropagation
-        debounce  debounce 模式, 后面可以带一个时间, 如
-                  debounce.750ms, debounce.2s, 默认 250ms
-        capture   capture 模式
-        once      once 模式, 只调用一次
-        passive   passive 模式
-
-      * 范围 modifier
-
-        self      只自己
-        away      自己之外的
-        window
-        document
-
-      * 键鼠 modifier
-
-        shift
-        ctrl
-        alt
-        meta      或 cmd, super
-
-      * 键盘 modifier
-
-        <key>     enter, escape, space, f1 等
+  - $el 组件根节点
+    ```
+    $el.$data 组件的包装 data 对象
+    ```
+  - $event 事件内的事件对象
 
 ## 加入我们
 

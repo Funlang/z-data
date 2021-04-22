@@ -1,4 +1,9 @@
 
+2021-04-22
+  + DOM MutationObserver
+  + TodoMVC
+  .debounce 支持
+
 2021-04-21
   z-data init 支持
   数据修改监控简单版支持
