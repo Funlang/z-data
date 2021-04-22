@@ -3,6 +3,7 @@ const ZData = (() => {
     const zdata = "z-data";
     const znone = "z-none";
     const qdata = `[${zdata}]`;
+    const zinit = "init";
     const zfor = "for";
     const zkey = "key";
     const zif = "if";
@@ -31,7 +32,7 @@ const ZData = (() => {
     const s_tyle = "style";
     const $ocument = document;
     const $ = (selector) => $ocument.querySelectorAll(selector);
-    const addEventListener = 'addEventListener'
+    const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const con = console;
     const log = con.log;
@@ -43,13 +44,16 @@ const ZData = (() => {
     const re_bind = /^[:@.#]./;
     const re_2camel = /-([a-z])/g;
     const re_kebab = /[-_ ]+/g;
-    const re_modifiers = /^(?:camel|prevent|stop|debounce|\d+(?:m?s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
+    const re_modifiers = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
     let age = 0;
     let _n_;
 
     let liteProxy = (obj, cb) => {
-        if (obj && typeof obj === "object") {
-            for (let p in obj) obj[p] = getProxy()(obj[p], cb);
+        if (obj && typeof obj === "object" && typeof obj !== "function") {
+            for (let p in obj)
+                try {
+                    obj[p] = getProxy()(obj[p], cb);
+                } catch (e) {}
             return new Proxy(obj, cb);
         }
         return obj;
@@ -60,24 +64,26 @@ const ZData = (() => {
         (el[_z_d] || (el[_z_d] = {})).age = age;
         el[_z_d].ing = true;
         // log(now(), `${zdata} component`, now() - _n_);
-        let timer;
         let init = (self) => {
-            timer = nil;
+            stopObserve($ocument.body);
             goAnode({ r: el, p: el[parentEL], el }, el[_z_d].zd, env, self || ++age);
+            observe($ocument.body);
         };
+        let initLater = debounce(init);
         let zd = el[_z_d].zd;
         if (!zd) {
             zd = tryEval(el, el[getAttribute](zdata) || "{}", data, env);
             let cb = {
                 set: (obj, prop, value, rec, zdataproxy) => {
-                    timer || (timer = setTimeout(init));
-                    if (!zdataproxy) obj[prop] = getProxy()(value, cb);
+                    initLater();
+                    try {
+                        if (!zdataproxy) obj[prop] = getProxy()(value, cb);
+                    } catch (e) {}
                     return true;
                 },
             };
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
-            if (el[getAttribute]("init")) tryEval(el, el[getAttribute]("init"), zd, env);
-            // observe(el);
+            if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), zd, env);
         }
         init(true);
         el[_z_d].ing = false;
@@ -296,8 +302,10 @@ const ZData = (() => {
                 }
             }
         });
-        let cls = Obj_keys(oldcls).join(" ");
-        if (clsChanged && props.oc !== cls) el.className = props.oc = cls;
+        if (clsChanged) {
+            let cls = Obj_keys(oldcls).join(" ");
+            if (props.oc !== cls) el.className = props.oc = cls;
+        }
     };
 
     let setValue = (el, ps, value, cls) => {
@@ -325,7 +333,10 @@ const ZData = (() => {
                     else value = { [ps.m[0]]: value && ps.m[1] };
                 }
                 if (typeof value === "object") {
-                    Obj_keys(value)[forEach]((name) => (el[s_tyle][name] = value[name]));
+                    Obj_keys(value)[forEach]((name) => {
+                        if (value[name] === false) el[s_tyle].removeProperty(name);
+                        else el[s_tyle][name] = value[name];
+                    });
                     return;
                 }
             }
@@ -333,9 +344,22 @@ const ZData = (() => {
         }
     };
 
+    let debounce = (fn, ms) => {
+        let timer;
+        return (...args) => {
+            let me = this;
+            let ifn = () => {
+                timer = nil;
+                fn.apply(me, args);
+            };
+            ms || (timer = clearTimeout(timer));
+            timer || (timer = setTimeout(ifn, ms));
+        };
+    };
+
     let keyMaps = { slash: "/", space: " " };
     let setEvent = ({ r, el }, { k: name, e: exp, m: ms = [], key }, data, env = {}) => {
-        key = key || "@" + name;
+        key = key || "@" + name + ms.join(".");
         if (el[_z_d][key]) return;
         let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
         let fn = (...args) => (e) => {
@@ -346,8 +370,8 @@ const ZData = (() => {
             if (name[startsWith]("key") || name[startsWith]("mouse")) {
                 for (let modifier of ms) {
                     let m = re_modifiers.exec(modifier);
-                    if (m && (m[1] || m[2])) {
-                        let key = m[1] || (m[2] && "meta");
+                    if (m && (m[3] || m[4])) {
+                        let key = m[3] || (m[4] && "meta");
                         if (!key || !e[key + "Key"]) return;
                     }
                 }
@@ -363,16 +387,23 @@ const ZData = (() => {
             }
             if (ms[includes]("prevent")) e.preventDefault();
             if (ms[includes]("stop")) e.stopPropagation();
+            if (ms[includes]("once")) target.removeEventListener(name, fn, options);
             return newFun(exp, { ...env, $el: "", $event: "" })(...args, e);
         };
+        fn = fn(data, ...Object.values(env), r);
         // debounce
-        // todo
+        let i = ms.indexOf("debounce");
+        if (i >= 0) {
+            i = ms[i + 1];
+            let m = re_modifiers.exec(i);
+            i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
+            fn = debounce(fn, i >> 0);
+        }
         let options = ms && {
             capture: ms[includes]("capture"),
-            once: ms[includes]("once"), // todo
             passive: ms[includes]("passive"),
         };
-        target[addEventListener](name, fn(data, ...Object.values(env), r), options);
+        target[addEventListener](name, fn, options);
         el[_z_d][key] = true;
     };
 
@@ -407,24 +438,26 @@ const ZData = (() => {
     };
 
     let updating;
+    let stopObserve = (el) => el[_z_d] && el[_z_d].ob && el[_z_d].ob.disconnect();
     let observe = (el) => {
-        new MutationObserver(() => {
-            if (updating) return;
-            if (el === $ocument.body) start(nil, true);
-            else initComponent(el);
-        }).observe(el, {
-            childList: true,
-            // attributes: true,
-            subtree: true,
-        });
+        // return; // speedy
+        let ob =
+            (el[_z_d] || (el[_z_d] = {})).ob ||
+            (el[_z_d].ob = new MutationObserver((ms) => {
+                if (updating) return;
+                if (el === $ocument.body) start(nil, true);
+                else initComponent(el);
+            }));
+        setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
     };
 
     let start = (env = {}, onlyObserve) => {
         let l = log;
         l((_n_ = now()), onlyObserve || ++age, (updating = true));
+        stopObserve($ocument.body);
         $(qdata)[forEach]((el) => initComponent(el, env, env));
         l(now(), zdata, now() - _n_, (updating = false));
-        // $ocument.body[_z_d] || (($ocument.body[_z_d] = {}) && observe($ocument.body));
+        observe($ocument.body);
     };
     $ocument[addEventListener]("DOMContentLoaded", start);
 
