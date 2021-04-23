@@ -31,6 +31,7 @@ const ZData = (() => {
     const c_lass = "class";
     const s_tyle = "style";
     const $ocument = document;
+    const createEl = "createElement";
     const $ = (selector) => $ocument.querySelectorAll(selector);
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
@@ -60,14 +61,14 @@ const ZData = (() => {
     };
     let getProxy = () => window.ZDataProxy || liteProxy;
     let initComponent = (el, data = {}, env = {}) => {
-        if (el[_z_d] && (age < el[_z_d].age || el[_z_d].ing)) return;
+        if (el[_z_d] && (age <= el[_z_d].age || el[_z_d].ing)) return;
         (el[_z_d] || (el[_z_d] = {})).age = age;
-        el[_z_d].ing = true;
-        // log(now(), `${zdata} component`, now() - _n_);
+        el[_z_d].ing = (el[_z_d].ing || 0) + 1;
+        // log(now(), `${zdata} component`, age, now() - _n_, el);
         let init = (self) => {
-            stopObserve($ocument.body);
-            goAnode({ r: el, p: el[parentEL], el }, el[_z_d].zd, env, self || ++age);
-            observe($ocument.body);
+            updating++, stopObserve($ocument.body);
+            goAnode({ r: el, p: el[parentEL], el }, el[_z_d].zd, env, self || age);
+            updating--, observe($ocument.body);
         };
         let initLater = debounce(init);
         let zd = el[_z_d].zd;
@@ -86,7 +87,7 @@ const ZData = (() => {
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), zd, env);
         }
         init(true);
-        el[_z_d].ing = false;
+        el[_z_d].ing--;
     };
 
     let goAnode = (args, data, env, self) => {
@@ -142,7 +143,7 @@ const ZData = (() => {
         if (el[_z_d].node) {
             n = el[_z_d].node.cloneNode(true);
         } else {
-            n = el[_z_d].node = $ocument.createElement(zdata);
+            n = el[_z_d].node = $ocument[createEl](zdata);
             n[insert]($ocument.importNode(el.content, true), nil);
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -182,7 +183,8 @@ const ZData = (() => {
             akey = el[getAttribute](zkey),
             keys = el[_z_d].ns || (el[_z_d].ns = {}),
             i = 0,
-            cur = el;
+            cur = el,
+            age = (el[_z_d].age = (el[_z_d].age || 0) + 1);
         for (let k in items) {
             if (kvi.k) ps[kvi.k] = k;
             if (kvi.v) ps[kvi.v] = items[k];
@@ -290,7 +292,7 @@ const ZData = (() => {
                     ps2.e = ps.e + "=$event.target." + ps.k;
                     let key = "@" + ps.k;
                     if (ps.k === s_tyle && ps.m && ps.m[length] > 0) {
-                        ps2.e += "['" + ps.m[0] + "']";
+                        ps2.e += "[`" + ps.m[0] + "`]";
                         key += ps.m[0];
                     }
                     let event = "change";
@@ -437,7 +439,21 @@ const ZData = (() => {
         }
     };
 
-    let updating;
+    let loadHTML = (html, p, before) => {
+        p || (p = $ocument.body);
+        let name = html.match(/^\s*<(\w+)/)[1];
+        let el = $ocument[createEl](name);
+        el[attrMaps["html"]] = html;
+        p[insert](el, before);
+        html.replace(/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
+            let e = $ocument[createEl]("script");
+            e[textC] = s;
+            el[insert](e, nil);
+        });
+    };
+
+    let updating = 0;
+    // let changeLater = debounce((e) => e.fireChange(), 100);
     let stopObserve = (el) => el[_z_d] && el[_z_d].ob && el[_z_d].ob.disconnect();
     let observe = (el) => {
         // return; // speedy
@@ -445,21 +461,23 @@ const ZData = (() => {
             (el[_z_d] || (el[_z_d] = {})).ob ||
             (el[_z_d].ob = new MutationObserver((ms) => {
                 if (updating) return;
-                if (el === $ocument.body) start(nil, true);
+                // if (ms[length] === 1 && ms[0].type === attributes && ms[0].attributeName === "style" && ms[0].fireChange) changeLater(ms[0]); else
+                if (el === $ocument.body) startLater();
                 else initComponent(el);
             }));
-        setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
+        setTimeout(() => ob.observe(el, { childList: true, subtree: true, [attributes]: false }));
     };
 
+    let startLater = debounce(() => start(nil, true));
     let start = (env = {}, onlyObserve) => {
         let l = log;
-        l((_n_ = now()), onlyObserve || ++age, (updating = true));
+        l((_n_ = now()), onlyObserve || ++age, ++updating);
         stopObserve($ocument.body);
         $(qdata)[forEach]((el) => initComponent(el, env, env));
-        l(now(), zdata, now() - _n_, (updating = false));
+        l(now(), zdata, now() - _n_, --updating);
         observe($ocument.body);
     };
     $ocument[addEventListener]("DOMContentLoaded", start);
 
-    return { start };
+    return { start, loadHTML };
 })();
