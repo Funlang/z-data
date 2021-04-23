@@ -56,6 +56,10 @@ TodoMVC:
 
 * https://codepen.io/funlang/pen/ExZOGJy
 
+复杂数据绑定:
+
+* https://codepen.io/funlang/pen/OJWrJep
+
 ## 用法:
 
 ### 安装
@@ -214,6 +218,23 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     $el.$data 组件的包装 data 对象
     ```
   - $event 事件内的事件对象
+
+### 函数
+
+  - ZData.start()
+    ```
+    z-template 需要显式调用 ZData.start(), z-data 一般不需要
+    ```
+  - ZData.loadHTML(html, p, before)
+    ```
+    动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
+
+    * html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
+    ```
+  - el.fireChange()
+    ```
+    在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
+    ```
 
 ## 加入我们
 

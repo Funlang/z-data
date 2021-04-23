@@ -1,4 +1,7 @@
 
+2021-04-23
+  + ZData.loadHTML()
+
 2021-04-22
   + DOM MutationObserver
   + TodoMVC
