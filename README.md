@@ -12,8 +12,8 @@ Z-data is an extremely lightweight zero configuration embedded front-end framewo
 ## 特性:
 
 - 无 VDom, 采用 H5 template 技术
-- 极简, 超轻量级, z-data minify ~ 6K, z-template minify ~ 3K
-- 符合 H5 趋势, 技术简单, z-data 0.5 ~400多行代码, z-template 1.0 ~200多行代码
+- 极简, 超轻量级, z-data minify ~ 7K, z-template minify ~ 3K
+- 符合 H5 趋势, 技术简单, z-data 0.7 ~500行代码, z-template 1.2 ~200多行代码
 - template 支持 for, if else
 - template 内支持多根
 - 嵌入式, 可以和其他框架无缝嵌入
