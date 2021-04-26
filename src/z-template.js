@@ -66,10 +66,8 @@ const ZData = (() => {
 
     let expand = (el, ret, data, env) => {
         let n;
-        if (el[z_node]) n = el[z_node].cloneNode(true);
-        else {
-            n = el[z_node] = $ocument.createElement(zdata);
-            n[insert]($ocument.importNode(el.content, true), nil);
+        if (!(n = el[z_node])) {
+            n = el[z_node] = el.content;
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
             n = c.cloneNode(true);
