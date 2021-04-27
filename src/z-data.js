@@ -110,7 +110,7 @@ const ZData = (() => {
                 let exp;
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
-                } else if ((exp = el[getAttribute](zif)) || attrs[includes](zelse)) {
+                } else if ((exp = el[getAttribute](zif)) || 1/*attrs[includes](zelse)*/) {
                     goIf(args, exp, env);
                 }
                 return;
@@ -213,14 +213,14 @@ const ZData = (() => {
                 let lastNext = curNode[last][nextEL];
                 let moveable = curNode.head !== next;
                 if (moveable && next && !curNode.head[_z_d].skip) {
-                    next[_z_d].skip = true;
+                    next[_z_d].skip = 1;
                     args.el = next;
                     next = next[_z_d][last][nextEL];
                     goNodes(args, env2, ({ el }) => el != next, nop);
                     moveable = curNode.head !== (next = args.next);
                 }
                 args.el = curNode.head;
-                args.el[_z_d].skip = false;
+                args.el[_z_d].skip = 0;
                 goNodes(
                     args,
                     env2,
@@ -268,7 +268,7 @@ const ZData = (() => {
             let c = el.className;
             if (c) {
                 c = classNames[c] || (classNames[c] = split(c));
-                c[forEach]((name) => (props.ocl[name] = true));
+                c[forEach]((name) => (props.ocl[name] = 1));
             }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
@@ -339,16 +339,16 @@ const ZData = (() => {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
                     if (typeof v === "boolean" || !name.endsWith("-")) {
-                        v ? (cls[name] = true) : delete cls[name];
-                    } else cls[name + v] = true;
+                        v ? (cls[name] = 1) : delete cls[name];
+                    } else cls[name + v] = 1;
                 });
             } else {
                 if (Array.isArray(value)) {
                 } else if (is_object(value)) {
-                    Obj_keys(value)[forEach]((name) => (value[name] ? (cls[name] = true) : delete cls[name]));
+                    Obj_keys(value)[forEach]((name) => (value[name] ? (cls[name] = 1) : delete cls[name]));
                     return true;
                 } else value = value ? split(value) : [];
-                value[forEach]((name) => (cls[name] = true));
+                value[forEach]((name) => (cls[name] = 1));
             }
             return true;
         } else {
@@ -427,7 +427,7 @@ const ZData = (() => {
             passive: ms[includes]("passive"),
         };
         target[addEventListener](name, fn, options);
-        el[_z_d][key] = true;
+        el[_z_d][key] = 1;
     };
 
     let Functions = {};
@@ -486,7 +486,7 @@ const ZData = (() => {
         setTimeout(() => ob.observe(el, { childList: true, subtree: true, [attributes]: false }));
     };
 
-    let startLater = debounce(() => start(nil, true));
+    let startLater = debounce(() => start(nil, 1));
     let start = (e, onlyObserve) => {
         let l = log;
         l((_n_ = now()), onlyObserve || ++age, ++updating);

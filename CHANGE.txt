@@ -1,4 +1,8 @@
 
+2021-04-27
+  * template z-data 根节点支持
+  z-data 和 z-template 分开立项
+
 2021-04-26
   * template clone optimized
   * template for optimized
