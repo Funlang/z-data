@@ -1,5 +1,11 @@
 # z-data
 
+- z-data
+  https://github.com/Funlang/z-data
+
+- z-template (仅静态渲染)
+  https://github.com/Funlang/z-template
+
 
 ## Z-data 是一个超轻量级的零配置嵌入式前端框架.
 
