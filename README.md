@@ -181,6 +181,7 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
     双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
     可以增加 .input / .change 强制在 input / change 中回写
+    支持 .trim / .number 修饰符
     ```
     ```
     目前有些属性如 style.value 修改, 不会自动触发响应式, 需要在当前执行 el 执行 el.fireChange()
@@ -230,6 +231,10 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
   - ZData.start()
     ```
     z-template 需要显式调用 ZData.start(), z-data 一般不需要
+    ```
+  - ZData.proxy()
+    ```
+    在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
     ```
   - ZData.loadHTML(html, p, before)
     ```

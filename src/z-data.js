@@ -31,6 +31,8 @@ const ZData = (() => {
     const _z_d = "_z_d";
     const c_lass = "class";
     const s_tyle = "style";
+    const input = "input";
+    const change = "change";
     const $ocument = document;
     const createEl = "createElement";
     const $ = (selector) => $ocument.querySelectorAll(selector);
@@ -79,7 +81,6 @@ const ZData = (() => {
         let initLater = debounce(init);
         let zd = el[_z_d].zd;
         if (!zd) {
-            zd = tryEval(el, el[getAttribute](zdata) || "{}", env);
             let cb = {
                 set: (obj, prop, value, rec, zdataproxy) => {
                     initLater();
@@ -89,6 +90,8 @@ const ZData = (() => {
                     return true;
                 },
             };
+            ZData.proxy = (v) => getProxy()(v, cb);
+            zd = tryEval(el, el[getAttribute](zdata) || "{}", env);
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
@@ -110,7 +113,7 @@ const ZData = (() => {
                 let exp;
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
-                } else if ((exp = el[getAttribute](zif)) || 1/*attrs[includes](zelse)*/) {
+                } else if ((exp = el[getAttribute](zif)) || 1 /*attrs[includes](zelse)*/) {
                     goIf(args, exp, env);
                 }
                 return;
@@ -186,7 +189,7 @@ const ZData = (() => {
         let { p, el } = args;
         let items = tryEval(el, m[4], env),
             kvi = { k: m[1], v: m[2], i: m[3] },
-            env2 = { ...env },
+            env2 = { ...env, ps: { ...env.ps } },
             akey = el[getAttribute](zkey),
             id = akey && split(akey, "."),
             keys = el[_z_d].ns || (el[_z_d].ns = {}),
@@ -230,7 +233,7 @@ const ZData = (() => {
                         return true;
                     }
                 );
-                if (!moveable) next = args.next;
+                moveable ? (args.next = next) : (next = args.next);
                 curNode.age = age;
             } else {
                 args.el = el;
@@ -304,25 +307,23 @@ const ZData = (() => {
         props.ps[forEach]((ps) => {
             if (ps.b === 3) setEvent(args, ps, env);
             else {
-                let v = ps.e && tryEval(el, ps.e, env);
+                let v = ps.e && tryEval(el, ps.e, env, ps);
                 if (vs[i] !== v) {
                     vs[i] = v;
                     clsChanged = setValue(el, ps, v, oldcls) || clsChanged;
                 }
                 i++;
-                if (ps.b === 2) {
-                    let ps2 = { ...ps };
-                    ps2.e = ps.e + "=$event.target." + ps.k;
-                    let key = "@" + ps.k;
-                    if (ps.k === s_tyle && ps.m && ps.m[length] > 0) {
-                        ps2.e += "[`" + ps.m[0] + "`]";
-                        key += ps.m[0];
+                if (ps.b === 2 && !el[_z_d][ps.a]) {
+                    v = "$event.target." + ps.k;
+                    if (ps.k === s_tyle && ps.m && ps.m[length] > 0) v += "[`" + ps.m[0] + "`]";
+                    let event = el.type === "text" ? input : change;
+                    if (ps.m) {
+                        if (ps.m[includes](input)) event = input;
+                        else if (ps.m[includes](change)) event = change;
+                        if (ps.m[includes]("trim")) v += ".trim()";
+                        if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
                     }
-                    let event = "change";
-                    if (el.type === "text" || (ps.m && ps.m[includes]("input") && !ps.m[includes](event))) event = "input";
-                    ps2.a = key + event;
-                    ps2.k = event;
-                    setEvent(args, ps2, env);
+                    setEvent(args, { ...ps, e: ps.e + "=" + v, k: event }, env);
                     el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || event)));
                 }
             }
@@ -438,11 +439,13 @@ const ZData = (() => {
             (Functions[k] = new Function(["$z_d", ...ks], "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"))
         );
     };
-    let tryEval = (el, exp, env) => {
+    let tryEval = (el, exp, env, ps) => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(env.d);
-                return newFun(exp, env.ks, env.k)(env.d, ...Obj_values(env.ps));
+                let f = (ps && ps.f) || newFun(exp, env.ks, env.k);
+                ps && !ps.f && (ps.f = f);
+                return f(env.d, ...Obj_values(env.ps));
             },
             { el, exp }
         );

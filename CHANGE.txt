@@ -1,4 +1,10 @@
 
+2021-04-28
+  + ZData.proxy()
+  * template for bug (moveable)
+  * env2 = {...env} bug, -> env2 = {...env, ps: {...env.ps}}
+  + 双向绑定时 .trim / .number 修饰符
+
 2021-04-27
   * template z-data 根节点支持
   z-data 和 z-template 分开立项
