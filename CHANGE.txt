@@ -1,4 +1,10 @@
 
+2021-04-30
+  * fix bug - cache event closure
+  * DOM observe optimized
+  + shift, alt, ctrl, meta modifiers to *click event
+  + z-comp 组件
+
 2021-04-28
   + ZData.proxy()
   * template for bug (moveable)

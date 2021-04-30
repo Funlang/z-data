@@ -2,7 +2,9 @@
 const ZData = (() => {
     const zdata = "z-data";
     const znone = "z-none";
+    const zcomp = "z-comp";
     const qdata = `[${zdata}]`;
+    const qnone = `[${znone}]`;
     const zinit = "init";
     const zfor = "for";
     const zkey = "key";
@@ -26,6 +28,7 @@ const ZData = (() => {
     const split = (s, d = / +/) => s.trim().split(d);
     const textC = "textContent";
     const length = "length";
+    const replace = "replace";
     const test = "test";
     const last = "last";
     const _z_d = "_z_d";
@@ -39,8 +42,8 @@ const ZData = (() => {
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
-    const is_object = (obj) => typeof obj === "object";
-    const is_function = (obj) => typeof obj === "function";
+    const is_object = (obj) => typeof obj == "object";
+    const is_function = (obj) => typeof obj == "function";
     const con = console;
     const log = con.log;
     const now = Date.now;
@@ -101,16 +104,27 @@ const ZData = (() => {
 
     let nodeCache = {};
     let goAnode = (args, env, self) => {
-        let { el } = args,
+        let { p, el } = args,
             nc;
         let zd = el[_z_d] || (el[_z_d] = {});
         let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el[getAttributeNames]());
         if (attrs[includes](znone)) return;
 
         if (!args.cp) {
+            let exp;
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
-            else if ("template" === el.localName) {
-                let exp;
+            else if ((exp = el[getAttribute](zcomp))) {
+                let res;
+                try {
+                    if (/^([.\/]|https?:)/[test](exp)) res = fetch(exp).then((res) => res.text());
+                    else res = tryEval(el, exp, env);
+                    res.then((html) => {
+                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el), el.remove();
+                        else loadHTML(html, el), el.removeAttribute(zcomp);
+                    }).catch(nop);
+                } catch (e) {}
+                return;
+            } else if ("template" == el.localName) {
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
                 } else if ((exp = el[getAttribute](zif)) || 1 /*attrs[includes](zelse)*/) {
@@ -139,12 +153,12 @@ const ZData = (() => {
             if (el[_z_d][last]) {
                 args.el = next;
                 next = el[_z_d][last][nextEL];
-                goNodes(args, env, ({ el }) => el !== next);
+                goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, nop);
             } else {
                 expand(args);
                 args.el = args.el[nextEL];
-                goNodes(args, env, ({ el }) => el !== next);
+                goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, fold);
             }
             el[_z_d][last] = next ? next[prevEL] : p[lastEL];
@@ -176,7 +190,7 @@ const ZData = (() => {
         goNodes(
             args,
             env,
-            ({ el }) => el !== next,
+            ({ el }) => el != next,
             ({ el }) => {
                 el.remove();
             }
@@ -196,7 +210,7 @@ const ZData = (() => {
             i = 0,
             cur = el,
             age = (el[_z_d].age = (el[_z_d].age || 0) + 1);
-        id = id && id.length === 2 && id[0] === kvi.v && id[1];
+        id = id && id[length] == 2 && id[0] == kvi.v && id[1];
         if (kvi.k) env2.ps[kvi.k] = nil;
         if (kvi.v) env2.ps[kvi.v] = nil;
         if (kvi.i) env2.ps[kvi.i] = nil;
@@ -214,20 +228,20 @@ const ZData = (() => {
             let curNode = keys[key];
             if (curNode) {
                 let lastNext = curNode[last][nextEL];
-                let moveable = curNode.head !== next;
+                let moveable = curNode.head != next;
                 if (moveable && next && !curNode.head[_z_d].skip) {
                     next[_z_d].skip = 1;
                     args.el = next;
                     next = next[_z_d][last][nextEL];
                     goNodes(args, env2, ({ el }) => el != next, nop);
-                    moveable = curNode.head !== (next = args.next);
+                    moveable = curNode.head != (next = args.next);
                 }
                 args.el = curNode.head;
                 args.el[_z_d].skip = 0;
                 goNodes(
                     args,
                     env2,
-                    ({ el }) => el !== lastNext,
+                    ({ el }) => el != lastNext,
                     ({ p, el }) => {
                         if (moveable) p[insert](el, next);
                         return true;
@@ -240,7 +254,7 @@ const ZData = (() => {
                 expand(args);
                 args.el = cur[nextEL];
                 curNode = keys[key] = { age, head: args.el };
-                goNodes(args, env2, ({ el }) => el !== next);
+                goNodes(args, env2, ({ el }) => el != next);
             }
             curNode.head[_z_d][last] = curNode[last] = cur = next ? next[prevEL] : p[lastEL];
         }
@@ -254,7 +268,7 @@ const ZData = (() => {
         args.next = cur[nextEL];
     };
 
-    let toCamel = (name) => name.replace(re_2camel, (m, c) => c.toUpperCase());
+    let toCamel = (name) => name[replace](re_2camel, (m, c) => c.toUpperCase());
     let classNames = {};
     let attrMaps = { css: s_tyle, text: textC, html: "innerHTML" };
     let setAttrs = (args, env, attrNames, nc) => {
@@ -277,13 +291,13 @@ const ZData = (() => {
                 let v = el[getAttribute](a);
                 if (!re_bind[test](a) && !re_text[test](v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
-                let k = ms[4] ? (ms[4] === "#" || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
+                let k = ms[4] ? (ms[4] == "#" || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
                 k = attrMaps[k] ? attrMaps[k] : k;
                 if (k) {
                     let modifiers = ms[6] && ms[6].split(".");
                     let ps = {
                         a,
-                        k: k === c_lass || !modifiers || !modifiers[includes]("camel") ? k : toCamel(k),
+                        k: k == c_lass || !modifiers || !modifiers[includes]("camel") ? k : toCamel(k),
                         b: (ms[3] && 3) || (ms[2] && 2) || ((ms[1] || ms[4]) && 1) || nil, // bind 1 2, event 3
                         m: ms[4] && ms[5] ? [ms[5]].concat(modifiers || []) : modifiers, // modifiers
                         e: v, // exp
@@ -293,7 +307,7 @@ const ZData = (() => {
                 }
             });
             let f, t;
-            if ((f = el.firstChild) && f === el.lastChild && f.nodeType === 3 && re_text[test]((t = f.nodeValue))) {
+            if ((f = el.firstChild) && f == el.lastChild && f.nodeType == 3 && re_text[test]((t = f.nodeValue))) {
                 props.ps.push({
                     k: textC,
                     e: "`" + t + "`",
@@ -305,7 +319,7 @@ const ZData = (() => {
         let clsChanged = false,
             i = 0;
         props.ps[forEach]((ps) => {
-            if (ps.b === 3) setEvent(args, ps, env);
+            if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, env, ps);
                 if (vs[i] !== v) {
@@ -313,33 +327,35 @@ const ZData = (() => {
                     clsChanged = setValue(el, ps, v, oldcls) || clsChanged;
                 }
                 i++;
-                if (ps.b === 2 && !el[_z_d][ps.a]) {
-                    v = "$event.target." + ps.k;
-                    if (ps.k === s_tyle && ps.m && ps.m[length] > 0) v += "[`" + ps.m[0] + "`]";
-                    let event = el.type === "text" ? input : change;
-                    if (ps.m) {
-                        if (ps.m[includes](input)) event = input;
-                        else if (ps.m[includes](change)) event = change;
-                        if (ps.m[includes]("trim")) v += ".trim()";
-                        if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
+                if (ps.b == 2) {
+                    if (!ps.b2) {
+                        v = "$event.target." + ps.k;
+                        if (ps.k == s_tyle && ps.m && ps.m[length] > 0) v += "[`" + ps.m[0] + "`]";
+                        let event = el.type == "text" ? input : change;
+                        if (ps.m) {
+                            if (ps.m[includes](input)) event = input;
+                            else if (ps.m[includes](change)) event = change;
+                            if (ps.m[includes]("trim")) v += ".trim()";
+                            if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
+                        }
+                        ps.b2 = { ...ps, e: ps.e + "=" + v, k: event, ev: event, f: nil };
                     }
-                    setEvent(args, { ...ps, e: ps.e + "=" + v, k: event }, env);
-                    el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || event)));
+                    setEvent(args, ps.b2, env);
                 }
             }
         });
         if (clsChanged) {
             let cls = Obj_keys(oldcls).join(" ");
-            if (zd.oc !== cls) el.className = zd.oc = cls;
+            if (zd.oc != cls) el.className = zd.oc = cls;
         }
     };
 
     let setValue = (el, ps, value, cls) => {
-        if (ps.k === c_lass) {
+        if (ps.k == c_lass) {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v === "boolean" || !name.endsWith("-")) {
+                    if (typeof v == "boolean" || !name.endsWith("-")) {
                         v ? (cls[name] = 1) : delete cls[name];
                     } else cls[name + v] = 1;
                 });
@@ -353,9 +369,9 @@ const ZData = (() => {
             }
             return true;
         } else {
-            if (ps.k === s_tyle) {
+            if (ps.k == s_tyle) {
                 if (ps.m && ps.m[length] > 0) {
-                    if (ps.m[length] === 1) value = { [ps.m[0]]: value };
+                    if (ps.m[length] == 1) value = { [ps.m[0]]: value };
                     else value = { [ps.m[0]]: value && ps.m[1] };
                 }
                 if (is_object(value)) {
@@ -384,68 +400,70 @@ const ZData = (() => {
     };
 
     let keyMaps = { slash: "/", space: " " };
-    let setEvent = ({ r, el }, { a: key, k: name, e: exp, m: ms = [] }, env) => {
-        if (el[_z_d][key]) return;
-        let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
-        let fn = (...args) => (e) => {
-            if (ms[includes]("self") && el !== e.target) return;
-            if (ms[includes]("away") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
-            // key and mouse (ctrl, alt, shift, meta, cmd, super)
-            if (name[startsWith]("key") || name[startsWith]("mouse")) {
-                for (let modifier of ms) {
-                    let m = re_modifiers.exec(modifier);
-                    if (m && (m[3] || m[4])) {
-                        let key = m[3] || (m[4] && "meta");
-                        if (!key || !e[key + "Key"]) return;
+    let setEvent = ({ r, el }, ps, env) => {
+        let { a: key, k: name, e: exp, ev, m: ms = [] } = ps;
+        if (!el[_z_d][key]) {
+            let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
+            let fn = (e) => {
+                if (ms[includes]("self") && el != e.target) return;
+                if (ms[includes]("away") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
+                // key and mouse (ctrl, alt, shift, meta, cmd, super)
+                if (name[startsWith]("key") || name[startsWith]("mouse") || name.endsWith("click")) {
+                    for (let modifier of ms) {
+                        let m = re_modifiers.exec(modifier);
+                        if (m && (m[3] || m[4])) {
+                            let key = m[3] || (m[4] && "meta");
+                            if (!key || !e[key + "Key"]) return;
+                        }
+                    }
+                    // key
+                    if (name[startsWith]("key")) {
+                        let keys = ms.filter((m) => !re_modifiers[test](m));
+                        if (keys[length] == 1) {
+                            let key = e.key.toLowerCase()[replace](re_kebab, "");
+                            key = keyMaps[key] || key;
+                            if (key != keys[0][replace](re_kebab, "")) return;
+                        }
                     }
                 }
-                // key
-                if (name[startsWith]("key")) {
-                    let keys = ms.filter((m) => !re_modifiers[test](m));
-                    if (keys[length] === 1) {
-                        let key = e.key.toLowerCase().replace(re_kebab, "");
-                        key = keyMaps[key] || key;
-                        if (key !== keys[0].replace(re_kebab, "")) return;
-                    }
-                }
+                if (ms[includes]("prevent")) e.preventDefault();
+                if (ms[includes]("stop")) e.stopPropagation();
+                if (ms[includes]("once")) target.removeEventListener(name, fn, options);
+                return el[_z_d]["@" + key](e);
+            };
+            // debounce
+            let i = ms.indexOf("debounce");
+            if (i >= 0) {
+                i = ms[i + 1];
+                let m = re_modifiers.exec(i);
+                i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
+                fn = debounce(fn, i >> 0);
             }
-            if (ms[includes]("prevent")) e.preventDefault();
-            if (ms[includes]("stop")) e.stopPropagation();
-            if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-            return newFun(exp, [...env.ks, "$el", "$event"], "")(...args, e);
-        };
-        fn = fn(env.d, ...Obj_values(env.ps), r);
-        // debounce
-        let i = ms.indexOf("debounce");
-        if (i >= 0) {
-            i = ms[i + 1];
-            let m = re_modifiers.exec(i);
-            i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
-            fn = debounce(fn, i >> 0);
+            let options = ms && {
+                capture: ms[includes]("capture"),
+                passive: ms[includes]("passive"),
+            };
+            target[addEventListener](name, fn, options);
+            ev && (el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || ev))));
+            el[_z_d][key] = (...args) => (e) => newFun(exp, [...env.ks, "$el", "$event"], env.k + "$el,$event", ps)(...args, e);
         }
-        let options = ms && {
-            capture: ms[includes]("capture"),
-            passive: ms[includes]("passive"),
-        };
-        target[addEventListener](name, fn, options);
-        el[_z_d][key] = 1;
+        el[_z_d]["@" + key] = el[_z_d][key](env.d, ...Obj_values(env.ps), r);
     };
 
     let Functions = {};
-    let newFun = (exp, ks, k) => {
-        k += exp;
-        return (
-            Functions[k] ||
-            (Functions[k] = new Function(["$z_d", ...ks], "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"))
-        );
+    let newFun = (exp, ks, k, ps) => {
+        let f =
+            (ps && ps.f) ||
+            Functions[(k += exp)] ||
+            (Functions[k] = new Function(["$z_d", ...ks], "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"));
+        ps && !ps.f && (ps.f = f);
+        return f;
     };
     let tryEval = (el, exp, env, ps) => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(env.d);
-                let f = (ps && ps.f) || newFun(exp, env.ks, env.k);
-                ps && !ps.f && (ps.f = f);
-                return f(env.d, ...Obj_values(env.ps));
+                return newFun(exp, env.ks, env.k, ps)(env.d, ...Obj_values(env.ps));
             },
             { el, exp }
         );
@@ -463,15 +481,15 @@ const ZData = (() => {
 
     let loadHTML = (html, p, before) => {
         p || (p = $ocument.body);
-        let name = html.match(/^\s*<(\w+)/)[1];
-        let el = $ocument[createEl](name);
+        let el = $ocument[createEl](zdata);
         el[attrMaps["html"]] = html;
-        p[insert](el, before);
-        html.replace(/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
+        for (let n = el[firstEL]; n; n = n[nextEL]) p[insert](n, before);
+        html[replace](/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
             let e = $ocument[createEl]("script");
             e[textC] = s;
-            el[insert](e, nil);
+            p[insert](e, before);
         });
+        startLater();
     };
 
     let updating = 0;
@@ -482,9 +500,17 @@ const ZData = (() => {
             (el[_z_d] || (el[_z_d] = {})).ob ||
             (el[_z_d].ob = new MutationObserver((ms) => {
                 if (updating) return;
-                // if (ms[length] === 1 && ms[0].type === attributes && ms[0].attributeName === s_tyle && ms[0].fireChange) changeLater(ms[0]); else
-                if (el === $ocument.body) startLater();
-                else initComponent(el);
+                // if (ms[length] == 1 && ms[0].type == attributes && ms[0].attributeName == s_tyle && ms[0].fireChange) changeLater(ms[0]); else
+                if (el == $ocument.body) {
+                    if (ms[length] < 100 /* How Many ??? */) {
+                        let ignore = true;
+                        for (let i = 0, t; i < ms[length]; i++) {
+                            ignore = ignore && ((t = ms[i].target).closest(qnone) || !t.closest(qdata));
+                        }
+                        if (ignore) return;
+                    }
+                    startLater();
+                } else initComponent(el);
             }));
         setTimeout(() => ob.observe(el, { childList: true, subtree: true, [attributes]: false }));
     };

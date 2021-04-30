@@ -118,6 +118,36 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ````
     在其他框架根节点加 z-none 即可
 
+### 组件
+
+  - z-comp 为 ZData 组件
+
+    ```html
+    <tag z-comp=...>
+    ````
+    z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s):// 的网络路径
+
+    ```html
+    <tag z-comp=./z-comp-2.html>
+    <tag z-comp=https://funlang.org/zdata/test/z-comp-2.html>
+    ````
+    z-comp 还可以是一个 Promise 函数, 用来加载组件代码
+
+    ```html
+    <tag z-comp="load_z_comp('z-comp-2')">
+    ````
+    z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
+
+    ```html
+    删除占位符:
+    <z-comp  z-comp=https://funlang.org/zdata/test/z-comp-2.html>
+    <div del z-comp=https://funlang.org/zdata/test/z-comp-2.html>
+    ````
+    ```html
+    保留占位符:
+    <div z-comp=https://funlang.org/zdata/test/z-comp-2.html>
+    ````
+
 ### 模板
 
   - template for
