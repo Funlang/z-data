@@ -170,10 +170,27 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```
     :style.name=value / :css.name=value
     :style.name.value=条件 / :css.name.value=...
-    可以简写为 ..name 和 #name, 如下:
-      ..width=100
-      #border-width=4
+    可以简写为 ..name 和 #name, 以及 !name=string-value, 如下:
+      ..width=`100px`
+      #border-width=`4px`
+      !border-width=4px
     ```
+
+    * !!! 特别注意:
+
+      - : :: @ . .. #
+      ```
+      : :: @ . .. # 绑定, 后面的值全部都是 js 表达式, 可以是 js 变量, 或者是字符串, 字符串需要另外加 ' " ` 等包围起来
+      ```
+      - ${...}
+      ```
+      非绑定的属性值中含有 ${...}, 会自动解析成一个字符串, 相当于 `...${...}...`
+      ```
+      - !
+      ```
+      ! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
+      ```
+
   - :attr.camel 支持驼峰表示法
 
   - ::value=propName, ::style.value=propName, ::css.value=propName

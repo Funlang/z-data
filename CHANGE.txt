@@ -3,6 +3,9 @@
   * performance optimized
   * fix bug - template for nesting for
     remove line:  env2.vs = Obj_values(env2.ps);
+  + !style-name=string-value
+    EQ
+    #style-name=`string-value`
 
 2021-04-30
   * fix bug - cache event closure

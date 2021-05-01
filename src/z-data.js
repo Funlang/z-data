@@ -49,9 +49,9 @@ const ZData = (() => {
     const now = Date.now;
     const nil = undefined;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
-    const re_attr = /^(?:(:)(:?)|(@)|([.#]))?([^.]*)(?:[.]([^.].*))?$/;
+    const re_attr = /^(?:(:)(:?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
     const re_text = /\$\{/;
-    const re_bind = /^[:@.#]./;
+    const re_bind = /^[:@.#!]./;
     const re_2camel = /-([a-z])/g;
     const re_kebab = /[-_ ]+/g;
     const re_modifiers = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
@@ -292,7 +292,7 @@ const ZData = (() => {
                 let v = el[getAttribute](a);
                 if (!re_bind[test](a) && !re_text[test](v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
-                let k = ms[4] ? (ms[4] == "#" || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
+                let k = ms[4] ? (ms[4] != "." || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
                 k = attrMaps[k] ? attrMaps[k] : k;
                 if (k) {
                     let modifiers = ms[6] && ms[6].split(".");
@@ -303,7 +303,7 @@ const ZData = (() => {
                         m: ms[4] && ms[5] ? [ms[5]].concat(modifiers || []) : modifiers, // modifiers
                         e: v, // exp
                     };
-                    if (!ps.b) ps.e = "`" + ps.e + "`";
+                    if (!ps.b || ms[4] == "!") ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
                     if (ps.k == c_lass) props.ocl = ocl;
                 }

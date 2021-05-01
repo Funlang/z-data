@@ -1,0 +1,22 @@
+{
+  "name": "z-data",
+  "author": {
+    "name": "Wisdom ZHANG"
+  },
+  "homepage": "https://github.com/Funlang/z-data",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Funlang/z-data.git"
+  },
+  "main": "dist/z-data.min.js",
+  "dependencies": {},
+  "devDependencies": {
+    "uglify-js": "^3.13.5"
+  },
+  "scripts": {
+    "build z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js",
+    "build z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js"
+  },
+  "version": "0.9.4"
+}
