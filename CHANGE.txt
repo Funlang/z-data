@@ -1,4 +1,7 @@
 
+2021-05-01
+  * performance optimized
+
 2021-04-30
   * fix bug - cache event closure
   * DOM observe optimized

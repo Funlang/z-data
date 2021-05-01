@@ -113,7 +113,7 @@ const ZData = (() => {
         if (!args.cp) {
             let exp;
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
-            else if ((exp = el[getAttribute](zcomp))) {
+            else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
                 let res;
                 try {
                     if (/^([.\/]|https?:)/[test](exp)) res = fetch(exp).then((res) => res.text());
@@ -124,7 +124,7 @@ const ZData = (() => {
                     }).catch(nop);
                 } catch (e) {}
                 return;
-            } else if ("template" == el.localName) {
+            } else if (el.content && "template" == el.localName) {
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
                 } else if ((exp = el[getAttribute](zif)) || 1 /*attrs[includes](zelse)*/) {
@@ -223,6 +223,7 @@ const ZData = (() => {
             if (kvi.i) env2.ps[kvi.i] = i++;
             let key = id ? v[id] : akey ? tryEval(el, akey, env2) : kvi.k ? k : v;
             if (key === nil) continue; // key MUST BE !!!
+            env2.vs = Obj_values(env2.ps);
 
             let next = cur[nextEL];
             let curNode = keys[key];
@@ -277,15 +278,16 @@ const ZData = (() => {
             vs = zd.vs || (zd.vs = []);
         let props = zd.ps || (zd.ps = nc && nc.ps);
         if (!props) {
-            props = zd.ps = { ps: [], ocl: {} };
+            props = zd.ps = { ps: [] };
             if (args.cp) {
                 nodeCache[++cps] = { as: attrNames, ps: props };
                 el.setAttribute("z-d", cps);
             }
-            let c = el.className;
+            let c = el.className,
+                ocl;
             if (c) {
                 c = classNames[c] || (classNames[c] = split(c));
-                c[forEach]((name) => (props.ocl[name] = 1));
+                c[forEach]((name) => ((ocl || (ocl = {}))[name] = 1));
             }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
@@ -304,6 +306,7 @@ const ZData = (() => {
                     };
                     if (!ps.b) ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
+                    if (ps.k == c_lass) props.ocl = ocl;
                 }
             });
             let f, t;
@@ -315,7 +318,7 @@ const ZData = (() => {
             }
             if (args.cp) return;
         }
-        let oldcls = { ...props.ocl };
+        let oldcls = props.ocl ? { ...props.ocl } : {};
         let clsChanged = false,
             i = 0;
         props.ps[forEach]((ps) => {
@@ -429,7 +432,8 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                return el[_z_d]["@" + key](e);
+                let f = newFun(exp, [...env.ks, "$el", "$event"], env.k + "$el,$event", ps);
+                return f(env.d, ...el[_z_d][key], r, e);
             };
             // debounce
             let i = ms.indexOf("debounce");
@@ -445,9 +449,8 @@ const ZData = (() => {
             };
             target[addEventListener](name, fn, options);
             ev && (el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || ev))));
-            el[_z_d][key] = (...args) => (e) => newFun(exp, [...env.ks, "$el", "$event"], env.k + "$el,$event", ps)(...args, e);
         }
-        el[_z_d]["@" + key] = el[_z_d][key](env.d, ...Obj_values(env.ps), r);
+        el[_z_d][key] = env.vs || Obj_values(env.ps);
     };
 
     let Functions = {};
@@ -463,7 +466,7 @@ const ZData = (() => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(env.d);
-                return newFun(exp, env.ks, env.k, ps)(env.d, ...Obj_values(env.ps));
+                return newFun(exp, env.ks, env.k, ps)(env.d, ...(env.vs || Obj_values(env.ps)));
             },
             { el, exp }
         );
