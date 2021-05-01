@@ -223,7 +223,6 @@ const ZData = (() => {
             if (kvi.i) env2.ps[kvi.i] = i++;
             let key = id ? v[id] : akey ? tryEval(el, akey, env2) : kvi.k ? k : v;
             if (key === nil) continue; // key MUST BE !!!
-            env2.vs = Obj_values(env2.ps);
 
             let next = cur[nextEL];
             let curNode = keys[key];
@@ -450,7 +449,7 @@ const ZData = (() => {
             target[addEventListener](name, fn, options);
             ev && (el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || ev))));
         }
-        el[_z_d][key] = env.vs || Obj_values(env.ps);
+        el[_z_d][key] = Obj_values(env.ps);
     };
 
     let Functions = {};
@@ -466,7 +465,7 @@ const ZData = (() => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(env.d);
-                return newFun(exp, env.ks, env.k, ps)(env.d, ...(env.vs || Obj_values(env.ps)));
+                return newFun(exp, env.ks, env.k, ps)(env.d, ...Obj_values(env.ps));
             },
             { el, exp }
         );
