@@ -70,7 +70,7 @@ TodoMVC:
 
 可以在线创建/调试/预览 z-data 代码
 
-* https://funlang.org/z-data
+* https://funlang.org/z-data/
 
 ## 用法:
 
