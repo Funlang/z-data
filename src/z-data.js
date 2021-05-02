@@ -18,27 +18,27 @@ const ZData = (() => {
     const ElementChild = `${Element}Child`;
     const firstEL = `first${ElementChild}`;
     const lastEL = `last${ElementChild}`;
-    const nextEL = `next${ElementSibling}`;
     const prevEL = `previous${ElementSibling}`;
+    const nextEL = `next${ElementSibling}`;
     const parentEL = `parent${Element}`;
     const insert = "insertBefore";
     const forEach = "forEach";
     const includes = "includes";
+    const length = "length";
     const startsWith = "startsWith";
     const split = (s, d = / +/) => s.trim().split(d);
     const textC = "textContent";
-    const length = "length";
     const replace = "replace";
-    const test = "test";
     const last = "last";
     const _z_d = "_z_d";
-    const c_lass = "class";
-    const s_tyle = "style";
     const input = "input";
     const change = "change";
+    const test = "test";
+    const c_lass = "class";
+    const s_tyle = "style";
     const $ocument = document;
-    const createEl = "createElement";
     const $ = (selector) => $ocument.querySelectorAll(selector);
+    const createEl = "createElement";
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
@@ -49,9 +49,9 @@ const ZData = (() => {
     const now = Date.now;
     const nil = undefined;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
-    const re_attr = /^(?:(:)(:?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
-    const re_text = /\$\{/;
     const re_bind = /^[:@.#!]./;
+    const re_attr = /^(?:(:)(:?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
+    const $e_text = (s) => s.indexOf("${") >= 0 && s.indexOf("`") < 0;
     const re_2camel = /-([a-z])/g;
     const re_kebab = /[-_ ]+/g;
     const re_modifiers = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
@@ -290,7 +290,7 @@ const ZData = (() => {
             }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
-                if (!re_bind[test](a) && !re_text[test](v)) return;
+                if (!re_bind[test](a) && !$e_text(v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
                 let k = ms[4] ? (ms[4] != "." || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
                 k = attrMaps[k] ? attrMaps[k] : k;
@@ -309,7 +309,7 @@ const ZData = (() => {
                 }
             });
             let f, t;
-            if ((f = el.firstChild) && f == el.lastChild && f.nodeType == 3 && re_text[test]((t = f.nodeValue))) {
+            if ((f = el.firstChild) && f == el.lastChild && f.nodeType == 3 && $e_text((t = f.nodeValue))) {
                 props.ps.push({
                     k: textC,
                     e: "`" + t + "`",
@@ -484,13 +484,14 @@ const ZData = (() => {
     let loadHTML = (html, p, before) => {
         p || (p = $ocument.body);
         let el = $ocument[createEl](zdata);
-        el[attrMaps["html"]] = html;
-        for (let n = el[firstEL]; n; n = n[nextEL]) p[insert](n, before);
-        html[replace](/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
+        el[attrMaps["html"]] = html[replace](/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
             let e = $ocument[createEl]("script");
+            e.setAttribute(znone, "");
             e[textC] = s;
             p[insert](e, before);
+            return "";
         });
+        for (let n = el[firstEL]; n; n = n[nextEL]) p[insert](n, before);
         startLater();
     };
 
