@@ -64,7 +64,7 @@ const ZData = (() => {
             for (let p in obj)
                 try {
                     obj[p] = getProxy()(obj[p], cb);
-                } catch (e) {}
+                } catch {}
             return new Proxy(obj, cb);
         }
         return obj;
@@ -89,7 +89,7 @@ const ZData = (() => {
                     initLater();
                     try {
                         if (!zdataproxy) obj[prop] = getProxy()(value, cb);
-                    } catch (e) {}
+                    } catch {}
                     return true;
                 },
             };
@@ -122,7 +122,7 @@ const ZData = (() => {
                         if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el), el.remove();
                         else loadHTML(html, el), el.removeAttribute(zcomp);
                     }).catch(nop);
-                } catch (e) {}
+                } catch {}
                 return;
             } else if (el.content && "template" == el.localName) {
                 if ((exp = el[getAttribute](zfor))) {
@@ -484,15 +484,27 @@ const ZData = (() => {
     let loadHTML = (html, p, before) => {
         p || (p = $ocument.body);
         let el = $ocument[createEl](zdata);
-        el[attrMaps["html"]] = html[replace](/<script[^>]*>(.+)<\/script>/gis, ($0, s) => {
+        let fn,
+            fns = debounce(() => {
+                fn[forEach]((f) => f());
+                updating--, startLater();
+            });
+        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")[replace](/<script([^>]*)>(.*?)<\/script>/gis, ($0, src, s) => {
+            let m = src.match(/src='([^']+)'|src="([^"]+)"|src=([^ ]+)/);
+            src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
+            if (!src && !s) return "";
             let e = $ocument[createEl]("script");
             e.setAttribute(znone, "");
-            e[textC] = s;
-            p[insert](e, before);
+            let f = () => p[insert](e, before);
+            if (fn && !src) fn.push(f);
+            else f();
+            if (src) (e.src = src), (e.onload = fns), (fn = []);
+            else e[textC] = s;
             return "";
         });
-        for (let n = el[firstEL]; n; n = n[nextEL]) p[insert](n, before);
-        startLater();
+        for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
+        if (fn) updating++;
+        else startLater();
     };
 
     let updating = 0;

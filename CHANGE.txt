@@ -1,4 +1,7 @@
 
+2021-05-03
+  * loadHTML(), <script src=... supported
+
 2021-05-02
   + z-data studio (z-pen)
 
