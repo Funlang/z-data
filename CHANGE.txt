@@ -1,4 +1,7 @@
 
+2021-05-04
+  * loadHTML(), <style> module supported
+
 2021-05-03
   * loadHTML(), <script src=... supported
 

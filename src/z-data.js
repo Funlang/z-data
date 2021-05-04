@@ -10,8 +10,10 @@ const ZData = (() => {
     const zkey = "key";
     const zif = "if";
     const zelse = "else";
-    const attributes = "attributes";
-    const getAttribute = "getAttribute";
+    const ttribute = "ttribute";
+    const attributes = `a${ttribute}s`;
+    const getAttribute = `getA${ttribute}`;
+    const setAttribute = `setA${ttribute}`;
     const getAttributeNames = `${getAttribute}Names`;
     const Element = "Element";
     const ElementSibling = `${Element}Sibling`;
@@ -55,16 +57,13 @@ const ZData = (() => {
     const re_2camel = /-([a-z])/g;
     const re_kebab = /[-_ ]+/g;
     const re_modifiers = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
-    let age = 0;
-    let cps = 0;
-    let _n_;
+    let age = 0, cps = 0, _n_;
 
     let liteProxy = (obj, cb) => {
         if (obj && is_object(obj) && !is_function(obj)) {
-            for (let p in obj)
-                try {
-                    obj[p] = getProxy()(obj[p], cb);
-                } catch {}
+            for (let p in obj) try {
+                obj[p] = getProxy()(obj[p], cb);
+            } catch {}
             return new Proxy(obj, cb);
         }
         return obj;
@@ -104,17 +103,15 @@ const ZData = (() => {
 
     let nodeCache = {};
     let goAnode = (args, env, self) => {
-        let { p, el } = args,
-            nc;
+        let { p, el } = args, nc;
         let zd = el[_z_d] || (el[_z_d] = {});
         let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el[getAttributeNames]());
         if (attrs[includes](znone)) return;
 
         if (!args.cp) {
-            let exp;
+            let exp, res;
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
             else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
-                let res;
                 try {
                     if (/^([.\/]|https?:)/[test](exp)) res = fetch(exp).then((res) => res.text());
                     else res = tryEval(el, exp, env);
@@ -165,8 +162,7 @@ const ZData = (() => {
         } else fold(args, env);
     };
 
-    let expand = ({ p, el, next }) => {
-        let n;
+    let expand = ({ p, el, next, n }) => {
         if (!(n = el[_z_d].node)) {
             n = el[_z_d].node = el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
@@ -188,8 +184,7 @@ const ZData = (() => {
 
     let remove = (args, next, env) => {
         goNodes(
-            args,
-            env,
+            args, env,
             ({ el }) => el != next,
             ({ el }) => {
                 el.remove();
@@ -216,7 +211,7 @@ const ZData = (() => {
         if (kvi.i) env2.ps[kvi.i] = nil;
         env2.ks = Obj_keys(env2.ps);
         env2.k = env2.ks.join(",");
-        for (let k in items /*of Obj_Keys(items)*/) {
+        for (let k in items /*of Obj_keys(items)*/) {
             let v = items[k];
             if (kvi.k) env2.ps[kvi.k] = k;
             if (kvi.v) env2.ps[kvi.v] = v;
@@ -239,8 +234,7 @@ const ZData = (() => {
                 args.el = curNode.head;
                 args.el[_z_d].skip = 0;
                 goNodes(
-                    args,
-                    env2,
+                    args, env2,
                     ({ el }) => el != lastNext,
                     ({ p, el }) => {
                         if (moveable) p[insert](el, next);
@@ -280,10 +274,9 @@ const ZData = (() => {
             props = zd.ps = { ps: [] };
             if (args.cp) {
                 nodeCache[++cps] = { as: attrNames, ps: props };
-                el.setAttribute("z-d", cps);
+                el[setAttribute]("z-d", cps);
             }
-            let c = el.className,
-                ocl;
+            let c = el.className, ocl;
             if (c) {
                 c = classNames[c] || (classNames[c] = split(c));
                 c[forEach]((name) => ((ocl || (ocl = {}))[name] = 1));
@@ -318,8 +311,7 @@ const ZData = (() => {
             if (args.cp) return;
         }
         let oldcls = props.ocl ? { ...props.ocl } : {};
-        let clsChanged = false,
-            i = 0;
+        let clsChanged = false, i = 0;
         props.ps[forEach]((ps) => {
             if (ps.b == 3) setEvent(args, ps, env);
             else {
@@ -384,7 +376,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            el[ps.k] = value; // el.setAttribute(ps.k, value);
+            el[ps.k] = value; // el[setAttribute](ps.k, value);
         }
     };
 
@@ -454,9 +446,7 @@ const ZData = (() => {
 
     let Functions = {};
     let newFun = (exp, ks, k, ps) => {
-        let f =
-            (ps && ps.f) ||
-            Functions[(k += exp)] ||
+        let f = (ps && ps.f) || Functions[(k += exp)] ||
             (Functions[k] = new Function(["$z_d", ...ks], "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"));
         ps && !ps.f && (ps.f = f);
         return f;
@@ -481,26 +471,38 @@ const ZData = (() => {
         }
     };
 
+    let ids = 0;
     let loadHTML = (html, p, before) => {
         p || (p = $ocument.body);
-        let el = $ocument[createEl](zdata);
-        let fn,
-            fns = debounce(() => {
+        let id, fn, el = $ocument[createEl](zdata);
+        if (!(id = p[getAttribute]("z-id"))) p[setAttribute]("z-id", (id = ++ids));
+        id = '[z-id="' + id + '"] ';
+        let fns = debounce(() => {
                 fn[forEach]((f) => f());
-                updating--, startLater();
+                --updating < 0 ? (updating = 0) : 0, startLater();
             });
-        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")[replace](/<script([^>]*)>(.*?)<\/script>/gis, ($0, src, s) => {
+        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")[replace](/<(script)([^>]*)>(.*?)<\/\1>/gis, ($0, $1, src, s) => {
             let m = src.match(/src='([^']+)'|src="([^"]+)"|src=([^ ]+)/);
             src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
             if (!src && !s) return "";
             let e = $ocument[createEl]("script");
-            e.setAttribute(znone, "");
+            e[setAttribute](znone, "");
             let f = () => p[insert](e, before);
             if (fn && !src) fn.push(f);
             else f();
-            if (src) (e.src = src), (e.onload = fns), (fn = []);
-            else e[textC] = s;
+            if (src) {
+                e.src = src;
+                e.onload = fns;
+                e.onerror = () => (updating = 0);
+                fn = [];
+            } else e[textC] = s;
             return "";
+        })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
+            s = s.replace(/([^{}]+)(?=\{)/g, ($0, names) => {
+                if (/^\s*(@.*|\d+%|from|to)\s*$/[test](names)) return names; // @keyframes
+                return split(names, /\s*,\s*/).map((n) => id + n).join(",");
+            });
+            return s1 + s + s2;
         });
         for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
         if (fn) updating++;
@@ -508,14 +510,11 @@ const ZData = (() => {
     };
 
     let updating = 0;
-    // let changeLater = debounce((e) => e.fireChange(), 100);
     let stopObserve = (el) => el[_z_d] && el[_z_d].ob && el[_z_d].ob.disconnect();
     let observe = (el) => {
-        let ob =
-            (el[_z_d] || (el[_z_d] = {})).ob ||
+        let ob = (el[_z_d] || (el[_z_d] = {})).ob ||
             (el[_z_d].ob = new MutationObserver((ms) => {
                 if (updating) return;
-                // if (ms[length] == 1 && ms[0].type == attributes && ms[0].attributeName == s_tyle && ms[0].fireChange) changeLater(ms[0]); else
                 if (el == $ocument.body) {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
@@ -527,7 +526,7 @@ const ZData = (() => {
                     startLater();
                 } else initComponent(el);
             }));
-        setTimeout(() => ob.observe(el, { childList: true, subtree: true, [attributes]: false }));
+        setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
     };
 
     let startLater = debounce(() => start(nil, 1));
