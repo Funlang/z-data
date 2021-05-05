@@ -393,7 +393,6 @@ const ZData = (() => {
         };
     };
 
-    let keyMaps = { slash: "/", space: " " };
     let setEvent = ({ r, el }, ps, env) => {
         let { a: key, k: name, e: exp, ev, m: ms = [] } = ps;
         if (!el[_z_d][key]) {
@@ -410,14 +409,13 @@ const ZData = (() => {
                             if (!key || !e[key + "Key"]) return;
                         }
                     }
-                    // key
-                    if (name[startsWith]("key")) {
-                        let keys = ms.filter((m) => !re_modifiers[test](m));
-                        if (keys[length] == 1) {
-                            let key = e.key.toLowerCase()[replace](re_kebab, "");
-                            key = keyMaps[key] || key;
-                            if (key != keys[0][replace](re_kebab, "")) return;
-                        }
+                    let keys = ms.filter((m) => !re_modifiers[test](m));
+                    if (keys[length] == 1) {
+                        if (name[startsWith]("key")) {
+                            let key = keys[0][replace](re_kebab, "");
+                            key = { space: " ", slash: "/", gt: ">", eq: "=" }[key] || key;
+                            if (key != (e.key.toLowerCase()[replace](re_kebab, "") || " ")) return;
+                        } else if (["left", "mid", "right"][e.button] != keys[0]) return;
                     }
                 }
                 if (ms[includes]("prevent")) e.preventDefault();
@@ -499,7 +497,7 @@ const ZData = (() => {
             return "";
         })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
             s = s.replace(/([^{}]+)(?=\{)/g, ($0, names) => {
-                if (/^\s*(@.*|\d+%|from|to)\s*$/[test](names)) return names; // @keyframes
+                if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/[test](names)) return names; // @keyframes
                 return split(names, /\s*,\s*/).map((n) => id + n).join(",");
             });
             return s1 + s + s2;

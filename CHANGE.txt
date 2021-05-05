@@ -1,4 +1,9 @@
 
+2021-05-05
+  * minor fixes (key modifiers, @keyframes: 1%, 2%,... {})
+  + mouse event modifiers (left, mid, right)
+  * key event modifiers (>, =) as gt, eq
+
 2021-05-04
   * loadHTML(), <style> module supported
 

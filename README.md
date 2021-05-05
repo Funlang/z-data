@@ -239,7 +239,13 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
       ```
     * 键盘 modifier
       ```
-      <key>     enter, escape, space, f1 等
+      <key>     enter, escape, space, f1 等, 详见:
+                https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+      特殊处理:  space: " ", slash: /, gt: >, eq: =
+      ```
+    * 鼠标 modifier
+      ```
+      <button>  left, mid, right
       ```
 ### 变量
 
