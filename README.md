@@ -294,6 +294,21 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```html
     <tag z-comp="load_z_comp('z-comp-2')">
     ````
+
+    * ZData.get
+
+      z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
+      ```
+      注意: ZData.get 是一个 Promise 函数, 返回类似于 fetch(url).then(res => res.text()) 之后的部分
+      ```
+      ```
+      定义并加载插件:
+      document.addEventListener("DOMContentLoaded", () => setTimeout(() => ZData.get = ...))
+
+      应用 ZData.get 加载 table-v1.5.2 组件
+      <z- z-comp=z://table-v1.5.2></z->
+      ```
+
     z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
 
     ```html

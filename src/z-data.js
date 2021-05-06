@@ -44,8 +44,8 @@ const ZData = (() => {
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
-    const is_object = (obj) => typeof obj == "object";
-    const is_function = (obj) => typeof obj == "function";
+    const is_object = (obj, t = "object") => typeof obj == t;
+    const is_function = (obj) => is_object(obj, "function");
     const con = console;
     const log = con.log;
     const now = Date.now;
@@ -114,6 +114,7 @@ const ZData = (() => {
             else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
                 try {
                     if (/^([.\/]|https?:)/[test](exp)) res = fetch(exp).then((res) => res.text());
+                    else if (/^z:/[test](exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el), el.remove();
@@ -277,7 +278,7 @@ const ZData = (() => {
                 el[setAttribute]("z-d", cps);
             }
             let c = el.className, ocl;
-            if (c) {
+            if (c && is_object(c, 'string')) {
                 c = classNames[c] || (classNames[c] = split(c));
                 c[forEach]((name) => ((ocl || (ocl = {}))[name] = 1));
             }
@@ -349,7 +350,7 @@ const ZData = (() => {
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
-                    if (typeof v == "boolean" || !name.endsWith("-")) {
+                    if (is_object(v, "boolean") || !name.endsWith("-")) {
                         v ? (cls[name] = 1) : delete cls[name];
                     } else cls[name + v] = 1;
                 });
@@ -474,7 +475,7 @@ const ZData = (() => {
         p || (p = $ocument.body);
         let id, fn, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-id"))) p[setAttribute]("z-id", (id = ++ids));
-        id = '[z-id="' + id + '"] ';
+        id = "[z-id='" + id + "'] ";
         let fns = debounce(() => {
                 fn[forEach]((f) => f());
                 --updating < 0 ? (updating = 0) : 0, startLater();
@@ -496,7 +497,7 @@ const ZData = (() => {
             } else e[textC] = s;
             return "";
         })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
-            s = s.replace(/([^{}]+)(?=\{)/g, ($0, names) => {
+            s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/[test](names)) return names; // @keyframes
                 return split(names, /\s*,\s*/).map((n) => id + n).join(",");
             });

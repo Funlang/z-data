@@ -1,4 +1,8 @@
 
+2021-05-06
+  + z:// protocol add-in for z-comp
+    ZData.get is the add-in Promise function
+
 2021-05-05
   * minor fixes (key modifiers, @keyframes: 1%, 2%,... {})
   + mouse event modifiers (left, mid, right)

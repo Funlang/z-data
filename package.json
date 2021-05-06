@@ -18,5 +18,5 @@
     "build z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js",
     "build z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js"
   },
-  "version": "0.9.5"
+  "version": "0.10.1"
 }
