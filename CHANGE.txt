@@ -1,4 +1,10 @@
 
+2021-05-14
+  + ZData.nobserve (default false)
+    no observe
+  * observe()
+    querySelector('[z-data]') in child sub tree
+
 2021-05-06
   + z:// protocol add-in for z-comp
     ZData.get is the add-in Promise function

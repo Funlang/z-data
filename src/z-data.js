@@ -518,14 +518,14 @@ const ZData = (() => {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
                         for (let i = 0, t; i < ms[length]; i++) {
-                            ignore = ignore && ((t = ms[i].target).closest(qnone) || !t.closest(qdata));
+                            ignore = ignore && ((t = ms[i].target).closest(qnone) || !t.closest(qdata) && !t.querySelector(qdata));
                         }
                         if (ignore) return;
                     }
                     startLater();
                 } else initComponent(el);
             }));
-        setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
+        ZData.nobserve || setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
     };
 
     let startLater = debounce(() => start(nil, 1));
