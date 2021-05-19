@@ -1,4 +1,8 @@
 
+2021-05-19
+  * try catch {}
+    + (e)
+
 2021-05-14
   + ZData.nobserve (default false)
     no observe

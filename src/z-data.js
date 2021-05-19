@@ -63,7 +63,7 @@ const ZData = (() => {
         if (obj && is_object(obj) && !is_function(obj)) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
-            } catch {}
+            } catch (e) {}
             return new Proxy(obj, cb);
         }
         return obj;
@@ -88,7 +88,7 @@ const ZData = (() => {
                     initLater();
                     try {
                         if (!zdataproxy) obj[prop] = getProxy()(value, cb);
-                    } catch {}
+                    } catch (e) {}
                     return true;
                 },
             };
@@ -120,7 +120,7 @@ const ZData = (() => {
                         if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el), el.remove();
                         else loadHTML(html, el), el.removeAttribute(zcomp);
                     }).catch(nop);
-                } catch {}
+                } catch (e) {}
                 return;
             } else if (el.content && "template" == el.localName) {
                 if ((exp = el[getAttribute](zfor))) {
