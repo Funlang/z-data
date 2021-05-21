@@ -324,7 +324,7 @@ const ZData = (() => {
                 i++;
                 if (ps.b == 2) {
                     if (!ps.b2) {
-                        v = "$event.target." + ps.k;
+                        v = "this." + ps.k;
                         if (ps.k == s_tyle && ps.m && ps.m[length] > 0) v += "[`" + ps.m[0] + "`]";
                         let event = el.type == "text" ? input : change;
                         if (ps.m) {
@@ -422,8 +422,8 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                let f = newFun(exp, [...env.ks, "$el", "$event"], env.k + "$el,$event", ps);
-                return f(env.d, ...el[_z_d][key], r, e);
+                let f = newFun(exp, [...env.ks, "$el"], env.k + "$el", ps);
+                return f.call(e.target, env.d, ...el[_z_d][key], r);
             };
             // debounce
             let i = ms.indexOf("debounce");

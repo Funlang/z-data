@@ -253,8 +253,6 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```
     $el.$data 组件的包装 data 对象
     ```
-  - $event 事件内的事件对象
-
   - ZData.nobserve (default false)
     ```
     no observe DOM for dynamic creating z-data node

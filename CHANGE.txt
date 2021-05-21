@@ -1,4 +1,11 @@
 
+2021-05-21
+  * variables
+    - $event
+      use "event" directly
+    + this
+      in event handler (and :: data bind)
+
 2021-05-19
   * try catch {}
     + (e)
