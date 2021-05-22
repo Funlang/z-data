@@ -269,7 +269,7 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```
     在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
     ```
-  - ZData.loadHTML(html, p, before)
+  - ZData.loadHTML(html, p, before, args)
     ```
     动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
 
@@ -325,7 +325,12 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     <div z-comp=https://funlang.org/zdata/test/z-comp-2.html>
     ````
 
-    z-comp demo:
+  - z-comp args
+    ```html
+    <tag z-comp=... args=...>
+    ````
+
+  - z-comp demo:
     * https://codepen.io/funlang/pen/ExZBPJL
     * https://codepen.io/funlang/pen/RwKzaOo
 

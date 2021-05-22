@@ -6,6 +6,7 @@ const ZData = (() => {
     const qdata = `[${zdata}]`;
     const qnone = `[${znone}]`;
     const zinit = "init";
+    const zargs = "args";
     const zfor = "for";
     const zkey = "key";
     const zif = "if";
@@ -39,7 +40,7 @@ const ZData = (() => {
     const c_lass = "class";
     const s_tyle = "style";
     const $ocument = document;
-    const $ = (selector) => $ocument.querySelectorAll(selector);
+    const $ = (selector, el = $ocument) => el.querySelectorAll(selector);
     const createEl = "createElement";
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
@@ -95,6 +96,7 @@ const ZData = (() => {
             ZData.proxy = (v) => getProxy()(v, cb);
             zd = tryEval(el, el[getAttribute](zdata) || "{}", env);
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
+            if (el[zargs]) Obj_keys(el[zargs])[forEach]((k) => zd[k] = el[zargs][k]);
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
         init(true);
@@ -117,8 +119,9 @@ const ZData = (() => {
                     else if (/^z:/[test](exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
-                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el), el.remove();
-                        else loadHTML(html, el), el.removeAttribute(zcomp);
+                        let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
+                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el.remove();
+                        else loadHTML(html, el, nil, as), el.removeAttribute(zcomp);
                     }).catch(nop);
                 } catch (e) {}
                 return;
@@ -471,7 +474,7 @@ const ZData = (() => {
     };
 
     let ids = 0;
-    let loadHTML = (html, p, before) => {
+    let loadHTML = (html, p, before, args) => {
         p || (p = $ocument.body);
         let id, fn, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-id"))) p[setAttribute]("z-id", (id = ++ids));
@@ -503,6 +506,7 @@ const ZData = (() => {
             });
             return s1 + s + s2;
         });
+        if (args && $(qdata, el)[length]) $(qdata, el)[0][zargs] = args;
         for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
         if (fn) updating++;
         else startLater();
