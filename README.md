@@ -80,8 +80,10 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 
 临时地址:
 - 全功能  https://funlang.org/zdata/z-data.min.js
+- CDN    https://cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js
 或
 - 仅渲染  https://funlang.org/zdata/z-template.min.js
+- CDN    https://cdn.jsdelivr.net/gh/Funlang/z-template@main/dist/z-template.min.js
 
 * z-template 需用户执行 ZData.start(), z-data 不需要.
 
