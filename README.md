@@ -111,6 +111,14 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```html
     <tag z-data=... init=...>
     ````
+    变量本地化 (模块化)
+    ```html
+    <tag z-data=$xxx init=...></tag>
+
+    <script>
+      var $xxx = ...
+    </script>
+    ````
 
   - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
 

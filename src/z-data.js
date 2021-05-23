@@ -476,15 +476,18 @@ const ZData = (() => {
     let ids = 0;
     let loadHTML = (html, p, before, args) => {
         p || (p = $ocument.body);
-        let id, fn, el = $ocument[createEl](zdata);
+        let id, fn, name, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-id"))) p[setAttribute]("z-id", (id = ++ids));
-        id = "[z-id='" + id + "'] ";
         let fns = debounce(() => {
                 fn[forEach]((f) => f());
                 --updating < 0 ? (updating = 0) : 0, startLater();
             });
-        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")[replace](/<(script)([^>]*)>(.*?)<\/\1>/gis, ($0, $1, src, s) => {
-            let m = src.match(/src='([^']+)'|src="([^"]+)"|src=([^ ]+)/);
+        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")
+          [replace](/(z-data\s*=\s*)(?:(')(\$[\w]+)([^'\w]*')|(")(\$[\w]+)([^"\w]*")|(\$[\w]+)([^\s>\w]*[\s>]))/, ($0,$1,$2='',$3='',$4='',$5='',$6='',$7='',$8='',$9='') => {
+            name = $3 + $6 + $8;
+            return $1 + $2 + $5 + name + '_' + id + $4 + $7 + $9;
+        })[replace](/<(script)([^>]*)>(.*?)<\/\1>/gis, ($0, $1, src, s) => {
+            let m = src.match(/src\s*=\s*(?:'([^']+)'|"([^"]+)"|(\S+))/);
             src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
             if (!src && !s) return "";
             let e = $ocument[createEl]("script");
@@ -497,12 +500,12 @@ const ZData = (() => {
                 e.onload = fns;
                 e.onerror = () => (updating = 0);
                 fn = [];
-            } else e[textC] = s;
+            } else e[textC] = name ? s.replaceAll(name, name + '_' + id) : s;
             return "";
         })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/[test](names)) return names; // @keyframes
-                return split(names, /\s*,\s*/).map((n) => id + n).join(",");
+                return split(names, /\s*,\s*/).map((n) => "[z-id='" + id + "'] " + n).join(",");
             });
             return s1 + s + s2;
         });

@@ -1,4 +1,11 @@
 
+2021-05-23
+  cdn to jsdelivr
+  + script module supported
+    * loadHTML()
+      + z-data=$xxx -> z-data=$xxx_...
+      local names
+
 2021-05-22
   * z-comp
     + z-comp args
