@@ -1,4 +1,9 @@
 
+2021-05-25
+  * z-comp args
+    use args.xxx instead of xxx
+  * no log (for production environment)
+
 2021-05-23
   cdn to jsdelivr
   + script module supported

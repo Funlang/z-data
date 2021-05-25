@@ -339,6 +339,12 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ```html
     <tag z-comp=... args=...>
     ````
+    在组件内部, 用 args.xxx 来使用传进来的参数, 形如:
+    ```html
+    <div z-data @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''
+     #color=args.color #background=args.bgcolor !height=100% !padding=8px
+    ></div> 
+    ```
 
   - z-comp demo:
     * https://codepen.io/funlang/pen/ExZBPJL

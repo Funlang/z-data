@@ -96,7 +96,7 @@ const ZData = (() => {
             ZData.proxy = (v) => getProxy()(v, cb);
             zd = tryEval(el, el[getAttribute](zdata) || "{}", env);
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
-            if (el[zargs]) Obj_keys(el[zargs])[forEach]((k) => zd[k] = el[zargs][k]);
+            if (el[zargs]) zd[zargs] = el[zargs];
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
         init(true);
@@ -537,7 +537,7 @@ const ZData = (() => {
 
     let startLater = debounce(() => start(nil, 1));
     let start = (e, onlyObserve) => {
-        let l = log;
+        let l = nop;//log;
         l((_n_ = now()), onlyObserve || ++age, ++updating);
         stopObserve($ocument.body);
         $(qdata)[forEach]((el) => initComponent(el));
