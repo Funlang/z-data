@@ -1,4 +1,8 @@
 
+2021-05-26
+  + ::checked=opt==this.value
+    and add @change=this.checked&&(opt=this.value) automatically
+
 2021-05-25
   * z-comp args
     use args.xxx instead of xxx

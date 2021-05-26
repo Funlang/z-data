@@ -220,6 +220,13 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     目前有些属性如 style.value 修改, 不会自动触发响应式, 需要在当前执行 el 执行 el.fireChange()
     ```
 
+    - input type='radio'
+    ```
+    ::checked=opt==this.value
+
+    注: opt 是一个 data 内的属性变量名
+    ```
+
   - @ 用来绑定事件, 支持 modifiers
 
     * 全局 modifier

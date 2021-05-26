@@ -48,7 +48,7 @@ const ZData = (() => {
     const is_object = (obj, t = "object") => typeof obj == t;
     const is_function = (obj) => is_object(obj, "function");
     const con = console;
-    const log = con.log;
+    // const log = con.log;
     const now = Date.now;
     const nil = undefined;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
@@ -281,7 +281,7 @@ const ZData = (() => {
                 el[setAttribute]("z-d", cps);
             }
             let c = el.className, ocl;
-            if (c && is_object(c, 'string')) {
+            if (c && is_object(c, "string")) {
                 c = classNames[c] || (classNames[c] = split(c));
                 c[forEach]((name) => ((ocl || (ocl = {}))[name] = 1));
             }
@@ -336,7 +336,8 @@ const ZData = (() => {
                             if (ps.m[includes]("trim")) v += ".trim()";
                             if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
                         }
-                        ps.b2 = { ...ps, e: ps.e + "=" + v, k: event, ev: event, f: nil };
+                        v = /==/.test(ps.e) ? "this.checked&&(" + ps.e[replace](/==+/, "=") + ")" : ps.e + "=" + v
+                        ps.b2 = { ...ps, e: v, k: event, ev: event, f: nil };
                     }
                     setEvent(args, ps.b2, env);
                 }
@@ -425,8 +426,7 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                let f = newFun(exp, [...env.ks, "$el"], env.k + "$el", ps);
-                return f.call(e.target, env.d, ...el[_z_d][key], r);
+                return tryEval(e.target, exp, {d: env.d, ks: [...env.ks, "$el"], k: env.k + "$el", ps: [...el[_z_d][key], r]});
             };
             // debounce
             let i = ms.indexOf("debounce");
@@ -457,7 +457,7 @@ const ZData = (() => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(env.d);
-                return newFun(exp, env.ks, env.k, ps)(env.d, ...Obj_values(env.ps));
+                return newFun(exp, env.ks, env.k, ps).call(el, env.d, ...Obj_values(env.ps));
             },
             { el, exp }
         );
@@ -483,9 +483,9 @@ const ZData = (() => {
                 --updating < 0 ? (updating = 0) : 0, startLater();
             });
         el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")
-          [replace](/(z-data\s*=\s*)(?:(')(\$[\w]+)([^'\w]*')|(")(\$[\w]+)([^"\w]*")|(\$[\w]+)([^\s>\w]*[\s>]))/, ($0,$1,$2='',$3='',$4='',$5='',$6='',$7='',$8='',$9='') => {
+          [replace](/(z-data\s*=\s*)(?:(')(\$[\w]+)([^'\w]*')|(")(\$[\w]+)([^"\w]*")|(\$[\w]+)([^\s>\w]*[\s>]))/, ($0,$1,$2="",$3="",$4="",$5="",$6="",$7="",$8="",$9="") => {
             name = $3 + $6 + $8;
-            return $1 + $2 + $5 + name + '_' + id + $4 + $7 + $9;
+            return $1 + $2 + $5 + name + "_" + id + $4 + $7 + $9;
         })[replace](/<(script)([^>]*)>(.*?)<\/\1>/gis, ($0, $1, src, s) => {
             let m = src.match(/src\s*=\s*(?:'([^']+)'|"([^"]+)"|(\S+))/);
             src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
@@ -500,7 +500,7 @@ const ZData = (() => {
                 e.onload = fns;
                 e.onerror = () => (updating = 0);
                 fn = [];
-            } else e[textC] = name ? s.replaceAll(name, name + '_' + id) : s;
+            } else e[textC] = name ? s[replace](name, name + "_" + id) : s;
             return "";
         })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
