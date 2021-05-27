@@ -61,7 +61,7 @@ const ZData = (() => {
     let age = 0, cps = 0, _n_;
 
     let liteProxy = (obj, cb) => {
-        if (obj && is_object(obj) && !is_function(obj)) {
+        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
             } catch (e) {}
