@@ -1,4 +1,9 @@
 
+2021-05-28
+  * minor fixes
+    for debounce()
+    for z-data error in script
+
 2021-05-27
   * proxy to compatible with Vue
 

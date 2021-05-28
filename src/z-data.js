@@ -94,7 +94,7 @@ const ZData = (() => {
                 },
             };
             ZData.proxy = (v) => getProxy()(v, cb);
-            zd = tryEval(el, el[getAttribute](zdata) || "{}", env);
+            zd = tryEval(el, el[getAttribute](zdata) || 0, env) || {};
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
             if (el[zargs]) zd[zargs] = el[zargs];
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
@@ -393,7 +393,7 @@ const ZData = (() => {
                 timer = nil;
                 fn.apply(me, args);
             };
-            ms || (timer = clearTimeout(timer));
+            ms && (timer = clearTimeout(timer));
             timer || (timer = setTimeout(ifn, ms));
         };
     };
