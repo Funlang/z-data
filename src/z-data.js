@@ -482,11 +482,11 @@ const ZData = (() => {
                 fn[forEach]((f) => f());
                 --updating < 0 ? (updating = 0) : 0, startLater();
             });
-        el[attrMaps["html"]] = html[replace](/<!--.*?-->/gs, "")
+        el[attrMaps["html"]] = html[replace](/<!--[^]*?-->/g, "")
           [replace](/(z-data\s*=\s*)(?:(')(\$[\w]+)([^'\w]*')|(")(\$[\w]+)([^"\w]*")|(\$[\w]+)([^\s>\w]*[\s>]))/, ($0,$1,$2="",$3="",$4="",$5="",$6="",$7="",$8="",$9="") => {
             name = $3 + $6 + $8;
             return $1 + $2 + $5 + name + "_" + id + $4 + $7 + $9;
-        })[replace](/<(script)([^>]*)>(.*?)<\/\1>/gis, ($0, $1, src, s) => {
+        })[replace](/<(script)([^>]*)>([^]*?)<\/\1>/gi, ($0, $1, src, s) => {
             let m = src.match(/src\s*=\s*(?:'([^']+)'|"([^"]+)"|(\S+))/);
             src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
             if (!src && !s) return "";
@@ -502,7 +502,7 @@ const ZData = (() => {
                 fn = [];
             } else e[textC] = name ? s[replace](name, name + "_" + id) : s;
             return "";
-        })[replace](/(<(style)[^>]*>)(.+?)(<\/\2>)/gis, ($0, s1, $2, s, s2) => {
+        })[replace](/(<(style)[^>]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/[test](names)) return names; // @keyframes
                 return split(names, /\s*,\s*/).map((n) => "[z-id='" + id + "'] " + n).join(",");

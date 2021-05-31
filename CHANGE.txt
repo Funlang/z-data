@@ -1,4 +1,8 @@
 
+2021-05-31
+  * browser compatible test and fixes
+    Chrome 61+, Firefox 55+, Opera 48+
+
 2021-05-28
   * minor fixes
     for debounce()
