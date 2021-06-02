@@ -361,6 +361,10 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
 
 Chrome 61+, Firefox 55+, Opera 48+
 
+  - Polyfill.js 之后 (Element.prototype.getAttributeNames)
+
+    Chrome 60+, Firefox 55+, Opera 47+
+
 ## 加入我们
 
 欢迎加入 z-data 项目, 一起工作, Enjoy!

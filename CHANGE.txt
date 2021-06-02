@@ -1,4 +1,10 @@
 
+2021-06-01
+  * browser compatible test and fixes
+    Chrome 61+, Firefox 55+, Opera 48+
+    - Polyfill.js 之后 (Element.prototype.getAttributeNames)
+      Chrome 60+, Firefox 55+, Opera 47+
+
 2021-05-31
   * browser compatible test and fixes
     Chrome 61+, Firefox 55+, Opera 48+

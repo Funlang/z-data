@@ -3,45 +3,42 @@ const ZData = (() => {
     const zdata = "z-data";
     const znone = "z-none";
     const zcomp = "z-comp";
-    const qdata = `[${zdata}]`;
-    const qnone = `[${znone}]`;
     const zinit = "init";
     const zargs = "args";
     const zfor = "for";
     const zkey = "key";
     const zif = "if";
     const zelse = "else";
-    const ttribute = "ttribute";
-    const attributes = `a${ttribute}s`;
-    const getAttribute = `getA${ttribute}`;
-    const setAttribute = `setA${ttribute}`;
-    const getAttributeNames = `${getAttribute}Names`;
+    const qdata = `[${zdata}]`;
+    const etAttribute = "etAttribute";
     const Element = "Element";
     const ElementSibling = `${Element}Sibling`;
     const ElementChild = `${Element}Child`;
+    const getAttribute = `g${etAttribute}`;
+    const setAttribute = `s${etAttribute}`;
     const firstEL = `first${ElementChild}`;
     const lastEL = `last${ElementChild}`;
     const prevEL = `previous${ElementSibling}`;
     const nextEL = `next${ElementSibling}`;
-    const parentEL = `parent${Element}`;
+    const createEl = `create${Element}`;
     const insert = "insertBefore";
+    const nexT = "next";
+    const last = "last";
+    const _z_d = "_z_d";
     const forEach = "forEach";
     const includes = "includes";
     const length = "length";
     const startsWith = "startsWith";
     const split = (s, d = / +/) => s.trim().split(d);
-    const textC = "textContent";
     const replace = "replace";
-    const last = "last";
-    const _z_d = "_z_d";
+    const test = "test";
+    const textC = "textContent";
     const input = "input";
     const change = "change";
-    const test = "test";
     const c_lass = "class";
     const s_tyle = "style";
     const $ocument = document;
     const $ = (selector, el = $ocument) => el.querySelectorAll(selector);
-    const createEl = "createElement";
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
@@ -78,7 +75,7 @@ const ZData = (() => {
         // log(now(), `${zdata} component`, age, now() - _n_, el);
         let init = (self) => {
             updating++, stopObserve($ocument.body);
-            goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd }, self || age);
+            goAnode({ r: el, p: el.parentElement, el }, { ...env, d: el[_z_d].zd }, self || age);
             updating--, observe($ocument.body);
         };
         let initLater = debounce(init);
@@ -107,7 +104,7 @@ const ZData = (() => {
     let goAnode = (args, env, self) => {
         let { p, el } = args, nc;
         let zd = el[_z_d] || (el[_z_d] = {});
-        let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el[getAttributeNames]());
+        let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el.getAttributeNames());
         if (attrs[includes](znone)) return;
 
         if (!args.cp) {
@@ -139,18 +136,18 @@ const ZData = (() => {
     };
 
     let goNodes = (args, env, cbIf, cbDo) => {
-        for (; args.el && (!cbIf || cbIf(args) !== false); args.el = args.next) {
-            args.next = args.el[nextEL];
+        for (; args.el && (!cbIf || cbIf(args) !== false); args.el = args[nexT]) {
+            args[nexT] = args.el[nextEL];
             if (!cbDo || cbDo(args, env) === true) goAnode(args, env);
         }
     };
 
-    let isElse = ({ el }) => !!el[attributes][zelse];
+    let isElse = ({ el }) => el.hasAttribute(zelse);
     let nop = () => {};
     let goIf = (args, exp, env) => {
         let { p, el } = args;
         if (!exp || tryEval(el, exp, env)) {
-            let next = args.next;
+            let next = args[nexT];
             if (el[_z_d][last]) {
                 args.el = next;
                 next = el[_z_d][last][nextEL];
@@ -181,7 +178,7 @@ const ZData = (() => {
         if (args.el[_z_d] && args.el[_z_d][last]) {
             let next = args.el[_z_d][last][nextEL];
             args.el[_z_d][last] = nil;
-            args.el = args.next;
+            args.el = args[nexT];
             remove(args, next, env);
         }
     };
@@ -233,7 +230,7 @@ const ZData = (() => {
                     args.el = next;
                     next = next[_z_d][last][nextEL];
                     goNodes(args, env2, ({ el }) => el != next, nop);
-                    moveable = curNode.head != (next = args.next);
+                    moveable = curNode.head != (next = args[nexT]);
                 }
                 args.el = curNode.head;
                 args.el[_z_d].skip = 0;
@@ -245,7 +242,7 @@ const ZData = (() => {
                         return true;
                     }
                 );
-                moveable ? (args.next = next) : (next = args.next);
+                moveable ? (args[nexT] = next) : (next = args[nexT]);
                 curNode.age = age;
             } else {
                 args.el = el;
@@ -263,7 +260,7 @@ const ZData = (() => {
                 remove({ el: keys[k].head }, keys[k][last][nextEL], env);
                 delete keys[k];
             });
-        args.next = cur[nextEL];
+        args[nexT] = cur[nextEL];
     };
 
     let toCamel = (name) => name[replace](re_2camel, (m, c) => c.toUpperCase());
@@ -525,7 +522,7 @@ const ZData = (() => {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
                         for (let i = 0, t; i < ms[length]; i++) {
-                            ignore = ignore && ((t = ms[i].target).closest(qnone) || !t.closest(qdata) && !t.querySelector(qdata));
+                            ignore = ignore && ((t = ms[i].target).closest(`[${znone}]`) || !t.closest(qdata) && !t.querySelector(qdata));
                         }
                         if (ignore) return;
                     }
