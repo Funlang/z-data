@@ -1,4 +1,12 @@
 
+2021-06-03
+  * fix bug - if in for
+    in if
+      rename .last -> .fi
+    in for
+      rename .head -> .from
+      rename .last -> .to
+
 2021-06-01
   * browser compatible test and fixes
     Chrome 61+, Firefox 55+, Opera 48+

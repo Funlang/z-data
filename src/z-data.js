@@ -23,7 +23,6 @@ const ZData = (() => {
     const createEl = `create${Element}`;
     const insert = "insertBefore";
     const nexT = "next";
-    const last = "last";
     const _z_d = "_z_d";
     const forEach = "forEach";
     const includes = "includes";
@@ -31,7 +30,6 @@ const ZData = (() => {
     const startsWith = "startsWith";
     const split = (s, d = / +/) => s.trim().split(d);
     const replace = "replace";
-    const test = "test";
     const textC = "textContent";
     const input = "input";
     const change = "change";
@@ -45,7 +43,6 @@ const ZData = (() => {
     const is_object = (obj, t = "object") => typeof obj == t;
     const is_function = (obj) => is_object(obj, "function");
     const con = console;
-    // const log = con.log;
     const now = Date.now;
     const nil = undefined;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
@@ -72,7 +69,6 @@ const ZData = (() => {
         (el[_z_d] || (el[_z_d] = {})).age = age;
         el[_z_d].ing = (el[_z_d].ing || 0) + 1;
         env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
-        // log(now(), `${zdata} component`, age, now() - _n_, el);
         let init = (self) => {
             updating++, stopObserve($ocument.body);
             goAnode({ r: el, p: el.parentElement, el }, { ...env, d: el[_z_d].zd }, self || age);
@@ -112,8 +108,8 @@ const ZData = (() => {
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
             else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
                 try {
-                    if (/^([.\/]|https?:)/[test](exp)) res = fetch(exp).then((res) => res.text());
-                    else if (/^z:/[test](exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
+                    if (/^([.\/]|https?:)/.test(exp)) res = fetch(exp).then((res) => res.text());
+                    else if (/^z:/.test(exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
@@ -148,9 +144,9 @@ const ZData = (() => {
         let { p, el } = args;
         if (!exp || tryEval(el, exp, env)) {
             let next = args[nexT];
-            if (el[_z_d][last]) {
+            if (el[_z_d].fi) {
                 args.el = next;
-                next = el[_z_d][last][nextEL];
+                next = el[_z_d].fi[nextEL];
                 goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, nop);
             } else {
@@ -159,7 +155,7 @@ const ZData = (() => {
                 goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, fold);
             }
-            el[_z_d][last] = next ? next[prevEL] : p[lastEL];
+            el[_z_d].fi = next ? next[prevEL] : p[lastEL];
         } else fold(args, env);
     };
 
@@ -175,9 +171,9 @@ const ZData = (() => {
     };
 
     let fold = (args, env) => {
-        if (args.el[_z_d] && args.el[_z_d][last]) {
-            let next = args.el[_z_d][last][nextEL];
-            args.el[_z_d][last] = nil;
+        if (args.el[_z_d] && args.el[_z_d].fi) {
+            let next = args.el[_z_d].fi[nextEL];
+            args.el[_z_d].fi = nil;
             args.el = args[nexT];
             remove(args, next, env);
         }
@@ -223,16 +219,16 @@ const ZData = (() => {
             let next = cur[nextEL];
             let curNode = keys[key];
             if (curNode) {
-                let lastNext = curNode[last][nextEL];
-                let moveable = curNode.head != next;
-                if (moveable && next && !curNode.head[_z_d].skip) {
+                let lastNext = curNode.to[nextEL];
+                let moveable = curNode.from != next;
+                if (moveable && next && !curNode.from[_z_d].skip) {
                     next[_z_d].skip = 1;
                     args.el = next;
-                    next = next[_z_d][last][nextEL];
+                    next = next[_z_d].to[nextEL];
                     goNodes(args, env2, ({ el }) => el != next, nop);
-                    moveable = curNode.head != (next = args[nexT]);
+                    moveable = curNode.from != (next = args[nexT]);
                 }
-                args.el = curNode.head;
+                args.el = curNode.from;
                 args.el[_z_d].skip = 0;
                 goNodes(
                     args, env2,
@@ -248,16 +244,16 @@ const ZData = (() => {
                 args.el = el;
                 expand(args);
                 args.el = cur[nextEL];
-                curNode = keys[key] = { age, head: args.el };
+                curNode = keys[key] = { age, from: args.el };
                 goNodes(args, env2, ({ el }) => el != next);
             }
-            curNode.head[_z_d][last] = curNode[last] = cur = next ? next[prevEL] : p[lastEL];
+            curNode.from[_z_d].to = curNode.to = cur = next ? next[prevEL] : p[lastEL];
         }
         // remove ...
         Obj_keys(keys)
             .filter((k) => keys[k].age != age)
             [forEach]((k) => {
-                remove({ el: keys[k].head }, keys[k][last][nextEL], env);
+                remove({ el: keys[k].from }, keys[k].to[nextEL], env);
                 delete keys[k];
             });
         args[nexT] = cur[nextEL];
@@ -284,7 +280,7 @@ const ZData = (() => {
             }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
-                if (!re_bind[test](a) && !$e_text(v)) return;
+                if (!re_bind.test(a) && !$e_text(v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
                 let k = ms[4] ? (ms[4] != "." || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
                 k = attrMaps[k] ? attrMaps[k] : k;
@@ -411,7 +407,7 @@ const ZData = (() => {
                             if (!key || !e[key + "Key"]) return;
                         }
                     }
-                    let keys = ms.filter((m) => !re_modifiers[test](m));
+                    let keys = ms.filter((m) => !re_modifiers.test(m));
                     if (keys[length] == 1) {
                         if (name[startsWith]("key")) {
                             let key = keys[0][replace](re_kebab, "");
@@ -501,7 +497,7 @@ const ZData = (() => {
             return "";
         })[replace](/(<(style)[^>]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
-                if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/[test](names)) return names; // @keyframes
+                if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/.test(names)) return names; // @keyframes
                 return split(names, /\s*,\s*/).map((n) => "[z-id='" + id + "'] " + n).join(",");
             });
             return s1 + s + s2;
@@ -534,7 +530,7 @@ const ZData = (() => {
 
     let startLater = debounce(() => start(nil, 1));
     let start = (e, onlyObserve) => {
-        let l = nop;//log;
+        let l = nop;//con.log;
         l((_n_ = now()), onlyObserve || ++age, ++updating);
         stopObserve($ocument.body);
         $(qdata)[forEach]((el) => initComponent(el));
