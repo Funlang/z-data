@@ -1,4 +1,8 @@
 
+2021-06-04
+  * proxy
+    detect proxy via cb.id and DONT new Proxy duplicate again !!!
+
 2021-06-03
   * fix bug - if in for
     in if

@@ -1,4 +1,4 @@
-"use strict"; // Copyright (c) 2021 zwd@funlang.org
+// Copyright (c) 2021 zwd@funlang.org
 const ZData = (() => {
     const zdata = "z-data";
     const znone = "z-none";
@@ -55,7 +55,7 @@ const ZData = (() => {
     let age = 0, cps = 0, _n_;
 
     let liteProxy = (obj, cb) => {
-        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__) {
+        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && (delete obj[cb.id])) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
             } catch (e) {}
@@ -78,13 +78,17 @@ const ZData = (() => {
         let zd = el[_z_d].zd;
         if (!zd) {
             let cb = {
-                set: (obj, prop, value, rec, zdataproxy) => {
+                id: _z_d + now(),
+                set(obj, prop, value, rec, zdataproxy) {
                     initLater();
                     try {
                         if (!zdataproxy) obj[prop] = getProxy()(value, cb);
                     } catch (e) {}
                     return true;
                 },
+                deleteProperty(obj, prop) {
+                    return prop != this.id && delete obj[prop];
+                }
             };
             ZData.proxy = (v) => getProxy()(v, cb);
             zd = tryEval(el, el[getAttribute](zdata) || 0, env) || {};
