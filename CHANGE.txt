@@ -2,6 +2,9 @@
 2021-06-04
   * proxy
     detect proxy via cb.id and DONT new Proxy duplicate again !!!
+  * key in for
+    support [{name: 'key1', ...}] and {key1: {...}} both
+      key=/^\d*$/.test(k)?field.name:k
 
 2021-06-03
   * fix bug - if in for

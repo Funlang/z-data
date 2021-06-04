@@ -219,6 +219,7 @@ const ZData = (() => {
             if (kvi.i) env2.ps[kvi.i] = i++;
             let key = id ? v[id] : akey ? tryEval(el, akey, env2) : kvi.k ? k : v;
             if (key === nil) continue; // key MUST BE !!!
+            if (kvi.k) env2.ps[kvi.k] = key;
 
             let next = cur[nextEL];
             let curNode = keys[key];
