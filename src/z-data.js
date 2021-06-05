@@ -379,7 +379,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            el[ps.k] = value; // el[setAttribute](ps.k, value);
+            ps.m && ps.m[includes]("attr") ? el[setAttribute](ps.k, value) : el[ps.k] = value;
         }
     };
 

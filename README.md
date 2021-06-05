@@ -207,6 +207,8 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     ! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
     ```
 
+  - :attr.attr 表示为可使 attribute 属性, 否则默认为不可见 prop 属性
+
   - :attr.camel 支持驼峰表示法
 
   - ::value=propName, ::style.value=propName, ::css.value=propName
