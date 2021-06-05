@@ -1,0 +1,91 @@
+.mui-number-range {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    visibility: hidden;
+}
+
+.mui-textfield:hover .mui-number-range {
+    visibility: visible;
+}
+
+.mui-color-edit {
+    position: absolute;
+    top: 20px;
+    right: 3px;
+    width: calc(100% - 28px);
+    height: 21px;
+    text-align: center;
+    padding: 0;
+    border: 0;
+    outline: 0;
+}
+
+.mui-multi-cols {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -8px;
+}
+
+.mui-multi-cols .mui-textfield {
+    flex-grow: 1;
+}
+
+input[type='checkbox'].mui-checkable {
+    margin-right: 2px;
+    height: 8px;
+    outline: 0;
+}
+
+.mui-textfield[mui-disabled='true'] {
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
+.mui-textfield[mui-disabled='true'] :not(label,input[type='checkbox']) {
+    pointer-events: none;
+}
+
+.mui-textfield input[type='number'] {
+    max-width: 60px;
+    min-width: 100%;
+    width: 100%;
+}
+
+.mui-textfield input[type='color'] {
+    min-width: 40px;
+}
+
+.mui-textfield textarea {
+    resize: vertical;
+}
+
+.mui-textfield.full {
+    width: 100%;
+}
+
+.mui-textfield, .mui-select, .mui-checkbox, .mui-checkbox+.mui-checkbox, .mui-radio {
+    margin: 8px 4px;
+}
+
+.mui-form {
+    background: #f8f8f8;
+    padding: 8px 4px;
+}
+
+.mui-textfield:hover input,
+.mui-textfield:hover textarea {
+    background: #fff;
+}
+
+.mui-textfield--float-label label {
+    pointer-events: unset;
+    cursor: unset;
+}
+
+.mui-form label:hover {
+    color: #000e !important;
+    text-shadow: 0 0 4px #ccc;
+}
