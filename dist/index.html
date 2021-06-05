@@ -68,7 +68,7 @@
 
 <body>
     <main z-data="app()" !display=flex !flex-direction=column !height=100% !gap=1px>
-        <button @click=run() !position=absolute !bottom=0 #display.none=top==window>run</button>
+        <button @click=run() !position=absolute !bottom=2px !left=2px !z-index=1 #display.none=top==window>run</button>
         <div !background-color=#f4f4f4 !color=#555 !box-shadow="2px 0 4px #aaa" !padding=6px #display.none=top!=window>
             <a href=https://funlang.org/z-data/ title="z-data" !display=inline-block !height=36px !width=100px
                 !margin='-12px 0' !background="url('https://funlang.org/z-data/z-data.svg') left/cover">
