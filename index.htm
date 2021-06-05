@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>z-data studio</title>
+    <meta name="author" content="Wisdom ZHANG" />
+    <meta name="description" content="z-data studio, to develop, debug and preview z-data apps and components">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <base href="./dist/">
+    <link rel="stylesheet" href="./res/style.css">
+    <style>
+        #fullscreen {
+            background: linear-gradient(to left, black, black) left top no-repeat,
+                linear-gradient(to bottom, black, black) left top no-repeat,
+                linear-gradient(to left, black, black) right top no-repeat,
+                linear-gradient(to bottom, black, black) right top no-repeat,
+                linear-gradient(to left, black, black) left bottom no-repeat,
+                linear-gradient(to bottom, black, black) left bottom no-repeat,
+                linear-gradient(to left, black, black) right bottom no-repeat,
+                linear-gradient(to left, black, black) right bottom no-repeat;
+            background-size: 2px 5px, 5px 2px, 2px 5px, 5px 2px;
+        }
+
+        button {
+            cursor: pointer;
+            color: #555;
+            padding: 3.5px 10.5px;
+            border: 1px outset transparent;
+            border-radius: 25%;
+            font-size: 105%;
+            outline: none;
+        }
+
+        button:hover {
+            color: #111;
+            border: 1px outset #fff;
+            background-color: #f8f8f8;
+        }
+
+        button:active {
+            border-style: inset;
+        }
+
+        @media only screen and (max-width: 1024px) {
+            * {
+                font-size: 1.1em;
+            }
+
+            #fullscreen {
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            * {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="./res/split.css">
+    <script src="./res/split.js"></script>
+    <script src="./res/uglifyjs.js"></script>
+    <script src="./res/polyfill.js"></script>
+    <!-- <script src="../src/z-data.js"></script> -->
+    <script src="./z-data.min.js"></script>
+    <script src="./z-minifier.min.js"></script>
+</head>
+
+<body title="?url=URL or ?[html=]HTML or ?:clipboard:">
+    <main z-data="app()" !display=flex !flex-direction=column !height=100% !gap=1px>
+        <button @click=run() !position=absolute !bottom=2px !left=2px !z-index=1 #display.none=top==window
+            title="f9 to run">run</button>
+        <div !background-color=#f4f4f4 !color=#555 !box-shadow="2px 0 4px #aaa" !padding=6px #display.none=top!=window>
+            <a href=https://funlang.org/z-data/ title="z-data logo" !display=inline-block !height=36px !width=100px
+                !margin='-12px 0' !background="url('https://funlang.org/z-data/z-data.svg') left/cover">
+            </a>
+            <button @click=runDemo() title="new a z-data comp">new</button>
+            <button @click=minify() title="minify the html/css/js">minify</button>
+            <button @click=save() title="save to localStorage">save</button>
+            <button @click=run() title="run the z-data app" @keyup.f9.document=run()>run
+                <u !font-size=75%>[F9]</u></button>
+            <c !font-size=80%>|</c>
+            <button @click=demo() title="open the built-in demos">demo <u :text=demo1?1:2 !font-size=75%></u></button>
+            <c z-data !color=#aaa !margin-left=8px !font-size=80%
+                @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''></c>
+            <a href=https://github.com/Funlang/z-data target=_blank title="GitHub Repo" !float=right !margin=4px>
+                <svg z-none height=16 width=16 viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                </svg>
+            </a>
+            <b id=fullscreen !float=right !width=14px !height=14px !margin=6px !cursor=pointer @click=fullScreen()
+                title="Full screen for the preview panel"></b>
+        </div>
+        <div !display=flex #flex-grow=1 !gap=0 !overflow-y=hidden data-flex-splitter-horizontal
+            @keyup.alt.z=toggleWrap()
+            @beforeunload.window=window.fromclipboard&&navigator.clipboard.writeText(editor.getValue())>
+            <div !width=32px !background-color=#f4f4f4 !box-shadow="2px 0 4px #aaa" #display.none=top!=window>
+            </div>
+            <div z-none id="editor" style="border:1px solid #ccc; flex-grow: 1; flex-shrink: 1; overflow: hidden;"
+                title="edit the code, f9 to run, f12 and debugger to debug">
+            </div>
+            <div role="separator" title="resize the panels"></div>
+            <iframe id="preview" src=./preview.html #flex-grow=1 !flex-shrink=1 !overflow-y=hidden !width=55%
+                !font-family=consolas !border=0 title="run the z-data app in this preview panel">
+            </iframe>
+        </div>
+    </main>
+
+    <z- z-none>
+        <script src="./res/moloader.min.js"></script>
+        <script>
+            window.$ = (selector) => document.querySelector(selector);
+            require.config({
+                paths: {
+                    'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs'
+                }
+            });
+            require(['vs/editor/editor.main'], function () {
+                window.editor = monaco.editor.create($('#editor'), {
+                    value: '', language: 'html', automaticLayout: true, wordWrap: 'off',
+                    formatOnType: false, formatOnPaste: false
+                });
+                try {
+                    let html = document.location.href.match(/(\?)(?:(?:(url)|html)=)?(.+)$/)
+                    if (html) {
+                        if (html[2]) fetch(window.unescape(html[3])).then(res => res.text()).then(v => editor.setValue(v));
+                        else if (window.fromclipboard = html[3] == ':clipboard:') {
+                            let fn = () => {
+                                try {
+                                    navigator.clipboard.readText().then(v => editor.setValue(v));
+                                } catch (e) {
+                                    setTimeout(fn, 1000)
+                                };
+                            }
+                            fn();
+                        } else editor.setValue(window.unescape(html[3]));
+                    }
+                } catch (e) { }
+            });
+
+            window.db = {
+                dbs: localStorage.getItem('dbs') ? JSON.parse(localStorage.getItem('dbs')) : {},
+                save(id, data) {
+                    this.dbs[id] = data;
+                    localStorage.setItem('dbs', JSON.stringify(this.dbs));
+                },
+                get(id) {
+                    return this.dbs[id];
+                },
+                ids() {
+                    return Object.keys(this.dbs);
+                }
+            }
+
+            window.app = () => {
+                return ZData.proxy({
+                    example: `
+<template z-data>
+  <style>
+    * { font-size: 24px }
+  </style>
+  <div !padding=4px !color=#05f>
+    z-data component demo
+  </div>
+  <z-
+   z-comp=https://funlang.org/zdata/test/z-cats-3.html
+  ></z->
+</template>
+`,
+                    demo1: true,
+                    demo() {
+                        if (this.demo1) {
+                            fetch(this.example.match(/https:[^ ]+/)[0]).then(res => res.text()).then(html => {
+                                this.runDemo(html);
+                            })
+                        } else {
+                            this.runDemo(this.example);
+                        }
+                        this.demo1 = !this.demo1;
+                    },
+                    runDemo(html) {
+                        html = html || `<!@id: demo-1>
+<!@name: a demo>
+<!@desc: a demo sample>
+<!@tags: z-data, demo>
+<!@author: author>
+<!@copyright: copyright>
+
+`;
+                        editor.setValue(html);
+                        this.run(html);
+                    },
+                    run(html) {
+                        let p = $('#preview').contentDocument.body;
+                        p.innerHTML = '';
+                        if (p.shadowRoot) p.shadowRoot.innerHTML = '';
+                        html = html || editor.getValue();
+                        $('#preview').contentWindow.ZData.loadHTML(html, p);
+                    },
+                    minify() {
+                        let p = $('#preview').contentDocument.body;
+                        let e = document.createElement('z-temp');
+                        let s, m, set = {};
+                        e.innerHTML = s = editor.getValue();
+                        p.innerText = m = window.minify(e, set);
+                        p.title = `source: ${s.length}, minify: ${m.length} (${m.length / s.length * 100 >> 0}%)\n${JSON.stringify(set, undefined, 2)}`;
+                    },
+                    save() {
+                        let s, m, set = {};
+                        s = editor.getValue();
+                        m = window.minify(s, set);
+                        db.save(set.id, { set, code: s, mini: m });
+                    },
+                    toggleWrap() {
+                        editor.updateOptions({ wordWrap: this.wrap ? 'on' : 'off' })
+                        this.wrap = !this.wrap;
+                    },
+                    fullScreen() {
+                        let p = $('#preview');
+                        if (!document.fullscreenElement) p.requestFullscreen();
+                        else document.exitFullscreen();
+                    },
+                })
+            }
+        </script>
+    </z->
+</body>
+
+</html>
