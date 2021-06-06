@@ -6,6 +6,7 @@
     <meta name="author" content="Wisdom ZHANG" />
     <meta name="description" content="z-data studio, to develop, debug and preview z-data apps and components">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <base href="https://funlang.github.io/z-data/dist/">
     <link rel="stylesheet" href="./res/style.css">
     <style>
         #fullscreen {
@@ -66,19 +67,23 @@
     <script src="./z-minifier.min.js"></script>
 </head>
 
-<body>
+<body title="?url=URL or ?[html=]HTML or ?:clipboard:">
     <main z-data="app()" !display=flex !flex-direction=column !height=100% !gap=1px>
-        <button @click=run() !position=absolute !bottom=2px !left=2px !z-index=1 #display.none=top==window>run</button>
+        <button @click=run() !position=absolute !bottom=2px !left=2px !z-index=1 #display.none=top==window
+            title="f9 to run">run <u !font-size=75%>[F9]</u></button>
         <div !background-color=#f4f4f4 !color=#555 !box-shadow="2px 0 4px #aaa" !padding=6px #display.none=top!=window>
-            <a href=https://funlang.org/z-data/ title="z-data" !display=inline-block !height=36px !width=100px
+            <a href=https://funlang.org/z-data/ title="z-data logo" !display=inline-block !height=36px !width=100px
                 !margin='-12px 0' !background="url('https://funlang.org/z-data/z-data.svg') left/cover">
             </a>
-            <button @click=runDemo()>new</button>
-            <button @click=minify()>minify</button>
-            <button @click=save()>save</button>
-            <button @click=run() @keyup.f9.document=run()>run <u !font-size=75%>[F9]</u></button>
+            <button @click=runDemo() title="new a z-data comp">new</button>
+            <button @click=minify() title="minify the html/css/js">minify</button>
+            <button @click=save() title="save to localStorage">save</button>
+            <button @click=run() title="run the z-data app" @keyup.f9.document=run()>run
+                <u !font-size=75%>[F9]</u></button>
             <c !font-size=80%>|</c>
-            <button @click=demo()>demo <u :text=demo1?1:2 !font-size=75%></u></button>
+            <button @click=demo() title="open the built-in demos">demo <u :text=demo1?1:2 !font-size=75%></u></button>
+            <c z-data !color=#aaa !margin-left=8px !font-size=80%
+                @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''></c>
             <a href=https://github.com/Funlang/z-data target=_blank title="GitHub Repo" !float=right !margin=4px>
                 <svg z-none height=16 width=16 viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -87,18 +92,19 @@
                 </svg>
             </a>
             <b id=fullscreen !float=right !width=14px !height=14px !margin=6px !cursor=pointer @click=fullScreen()
-                title="Full screen"></b>
+                title="Full screen for the preview panel"></b>
         </div>
         <div !display=flex #flex-grow=1 !gap=0 !overflow-y=hidden data-flex-splitter-horizontal
             @keyup.alt.z=toggleWrap()
             @beforeunload.window=window.fromclipboard&&navigator.clipboard.writeText(editor.getValue())>
             <div !width=32px !background-color=#f4f4f4 !box-shadow="2px 0 4px #aaa" #display.none=top!=window>
             </div>
-            <div z-none id="editor" style="border:1px solid #ccc; flex-grow: 1; flex-shrink: 1; overflow: hidden;">
+            <div z-none id="editor" style="border:1px solid #ccc; flex-grow: 1; flex-shrink: 1; overflow: hidden;"
+                title="edit the code, f9 to run, f12 and debugger to debug">
             </div>
-            <div role="separator"></div>
+            <div role="separator" title="resize the panels"></div>
             <iframe id="preview" src=./preview.html #flex-grow=1 !flex-shrink=1 !overflow-y=hidden !width=55%
-                !font-family=consolas !border=0>
+                !font-family=consolas !border=0 title="run the z-data app in this preview panel">
             </iframe>
         </div>
     </main>
