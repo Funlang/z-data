@@ -65,6 +65,10 @@
     <!-- <script src="../src/z-data.js"></script> -->
     <script src="./z-data.min.js"></script>
     <script src="./z-minifier.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.13.13/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.13.13/beautify-css.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.13.13/beautify-html.min.js"></script> -->
+    <script src="https://beautifytools.com/js/js-beautify/js/lib/beautify-html.js"></script>
 </head>
 
 <body title="?url=URL or ?[html=]HTML or ?:clipboard:">
@@ -76,8 +80,11 @@
                 !margin='-12px 0' !background="url('https://funlang.org/z-data/z-data.svg') left/cover">
             </a>
             <button @click=runDemo() title="new a z-data comp">new</button>
+            <button @click=format() title="[F8] format the html/css/js" @keyup.f8.document=format()>format
+                <u !font-size=75%>[F8]</u></button>
             <button @click=minify() title="minify the html/css/js">minify</button>
-            <button @click=save() title="save to localStorage">save</button>
+            <button @click=save() title="[Ctrl-S] save to localStorage"
+                @keydown.ctrl.s.document.stop.prevent=save()>save</button>
             <button @click=run() title="run the z-data app" @keyup.f9.document=run()>run
                 <u !font-size=75%>[F9]</u></button>
             <c !font-size=80%>|</c>
@@ -191,6 +198,8 @@
 
 `;
                         editor.setValue(html);
+                        editor.setScrollLeft(0);
+                        editor.setScrollTop(0);
                         this.run(html);
                     },
                     run(html) {
@@ -199,6 +208,11 @@
                         if (p.shadowRoot) p.shadowRoot.innerHTML = '';
                         html = html || editor.getValue();
                         $('#preview').contentWindow.ZData.loadHTML(html, p);
+                    },
+                    format() {
+                        editor.setValue(html_beautify(editor.getValue()));
+                        editor.setScrollLeft(0);
+                        editor.setScrollTop(0);
                     },
                     minify() {
                         let p = $('#preview').contentDocument.body;
