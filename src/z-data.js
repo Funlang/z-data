@@ -374,7 +374,7 @@ const ZData = (() => {
                 if (is_object(value)) {
                     Obj_keys(value)[forEach]((name) => {
                         if (value[name] === false) el[s_tyle].removeProperty(name);
-                        else el[s_tyle][name] = value[name];
+                        else name[0] == "-" ? el[s_tyle].setProperty(name, value[name]) : el[s_tyle][name] = value[name];
                     });
                     return;
                 }
