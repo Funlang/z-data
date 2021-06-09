@@ -117,8 +117,16 @@
     </main>
 
     <z- z-none>
-        <script src="./res/moloader.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+        <!-- <script src="./res/html.min.js"></script> -->
         <script>
+            HTMLScriptElement.prototype.setAttribute = (() => {
+                let f = Element.prototype.setAttribute;
+                return function (name, value) {
+                    if (name == 'src' && /\/monaco-editor.*?html\.js$/.test(value)) value = "./res/html.min.js";
+                    f.call(this, name, value);
+                }
+            })()
             window.$ = (selector) => document.querySelector(selector);
             require.config({
                 paths: {
@@ -139,7 +147,7 @@
                                 try {
                                     navigator.clipboard.readText().then(v => editor.setValue(v));
                                 } catch (e) {
-                                    setTimeout(fn, 1000)
+                                    setTimeout(fn, 1000);
                                 };
                             }
                             fn();
@@ -204,18 +212,23 @@
                     },
                     run(html) {
                         let p = $('#preview').contentDocument.body;
+                        p.removeAttribute('minify');
                         p.innerHTML = '';
                         if (p.shadowRoot) p.shadowRoot.innerHTML = '';
                         html = html || editor.getValue();
                         $('#preview').contentWindow.ZData.loadHTML(html, p);
                     },
                     format() {
-                        editor.setValue(html_beautify(editor.getValue()));
+                        let html = editor.getValue().replace(/\b(z-data=')([^']+)(')/g, ($0, $1, $2, $3) => $1 + js_beautify($2) + $3)
+                            .replace(/\b(z-data=")([^"]+)(")/g, ($0, $1, $2, $3) => $1 + js_beautify($2) + $3)
+                            .replace(/\b(z-data=)([^'"](?:[^'\s>]+|"[^"]")+)/g, ($0, $1, $2) => $1 + "'" + js_beautify($2) + "'");
+                        editor.setValue(html_beautify(html));
                         editor.setScrollLeft(0);
                         editor.setScrollTop(0);
                     },
                     minify() {
                         let p = $('#preview').contentDocument.body;
+                        p.setAttribute('minify', '');
                         let e = document.createElement('z-temp');
                         let s, m, set = {};
                         e.innerHTML = s = editor.getValue();
