@@ -190,7 +190,7 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
       ..width=`100px`
       #border-width=`4px`
       !border-width=4px
-      #--a-css-var="'${theCssVarValue}'"
+      #--a-css-var=`'${theCssVarValue}'`
     ```
 
   * !!! 特别注意:
