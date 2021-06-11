@@ -16,6 +16,7 @@ const ZData = (() => {
     const ElementChild = `${Element}Child`;
     const getAttribute = `g${etAttribute}`;
     const setAttribute = `s${etAttribute}`;
+    const removeAttribute = "removeAttribute";
     const firstEL = `first${ElementChild}`;
     const lastEL = `last${ElementChild}`;
     const prevEL = `previous${ElementSibling}`;
@@ -102,12 +103,12 @@ const ZData = (() => {
 
     let nodeCache = {};
     let goAnode = (args, env, self) => {
-        let { p, el } = args, nc;
+        let { p, el, cp } = args, nc;
         let zd = el[_z_d] || (el[_z_d] = {});
         let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el.getAttributeNames());
         if (attrs[includes](znone)) return;
 
-        if (!args.cp) {
+        if (!cp) {
             let exp, res;
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
             else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
@@ -118,7 +119,7 @@ const ZData = (() => {
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
                         if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el.remove();
-                        else loadHTML(html, el, nil, as), el.removeAttribute(zcomp);
+                        else loadHTML(html, el, nil, as), el[removeAttribute](zcomp);
                     }).catch(nop);
                 } catch (e) {}
                 return;
@@ -132,7 +133,7 @@ const ZData = (() => {
             }
         }
         setAttrs(args, env, attrs, nc);
-        goNodes({ cp: args.cp, r: args.r, p: el, el: el[firstEL] }, env);
+        goNodes({ cp, r: args.r, p: el, el: (/*cp && el.content ||*/ el)[firstEL] }, env);
     };
 
     let goNodes = (args, env, cbIf, cbDo) => {
@@ -288,7 +289,7 @@ const ZData = (() => {
                 if (!re_bind.test(a) && !$e_text(v)) return;
                 let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
                 let k = ms[4] ? (ms[4] != "." || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
-                k = attrMaps[k] ? attrMaps[k] : k;
+                k = attrMaps[k] || k;
                 if (k) {
                     let modifiers = ms[6] && ms[6].split(".");
                     let ps = {
@@ -301,6 +302,7 @@ const ZData = (() => {
                     if (!ps.b || ms[4] == "!") ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
                     if (ps.k == c_lass) props.ocl = ocl;
+                    args.cp && ps.b && el[removeAttribute](a);
                 }
             });
             let f, t;
@@ -481,13 +483,11 @@ const ZData = (() => {
                 --updating < 0 ? (updating = 0) : 0, startLater();
             });
         el[attrMaps["html"]] = html[replace](/<!--[^]*?-->/g, "")
-          [replace](/(z-data\s*=\s*)(?:(')(\$[\w]+)([^'\w]*')|(")(\$[\w]+)([^"\w]*")|(\$[\w]+)([^\s>\w]*[\s>]))/, ($0,$1,$2="",$3="",$4="",$5="",$6="",$7="",$8="",$9="") => {
-            name = $3 + $6 + $8;
-            return $1 + $2 + $5 + name + "_" + id + $4 + $7 + $9;
-        })[replace](/<(script)([^>]*)>([^]*?)<\/\1>/gi, ($0, $1, src, s) => {
-            let m = src.match(/src\s*=\s*(?:'([^']+)'|"([^"]+)"|(\S+))/);
-            src = m ? (m[1] || "") + (m[2] || "") + (m[3] || "") : "";
-            if (!src && !s) return "";
+          [replace](/\bz-data\s*=\s*['"]?(\$[\w]+)/, ($0, $1) => (name = $1, $0 + "_" + id))
+          [replace](/<(script)([^>]*)>([^]*?)<\/\1>/gi, ($0, $1, src, s) => {
+            let m = src.match(/src\s*=\s*(?:'([^']+)|"([^"]+)|(\S+))/);
+            src = m && (m[1] || m[2] || m[3]);
+            if ((!src || $(`script[src="${src}"]`)[length]) && !s) return "";
             let e = $ocument[createEl]("script");
             e[setAttribute](znone, "");
             let f = () => p[insert](e, before);
@@ -503,7 +503,7 @@ const ZData = (() => {
         })[replace](/(<(style)[^>]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/.test(names)) return names; // @keyframes
-                return split(names, /\s*,\s*/).map((n) => "[z-id='" + id + "'] " + n).join(",");
+                return split(names, /\s*,\s*/).map((n) => `[z-id="${id}"] ` + n).join(",");
             });
             return s1 + s + s2;
         });

@@ -1,4 +1,10 @@
 
+2021-06-11
+  * removeAttribute after compile
+
+2021-06-10~11
+  * loadHTML, check loaded script [src=...]
+
 2021-06-09
   + style property
     --* -> setProperty
