@@ -1,4 +1,13 @@
 
+2021-06-11~12
+  * proxy to compatible with Vue
+  * reactive with Vue
+    Object.defineProperty(__vue__, prop, {
+        set(newValue) {
+            vthis._data[prop] = me.xxx = newValue;
+        }
+    });
+
 2021-06-11
   * removeAttribute after compile
 
