@@ -12,16 +12,16 @@ const ZData = (() => {
     const qdata = `[${zdata}]`;
     const etAttribute = "etAttribute";
     const Element = "Element";
-    const ElementSibling = `${Element}Sibling`;
-    const ElementChild = `${Element}Child`;
-    const getAttribute = `g${etAttribute}`;
-    const setAttribute = `s${etAttribute}`;
+    const ElementSibling = Element + "Sibling";
+    const ElementChild = Element + "Child";
+    const getAttribute = "g" + etAttribute;
+    const setAttribute = "s" + etAttribute;
     const removeAttribute = "removeAttribute";
-    const firstEL = `first${ElementChild}`;
-    const lastEL = `last${ElementChild}`;
-    const prevEL = `previous${ElementSibling}`;
-    const nextEL = `next${ElementSibling}`;
-    const createEl = `create${Element}`;
+    const firstEL = "first" + ElementChild;
+    const lastEL = "last" + ElementChild;
+    const prevEL = "previous" + ElementSibling;
+    const nextEL = "next" + ElementSibling;
+    const createEl = "create" + Element;
     const insert = "insertBefore";
     const nexT = "next";
     const _z_d = "_z_d";
@@ -36,8 +36,9 @@ const ZData = (() => {
     const change = "change";
     const c_lass = "class";
     const s_tyle = "style";
+    const querySelector = "querySelector";
     const $ocument = document;
-    const $ = (selector, el = $ocument) => el.querySelectorAll(selector);
+    const $ = (selector, el = $ocument) => el[querySelector+"All"](selector);
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
@@ -164,9 +165,9 @@ const ZData = (() => {
         } else fold(args, env);
     };
 
-    let expand = ({ p, el, next, n }) => {
+    let expand = ({ u, r, p, el, next, n }) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = el.content;
+            n = el[_z_d].node = (u = el[getAttribute]('use')) && (u = r[querySelector]('#' + u)) && u.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -523,7 +524,7 @@ const ZData = (() => {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
                         for (let i = 0, t; i < ms[length]; i++) {
-                            ignore = ignore && ((t = ms[i].target).closest(`[${znone}]`) || !t.closest(qdata) && !t.querySelector(qdata));
+                            ignore = ignore && ((t = ms[i].target).closest(`[${znone}]`) || !t.closest(qdata) && !t[querySelector](qdata));
                         }
                         if (ignore) return;
                     }

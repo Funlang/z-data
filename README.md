@@ -168,6 +168,18 @@ Or
     <template else>
     ````
 
+  - template use
+
+    ```html
+    <z z-none>
+        <template id=t1>
+            <div>template id = t1</div>
+        </template>
+    </z>
+
+    <template use=t1></template>
+    ````
+
 ### data binding
 
   - : directive a data binding, :: directive a data dual-binding (like modal in some framework)

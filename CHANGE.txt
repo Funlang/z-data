@@ -1,4 +1,7 @@
 
+2021-07-01
+  + template use
+
 2021-06-11~12
   * proxy to compatible with Vue
   * reactive with Vue
