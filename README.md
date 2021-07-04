@@ -1,9 +1,9 @@
-# 1. z-data
+# z-data
 
 Z-data 是一个超轻量级的零配置嵌入式微前端框架.
 Z-data is an extremely lightweight zero configuration embedded micro front-end framework.
 
-## 1.1. 特性 | Features:
+# 1. 特性 | Features:
 
 - 没有虚拟 DOM | Without VDOM
 - 零配置零依赖, 无需编译 | Zero configuration zero dependency, no compile time
@@ -15,7 +15,7 @@ Z-data is an extremely lightweight zero configuration embedded micro front-end f
 - 更多语法糖, 特别对 class 和 style 友好 | Useful syntax sugars, friendly for class and style
 - 鼓励配合 tailwind 以 H5 DOM 为中心 | Run with tailwind, supports production with H5 DOM inline
 
-## 1.2. 示例 | Examples:
+# 2. 示例 | Examples:
 
 ```html
 <div z-data="{name:'hello-world.html',items:{i:1,j:2,k:3}}"
@@ -55,16 +55,16 @@ TodoMVC:
 
 * https://codepen.io/funlang/pen/OJWrJep
 
-### 1.2.1. z-data studio
+## 2.1. z-data studio
 
 可以在线创建/调试/预览 z-data 代码
 Online IDE for creating/debugging/previewing z-data code/app/comp
 
 * https://funlang.org/z-data/
 
-## 1.3. 用法 | Usage:
+# 3. 用法 | Usage:
 
-### 1.3.1. 安装 | Install
+## 3.1. 安装 | Install
 
 - CDN https://cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js
 
@@ -72,7 +72,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
   <script src=//cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js></script>
   ```
 
-### 1.3.2. 作用域 | Scope
+## 3.2. 作用域 | Scope
 
   - z-data 属性创建 ZData 作用域 | z-data attribute launch a ZData scope
     ```html
@@ -111,7 +111,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     在其他框架根节点加 z-none 即可
     add z-none to other tag will skip ZData process
 
-### 1.3.3. 模板 | template
+## 3.3. 模板 | template
 
   - template for
 
@@ -153,7 +153,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <template use=t1></template>
     ````
 
-### 1.3.4. 绑定 | data binding
+## 3.4. 绑定 | data binding
 
   - : 用来做属性绑定, 其中 :: 是双向绑定 | : directive a data binding, :: directive a data dual-binding (like modal in some framework)
 
@@ -161,17 +161,17 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <tag :attr-name1=... ::attr-name2=...></tag>
     ````
 
-#### 1.3.4.1. :text :html
+### 3.4.1. :text :html
 
   :text :html 分别对应 textContent 和 innerHTML
   :text :html for textContent and innerHTML
 
-#### 1.3.4.2. :class
+### 3.4.2. :class
 
   :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
   :class supports [] {} and string, these will be combine to the classname in order
 
-#### 1.3.4.3. :class 简写 | :class shorthand
+### 3.4.3. :class 简写 | :class shorthand
 
 :class 支持 :class.name1.name2=...
 :class supports :class.name1.name2=...
@@ -186,12 +186,12 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     .p-=1 causes p-1 added to classList
   ```
 
-#### 1.3.4.4. :style
+### 3.4.4. :style
 
 :style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
 :style supports :css shorthand, supports {} and string, the style property will be overwrite in order
 
-#### 1.3.4.5. :style 简写 | :style shorthand
+### 3.4.5. :style 简写 | :style shorthand
 
 :style 支持 :style.name.value=...
 :style supports :style.name.value=...
@@ -214,32 +214,32 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     #--a-css-var=`'${theCssVarValue}'`
   ```
 
-#### 1.3.4.6. !!! 特别注意 | !!! Warning:
+### 3.4.6. !!! 特别注意 | !!! Warning:
 
-##### 1.3.4.6.1. : :: @ . .. \#
+#### 3.4.6.1. : :: @ . .. \#
 
 后面的值全部都是 js 表达式, 可以是 js 变量, 或者是字符串, 字符串要用 ' " ` 套住
 
 \: :: @ . .. # directive, all of the attribute value is a js expression, supports js variable, or string, string must quoted with ' " `
 
-##### 1.3.4.6.2. ${...}
+#### 3.4.6.2. ${...}
 
 非绑定的属性值中含有 ${...}, 会自动解析成一个字符串, 相当于 `...${...}...`
 
 builtin attributes with \${...} in their values, will be paused as a string expression, to `...${...}...`
 
-##### 1.3.4.6.3. !
+#### 3.4.6.3. !
 
 ! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
 
 ! will be compiled to :css.style-name=`string-value`
 
-#### 1.3.4.7. attr
+### 3.4.7. attr
 
 :attr.attr 表示为可视 attribute 属性, 否则默认为不可见 prop 属性
 :attr.attr will be attribute, or default are prop (property)
 
-#### 1.3.4.8. camel
+### 3.4.8. camel
 
 :attr.camel 支持驼峰表示法
 :attr.camel supports camel attributes or properties
@@ -264,7 +264,7 @@ builtin attributes with \${...} in their values, will be paused as a string expr
   style.value updated will not reactive automatically, must execute el.fireChange() manually in el
   ```
 
-#### 1.3.4.9. input type='radio'
+### 3.4.9. input type='radio'
 ```
 ::checked=opt==this.value
 
@@ -272,12 +272,12 @@ builtin attributes with \${...} in their values, will be paused as a string expr
 Note: opt is prop name in data
 ```
 
-### 1.3.5. 事件 | event
+## 3.5. 事件 | event
 
 @ 用来绑定事件, 支持 modifiers
 @ to bind events, supports modifiers
 
-#### 1.3.5.1. 全局 | Global modifier
+### 3.5.1. 全局 | Global modifier
 
 ```
 camel     事件名驼峰表示法 | a-camel-name -> aCamelName
@@ -290,7 +290,7 @@ once      once mode, run once only
 passive   passive mode
 ```
 
-#### 1.3.5.2. 范围 | Scope modifier
+### 3.5.2. 范围 | Scope modifier
 
 ```
 self      tag only
@@ -299,7 +299,7 @@ window
 document
 ```
 
-#### 1.3.5.3. 键鼠 | Keyboard and mouse modifier
+### 3.5.3. 键鼠 | Keyboard and mouse modifier
 
 ```
 shift
@@ -308,46 +308,46 @@ alt
 meta      or cmd, super
 ```
 
-#### 1.3.5.4. 键盘 | Keyboard modifier
+### 3.5.4. 键盘 | Keyboard modifier
 ```
 <key>     enter, escape, space, f1 etc., details refer to:
           https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
 alias:  space: " ", slash: /, gt: >, eq: =
 ```
 
-#### 1.3.5.5. 鼠标 | Mouse modifier
+### 3.5.5. 鼠标 | Mouse modifier
 ```
 <button>  left, mid, right
 ```
 
-### 1.3.6. 变量 | Variables
+## 3.6. 变量 | Variables
 
-#### 1.3.6.1. $el
+### 3.6.1. $el
 
 \$el 组件根节点
 $el z-data root element
 
-#### 1.3.6.2. \$el.$data
+### 3.6.2. \$el.$data
 
 \$el.\$data 组件的包装 data 对象
 \$el.\$data the z-data data object
 
-#### 1.3.6.3. ZData.nobserve (default false)
+### 3.6.3. ZData.nobserve (default false)
 
 ```
 no observe DOM for dynamic creating z-data node
   use ZData.loadHTML(), so observe DOM is not needed.
 ```
 
-### 1.3.7. 函数 | Function
+## 3.7. 函数 | Function
 
-#### 1.3.7.1. ZData.proxy()
+### 3.7.1. ZData.proxy()
 
 在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
 
 Reactive to the z-data data object, return ZData.proxy() wrapper, and it will reactive when change manual
 
-#### 1.3.7.2. ZData.loadHTML(html, p, before, args)
+### 3.7.2. ZData.loadHTML(html, p, before, args)
 
 动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
 
@@ -356,15 +356,15 @@ Dynamic load html, p - the parent element(default body), before - insert before
 * html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
 * html have script, must run loadHTML. Or you can use :html=... to load html properly
 
-#### 1.3.7.3. el.fireChange()
+### 3.7.3. el.fireChange()
 
 在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
 Change el style out of z-data, for dual-binding, needs to call .fireChange()
 
 
-### 1.3.8. 组件 | Component
+## 3.8. 组件 | Component
 
-#### 1.3.8.1. z-comp
+### 3.8.1. z-comp
 
 z-comp 为 ZData 组件
 z-comp is a ZData component
@@ -373,7 +373,7 @@ z-comp is a ZData component
 <tag z-comp=...></tag>
 ````
 
-#### 1.3.8.2. 组件地址 | z-comp URL
+### 3.8.2. 组件地址 | z-comp URL
 z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
 z-comp may equal a ./ relative path, or a http(s): resource
 
@@ -388,7 +388,7 @@ z-comp may be a Promise function, then return a z-comp code
 <tag z-comp="load_z_comp('z-comp-2')"></tag>
 ````
 
-#### 1.3.8.3. 组件加载器 | z-comp loader ZData.get
+### 3.8.3. 组件加载器 | z-comp loader ZData.get
 
 z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
 z-comp supports z:// protocol plugin, ZData.get is exists, z:// will be work
@@ -414,7 +414,7 @@ and apply ZData.get to load table-v1.5.2 component
 <z- z-comp=z://table-v1.5.2></z->
 ```
 
-#### 1.3.8.4. 组件占位符 | z-comp placeholder
+### 3.8.4. 组件占位符 | z-comp placeholder
 
 z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
 z-comp supports keep / remove the placeholder tag, z-xxx or del attribute, then remove itself
@@ -429,7 +429,7 @@ keep the placeholder tag:
 <div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
 ````
 
-#### 1.3.8.5. 组件参数 | z-comp args
+### 3.8.5. 组件参数 | z-comp args
 
 ```html
 <tag z-comp=... args=...></tag>
@@ -442,11 +442,11 @@ and use args.xxx to get the args props, e.g.:
 ></div> 
 ```
 
-#### 1.3.8.6. z-comp demo:
+### 3.8.6. z-comp demo:
 * https://codepen.io/funlang/pen/ExZBPJL
 * https://codepen.io/funlang/pen/RwKzaOo
 
-## 1.4. 浏览器兼容性 | Browser compatibles
+# 4. 浏览器兼容性 | Browser compatibles
 
 Chrome 61+, Firefox 55+, Opera 48+
 
@@ -454,7 +454,7 @@ Chrome 61+, Firefox 55+, Opera 48+
 
     Chrome 60+, Firefox 55+, Opera 47+
 
-## 1.5. 加入我们 | JOIN US
+# 5. 加入我们 | JOIN US
 
 欢迎加入 z-data 项目, 一起工作, Enjoy!
 Welcome to join z-data project, a front-end framework for future, Enjoy!
