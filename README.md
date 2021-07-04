@@ -3,6 +3,8 @@
 Z-data 是一个超轻量级的零配置嵌入式微前端框架.
 Z-data is an extremely lightweight zero configuration embedded micro front-end framework.
 
+[[English](./README-en.md)] [[中文](./README-cn.md)]
+
 # 1. 特性 | Features:
 
 - 没有虚拟 DOM | Without VDOM
@@ -77,13 +79,13 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
   - z-data 属性创建 ZData 作用域 | z-data attribute launch a ZData scope
     ```html
     <tag z-data=...></tag>
-    ````
+    ```
     z-data 支持一个 init 函数, 在组件初始化时执行
     z-data supports an init function, will run when initialization
 
     ```html
     <tag z-data=... init=...></tag>
-    ````
+    ```
     变量本地化 (模块化) | localize for variables (module)
     ```html
     <tag z-data=$xxx init=...></tag>
@@ -91,7 +93,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <script>
       var $xxx = ...
     </script>
-    ````
+    ```
 
   - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过 | z-none stop the ZData scope, all inner tags will be ignored with ZData
 
@@ -99,7 +101,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <tag z-none>
       ...
     </tag>
-    ````
+    ```
 
   - 与其他框架共存 | Run with another framework together
 
@@ -107,7 +109,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     add x-ignore attribute to the root tag of ZData (x-ignore and other name of the 3rd framework):
     ```html
     <tag z-data=... x-ignore></tag>
-    ````
+    ```
     在其他框架根节点加 z-none 即可
     add z-none to other tag will skip ZData process
 
@@ -117,7 +119,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
     ```html
     <template for='k:v,i in ...' key=...></template>
-    ````
+    ```
     ZData 依赖 key, 如果没有指定 key, 则优先选用 k 做 key, 否则用 v 做 key 键
     k : v , i 可以部分可选, 如:
     ZData is key needed, if key specified, the k will be key, or the v will be key
@@ -131,7 +133,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <template for='k:v   in items'></template>
     <template for='  v,i in items'></template>
     <template for=items></template>
-    ````
+    ```
 
   - template if/else
 
@@ -139,7 +141,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <template if=...></template>
     <template else if=...></template>
     <template else></template>
-    ````
+    ```
 
   - template use
 
@@ -151,7 +153,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     </z>
 
     <template use=t1></template>
-    ````
+    ```
 
 ## 3.4. 绑定 | data binding
 
@@ -159,7 +161,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
     ```html
     <tag :attr-name1=... ::attr-name2=...></tag>
-    ````
+    ```
 
 ### 3.4.1. :text :html
 
@@ -361,7 +363,6 @@ Dynamic load html, p - the parent element(default body), before - insert before
 在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
 Change el style out of z-data, for dual-binding, needs to call .fireChange()
 
-
 ## 3.8. 组件 | Component
 
 ### 3.8.1. z-comp
@@ -371,22 +372,23 @@ z-comp is a ZData component
 
 ```html
 <tag z-comp=...></tag>
-````
+```
 
 ### 3.8.2. 组件地址 | z-comp URL
+
 z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
 z-comp may equal a ./ relative path, or a http(s): resource
 
 ```html
 <tag z-comp=./z-comp-2.html></tag>
 <tag z-comp=https://funlang.org/zdata/test/z-comp-2.html></tag>
-````
+```
 z-comp 还可以是一个 Promise 函数, 用来加载组件代码
 z-comp may be a Promise function, then return a z-comp code
 
 ```html
 <tag z-comp="load_z_comp('z-comp-2')"></tag>
-````
+```
 
 ### 3.8.3. 组件加载器 | z-comp loader ZData.get
 
@@ -423,17 +425,17 @@ z-comp supports keep / remove the placeholder tag, z-xxx or del attribute, then 
 remove the placeholder tag:
 <z-comp  z-comp=https://funlang.org/zdata/test/z-comp-2.html></z-comp>
 <div del z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
-````
+```
 ```html
 keep the placeholder tag:
 <div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
-````
+```
 
 ### 3.8.5. 组件参数 | z-comp args
 
 ```html
 <tag z-comp=... args=...></tag>
-````
+```
 在组件内部, 用 args.xxx 来使用传进来的参数, 形如:
 and use args.xxx to get the args props, e.g.:
 ```html

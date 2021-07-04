@@ -1,32 +1,22 @@
 # z-data
 
-- z-data
-  https://github.com/Funlang/z-data
+Z-data 是一个超轻量级的零配置嵌入式微前端框架.
 
-- z-template (仅静态渲染)
-  https://github.com/Funlang/z-template
+[[English](./README-en.md)] [[中文](./README-cn.md)]
 
+# 1. 特性
 
-## Z-data 是一个超轻量级的零配置嵌入式前端框架.
-
-Z-data is an extremely lightweight zero configuration embedded front-end framework.
-
-- Z-Data 灵感来自于 Alpine, https://github.com/alpinejs/alpine
-- 唯 Alpine 有一点慢, https://krausest.github.io/js-framework-benchmark/index.html
-- 加上不支持多根模板及一些实用的语法糖, 在尝试一些做法以后, 决定自行启动 z-data 项目.
-
-## 特性:
-
-- 无 VDom, 采用 H5 template 技术
-- 极简, 超轻量级, z-data minify ~ 8K, z-template minify ~ 3K
-- 符合 H5 趋势, 技术简单, z-data ~500多行代码, z-template ~200多行代码
-- template 支持 for, if else
-- template 内支持多根
+- 没有虚拟 DOM
+- 零配置零依赖, 无需编译
+- 极简, 超轻量级
+- H5 模板技术, 支持 for/if/else/use 等
+- 模板支持多根
+- 支持双向数据绑定和事件 
 - 嵌入式, 可以和其他框架无缝嵌入
 - 更多语法糖, 特别对 class 和 style 友好
-- 可很好配合 tailwind, https://tailwindcss.com/, 支持以 H5 DOM 为中心的生产方式
+- 鼓励配合 tailwind 以 H5 DOM 为中心
 
-## 例子:
+# 2. 示例
 
 ```html
 <div z-data="{name:'hello-world.html',items:{i:1,j:2,k:3}}"
@@ -54,7 +44,7 @@ Z-data is an extremely lightweight zero configuration embedded front-end framewo
 </div>
 ```
 
-在线 demo:
+在线 demo
 
 * https://codepen.io/funlang/pen/NWdOQye
 
@@ -62,55 +52,37 @@ TodoMVC:
 
 * https://codepen.io/funlang/pen/ExZOGJy
 
-复杂数据绑定:
+复杂数据绑定
 
 * https://codepen.io/funlang/pen/OJWrJep
 
-### z-data studio
+## 2.1. z-data studio
 
 可以在线创建/调试/预览 z-data 代码
 
 * https://funlang.org/z-data/
 
-## 用法:
+# 3. 用法
 
-### 安装
+## 3.1. 安装
 
-ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
+- CDN https://cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js
 
-临时地址:
-- 全功能  https://funlang.org/zdata/z-data.min.js
-- CDN    https://cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js
-或
-- 仅渲染  https://funlang.org/zdata/z-template.min.js
-- CDN    https://cdn.jsdelivr.net/gh/Funlang/z-template@main/dist/z-template.min.js
-
-* z-template 需用户执行 ZData.start(), z-data 不需要.
-
-* ZData 与 ZDataProxy 可以配合使用, 请自行加载 ZDataProxy
-
-  ```js
-  ZDataProxy = (target, handler) => ...
-
-  // 其中:
-
-    handler = (obj, prop, value, rec, isOuterProxy) => {
-      if (! isOuterProxy) obj[prop] = value
-    }
+  ```html
+  <script src=//cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js></script>
   ```
 
-### 作用域
+## 3.2. 作用域
 
-  - z-data 开启 ZData 作用域, 其内部节点为 ZData 组件
-
+  - z-data 属性创建 ZData 作用域
     ```html
-    <tag z-data=...>
-    ````
+    <tag z-data=...></tag>
+    ```
     z-data 支持一个 init 函数, 在组件初始化时执行
 
     ```html
-    <tag z-data=... init=...>
-    ````
+    <tag z-data=... init=...></tag>
+    ```
     变量本地化 (模块化)
     ```html
     <tag z-data=$xxx init=...></tag>
@@ -118,256 +90,303 @@ ZData 为零配置嵌入式前端框架, 不需要安装, 只需要引用即可.
     <script>
       var $xxx = ...
     </script>
-    ````
+    ```
 
   - z-none 关闭 ZData 作用域, 其内部节点 ZData 会跳过
 
     ```html
     <tag z-none>
-    ````
+      ...
+    </tag>
+    ```
 
   - 与其他框架共存
 
-    在 ZData 根节点用类似以下的方式处理 (x-ignore 改为其他框架关闭作用域的属性名):
+    在 ZData 根节点用类似以下的方式处理 (x-ignore 改为其他框架关闭作用域的属性名)
     ```html
-    <tag z-data=... x-ignore>
-    ````
+    <tag z-data=... x-ignore></tag>
+    ```
     在其他框架根节点加 z-none 即可
 
-### 模板
+## 3.3. 模板
 
   - template for
 
     ```html
-    <template for='k:v,i in ...' key=...>
-    ````
+    <template for='k:v,i in ...' key=...></template>
+    ```
     ZData 依赖 key, 如果没有指定 key, 则优先选用 k 做 key, 否则用 v 做 key 键
-    k : v , i 可以部分可选, 如
+    k : v , i 可以部分可选, 如:
 
     ```html
-      <template for='k:v,i in items'>
-      <template for='  v   in items'>
-      <template for='k:    in items'>
-      <template for='   ,i in items'>
-      <template for='k:v   in items'>
-      <template for='  v,i in items'>
-      <template for=items>
-    ````
+    <template for='k:v,i in items'></template>
+    <template for='  v   in items'></template>
+    <template for='k:    in items'></template>
+    <template for='   ,i in items'></template>
+    <template for='k:v   in items'></template>
+    <template for='  v,i in items'></template>
+    <template for=items></template>
+    ```
 
   - template if/else
 
     ```html
-    <template if=...>
-    <template else if=...>
-    <template else>
-    ````
+    <template if=...></template>
+    <template else if=...></template>
+    <template else></template>
+    ```
 
-### 绑定
+  - template use
+
+    ```html
+    <z z-none>
+        <template id=t1>
+            <div>template id = t1</div>
+        </template>
+    </z>
+
+    <template use=t1></template>
+    ```
+
+## 3.4. 绑定
 
   - : 用来做属性绑定, 其中 :: 是双向绑定
 
     ```html
-    <tag :attr-name1=... ::attr-name2=...>
-    ````
-
-  - :text :html 分别对应 textContent 和 innerHTML
-
-  - :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
-
-  - :class 支持 :class.name1.name2=...
-    ```
-    可以简写为 .name1.name2=...
-    如果 classname 后面为 -, 且返回值不是 boolean, 则将其值加入到 classname, 如:
-      .p-=1 则 classList 里会增加 p-1
-    ```
-  - :style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
-
-  - :style 支持 :style.name.value=...
-    ```
-    :style.name=value / :css.name=value
-    :style.name.value=条件 / :css.name.value=...
-    可以简写为 ..name 和 #name, 以及 !name=string-value, 如下:
-      ..width=`100px`
-      #border-width=`4px`
-      !border-width=4px
-      #--a-css-var=`'${theCssVarValue}'`
+    <tag :attr-name1=... ::attr-name2=...></tag>
     ```
 
-  * !!! 特别注意:
+### 3.4.1. :text :html
 
-    - : :: @ . .. #
-    ```
-    : :: @ . .. # 绑定, 后面的值全部都是 js 表达式, 可以是 js 变量, 或者是字符串, 字符串要用 ' " ` 套住
-    ```
-    - ${...}
-    ```
-    非绑定的属性值中含有 ${...}, 会自动解析成一个字符串, 相当于 `...${...}...`
-    ```
-    - !
-    ```
-    ! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
-    ```
+  :text :html 分别对应 textContent 和 innerHTML
 
-  - :attr.attr 表示为可视 attribute 属性, 否则默认为不可见 prop 属性
+### 3.4.2. :class
 
-  - :attr.camel 支持驼峰表示法
+  :class 支持 [] {} 和 字符串三种, 这些 classname 会按顺序合并处理
 
-  - ::value=propName, ::style.value=propName, ::css.value=propName
-    ```
-    其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
-    双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
-    可以增加 .input / .change 强制在 input / change 中回写
-    支持 .trim / .number 修饰符
-    ```
-    ```
-    目前有些属性如 style.value 修改, 不会自动触发响应式, 需要在当前执行 el 执行 el.fireChange()
-    ```
+### 3.4.3. :class 简写
 
-    - input type='radio'
-    ```
-    ::checked=opt==this.value
+:class 支持 :class.name1.name2=...
+  ```
+  可以简写为 .name1.name2=...
+  如果 classname 后面为 -, 且返回值不是 boolean, 则将其值加入到 classname, 如:
+    .p-=1 则 classList 里会增加 p-1
+  ```
 
-    注: opt 是一个 data 内的属性变量名
-    ```
+### 3.4.4. :style
 
-  - @ 用来绑定事件, 支持 modifiers
+:style 支持 :css 别名, 支持 {} 和字符串两种, 字符串会按顺序覆盖
 
-    * 全局 modifier
-      ```
-      camel     事件名驼峰表示法
-      prevent   preventDefault
-      stop      stopPropagation
-      debounce  debounce 模式, 后面可以带一个时间, 如
-                debounce.750ms, debounce.2s, 默认 250ms
-      capture   capture 模式
-      once      once 模式, 只调用一次
-      passive   passive 模式
-      ```
-    * 范围 modifier
-      ```
-      self      只自己
-      away      自己之外的
-      window
-      document
-      ```
-    * 键鼠 modifier
-      ```
-      shift
-      ctrl
-      alt
-      meta      或 cmd, super
-      ```
-    * 键盘 modifier
-      ```
-      <key>     enter, escape, space, f1 等, 详见:
-                https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
-      特殊处理:  space: " ", slash: /, gt: >, eq: =
-      ```
-    * 鼠标 modifier
-      ```
-      <button>  left, mid, right
-      ```
-### 变量
+### 3.4.5. :style 简写
 
-  - $el 组件根节点
-    ```
-    $el.$data 组件的包装 data 对象
-    ```
-  - ZData.nobserve (default false)
-    ```
-    no observe DOM for dynamic creating z-data node
-      use ZData.loadHTML(), so observe DOM is not needed.
-    ```
+:style 支持 :style.name.value=...
+  ```
+  :style.name=value / :css.name=value
+  :style.name.value=条件 / :css.name.value=...
+  可以简写为 ..name 和 #name, 以及 !name=string-value, 如下:
+    ..width=`100px`
+    #border-width=`4px`
+    !border-width=4px
+    #--a-css-var=`'${theCssVarValue}'`
+  ```
 
-### 函数
+### 3.4.6. !!! 特别注意
 
-  - ZData.start()
-    ```
-    z-template 需要显式调用 ZData.start(), z-data 一般不需要
-    ```
-  - ZData.proxy()
-    ```
-    在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
-    ```
-  - ZData.loadHTML(html, p, before, args)
-    ```
-    动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
+#### 3.4.6.1. : :: @ . .. \#
 
-    * html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
-    ```
-  - el.fireChange()
-    ```
-    在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
-    ```
+后面的值全部都是 js 表达式, 可以是 js 变量, 或者是字符串, 字符串要用 ' " ` 套住
 
-### 组件
+#### 3.4.6.2. ${...}
 
-  - z-comp 为 ZData 组件
+非绑定的属性值中含有 ${...}, 会自动解析成一个字符串, 相当于 `...${...}...`
 
-    ```html
-    <tag z-comp=...>
-    ````
-    z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
+#### 3.4.6.3. !
 
-    ```html
-    <tag z-comp=./z-comp-2.html>
-    <tag z-comp=https://funlang.org/zdata/test/z-comp-2.html>
-    ````
-    z-comp 还可以是一个 Promise 函数, 用来加载组件代码
+! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
 
-    ```html
-    <tag z-comp="load_z_comp('z-comp-2')">
-    ````
+### 3.4.7. attr
 
-    * ZData.get
+:attr.attr 表示为可视 attribute 属性, 否则默认为不可见 prop 属性
 
-      z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
-      ```
-      注意: ZData.get 是一个 Promise 函数, 返回类似于 fetch(url).then(res => res.text()) 之后的部分
-      ```
-      ```
-      定义并加载插件:
-      document.addEventListener("DOMContentLoaded", () => setTimeout(() => ZData.get = ...))
+### 3.4.8. camel
 
-      应用 ZData.get 加载 table-v1.5.2 组件
-      <z- z-comp=z://table-v1.5.2></z->
-      ```
+:attr.camel 支持驼峰表示法
 
-    z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
+::value=propName, ::style.value=propName, ::css.value=propName
+  ```
+  其中 propName 只支持驼峰表示法, DOM 属性(包括 style)可以增加 .camel 修饰符
+  双向绑定默认在 change 中触发回写行为, 只有 input text 同时在 input 中触发回写
+  可以增加 .input / .change 强制在 input / change 中回写
+  支持 .trim / .number 修饰符
+  ```
+  ```
+  目前有些属性如 style.value 修改, 不会自动触发响应式, 需要在当前执行 el 执行 el.fireChange()
+  ```
 
-    ```html
-    删除占位符:
-    <z-comp  z-comp=https://funlang.org/zdata/test/z-comp-2.html>
-    <div del z-comp=https://funlang.org/zdata/test/z-comp-2.html>
-    ````
-    ```html
-    保留占位符:
-    <div z-comp=https://funlang.org/zdata/test/z-comp-2.html>
-    ````
+### 3.4.9. input type='radio'
+```
+::checked=opt==this.value
 
-  - z-comp args
-    ```html
-    <tag z-comp=... args=...>
-    ````
-    在组件内部, 用 args.xxx 来使用传进来的参数, 形如:
-    ```html
-    <div z-data @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''
-     #color=args.color #background=args.bgcolor !height=100% !padding=8px
-    ></div> 
-    ```
+注: opt 是一个 data 内的属性变量名
+```
 
-  - z-comp demo:
-    * https://codepen.io/funlang/pen/ExZBPJL
-    * https://codepen.io/funlang/pen/RwKzaOo
+## 3.5. 事件
 
-## 浏览器兼容性
+@ 用来绑定事件, 支持 modifiers
+
+### 3.5.1. 全局
+
+```
+camel     事件名驼峰表示法
+prevent   preventDefault
+stop      stopPropagation
+debounce  debounce mode, follow a time optional, such as
+          debounce.750ms, debounce.2s, default 250ms
+capture   capture mode
+once      once mode, run once only
+passive   passive mode
+```
+
+### 3.5.2. 范围
+
+```
+self      tag only
+away      tag not
+window
+document
+```
+
+### 3.5.3. 键鼠
+
+```
+shift
+ctrl
+alt
+meta      or cmd, super
+```
+
+### 3.5.4. 键盘
+```
+<key>     enter, escape, space, f1 etc., details refer to:
+          https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+alias:  space: " ", slash: /, gt: >, eq: =
+```
+
+### 3.5.5. 鼠标
+```
+<button>  left, mid, right
+```
+
+## 3.6. 变量
+
+### 3.6.1. $el
+
+\$el 组件根节点
+
+### 3.6.2. \$el.$data
+
+\$el.\$data 组件的包装 data 对象
+
+### 3.6.3. ZData.nobserve (default false)
+
+```
+no observe DOM for dynamic creating z-data node
+  use ZData.loadHTML(), so observe DOM is not needed.
+```
+
+## 3.7. 函数
+
+### 3.7.1. ZData.proxy()
+
+在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
+
+### 3.7.2. ZData.loadHTML(html, p, before, args)
+
+动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
+
+* html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
+
+### 3.7.3. el.fireChange()
+
+在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
+
+## 3.8. 组件
+
+### 3.8.1. z-comp
+
+z-comp 为 ZData 组件
+
+```html
+<tag z-comp=...></tag>
+```
+
+### 3.8.2. 组件地址
+
+z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
+
+```html
+<tag z-comp=./z-comp-2.html></tag>
+<tag z-comp=https://funlang.org/zdata/test/z-comp-2.html></tag>
+```
+z-comp 还可以是一个 Promise 函数, 用来加载组件代码
+
+```html
+<tag z-comp="load_z_comp('z-comp-2')"></tag>
+```
+
+### 3.8.3. 组件加载器
+
+z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
+
+```
+注意: ZData.get 是一个 Promise 函数, 返回类似于 fetch(url).then(res => res.text()) 之后的部分
+```
+```
+定义并加载插件:
+document.addEventListener("DOMContentLoaded", () => setTimeout(() => ZData.get = ...))
+
+应用 ZData.get 加载 table-v1.5.2 组件
+<z- z-comp=z://table-v1.5.2></z->
+```
+
+### 3.8.4. 组件占位符
+
+z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
+
+```html
+remove the placeholder tag:
+<z-comp  z-comp=https://funlang.org/zdata/test/z-comp-2.html></z-comp>
+<div del z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
+```
+```html
+keep the placeholder tag:
+<div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
+```
+
+### 3.8.5. 组件参数
+
+```html
+<tag z-comp=... args=...></tag>
+```
+在组件内部, 用 args.xxx 来使用传进来的参数, 形如:
+```html
+<div z-data @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''
+#color=args.color #background=args.bgcolor !height=100% !padding=8px
+></div> 
+```
+
+### 3.8.6. z-comp demo:
+* https://codepen.io/funlang/pen/ExZBPJL
+* https://codepen.io/funlang/pen/RwKzaOo
+
+# 4. 浏览器兼容性
 
 Chrome 61+, Firefox 55+, Opera 48+
 
-  - Polyfill.js 之后 (Element.prototype.getAttributeNames)
+  - Polyfill.js (Element.prototype.getAttributeNames)
 
     Chrome 60+, Firefox 55+, Opera 47+
 
-## 加入我们
+# 5. 加入我们
 
 欢迎加入 z-data 项目, 一起工作, Enjoy!

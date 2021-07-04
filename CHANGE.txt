@@ -1,4 +1,8 @@
 
+2021-07-04
+  * manual
+  + v1.0 released
+
 2021-07-01
   + template use
 
