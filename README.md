@@ -222,19 +222,19 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
 后面的值全部都是 js 表达式, 可以是 js 变量, 或者是字符串, 字符串要用 ' " ` 套住
 
-\: :: @ . .. # directive, all of the attribute value is a js expression, supports js variable, or string, string must quoted with ' " `
+Attribute value is a js expression, supports js variable, or string, string must quoted with ' " `
 
 #### 3.4.6.2. ${...}
 
-非绑定的属性值中含有 ${...}, 会自动解析成一个字符串, 相当于 `...${...}...`
+非绑定的属性值中含有 \${...}, 会自动解析成一个字符串, 相当于 \`...${...}...`
 
-builtin attributes with \${...} in their values, will be paused as a string expression, to `...${...}...`
+builtin attributes with \${...} in their values, will be paused as a string expression, to \`...${...}...`
 
 #### 3.4.6.3. !
 
-! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=`string-value`
+! 与 含有 ${} 的属性值类似, 会自动解析成 :css.style-name=\`string-value`
 
-! will be compiled to :css.style-name=`string-value`
+! will be compiled to :css.style-name=\`string-value`
 
 ### 3.4.7. attr
 

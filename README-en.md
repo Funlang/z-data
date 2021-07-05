@@ -194,15 +194,15 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
 #### 3.4.6.1. : :: @ . .. \#
 
-\: :: @ . .. # directive, all of the attribute value is a js expression, supports js variable, or string, string must quoted with ' " `
+Attribute value is a js expression, supports js variable, or string, string must quoted with ' " `
 
 #### 3.4.6.2. ${...}
 
-builtin attributes with \${...} in their values, will be paused as a string expression, to `...${...}...`
+builtin attributes with \${...} in their values, will be paused as a string expression, to \`...${...}...`
 
 #### 3.4.6.3. !
 
-! will be compiled to :css.style-name=`string-value`
+! will be compiled to :css.style-name=\`string-value`
 
 ### 3.4.7. attr
 
