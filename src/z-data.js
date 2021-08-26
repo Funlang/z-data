@@ -1,15 +1,10 @@
 // Copyright (c) 2021 zwd@funlang.org
 const ZData = (() => {
-    const zdata = "z-data";
-    const znone = "z-none";
-    const zcomp = "z-comp";
-    const zinit = "init";
-    const zargs = "args";
-    const zfor = "for";
-    const zkey = "key";
-    const zif = "if";
-    const zelse = "else";
-    const qdata = `[${zdata}]`;
+    const zdata = "z-data", zcomp = "z-comp", znone = "z-none";
+    const zinit = "init",   zargs = "args";
+    const zfor  = "for",    zkey  = "key";
+    const zif   = "if",     zelse = "else";
+    const zuse  = "use",     _z_d = "_z_d",   qdata = `[${zdata}]`;
     const etAttribute = "etAttribute";
     const Element = "Element";
     const ElementSibling = Element + "Sibling";
@@ -20,11 +15,9 @@ const ZData = (() => {
     const firstEL = "first" + ElementChild;
     const lastEL = "last" + ElementChild;
     const prevEL = "previous" + ElementSibling;
-    const nextEL = "next" + ElementSibling;
+    const nexT = "next", nextEL = nexT + ElementSibling;
     const createEl = "create" + Element;
     const insert = "insertBefore";
-    const nexT = "next";
-    const _z_d = "_z_d";
     const forEach = "forEach";
     const includes = "includes";
     const length = "length";
@@ -156,7 +149,7 @@ const ZData = (() => {
                 goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, nop);
             } else {
-                expand(args);
+                expand(args, env);
                 args.el = args.el[nextEL];
                 goNodes(args, env, ({ el }) => el != next);
                 goNodes(args, env, isElse, fold);
@@ -165,9 +158,9 @@ const ZData = (() => {
         } else fold(args, env);
     };
 
-    let expand = ({ u, r, p, el, next, n }) => {
+    let expand = ({ p, el, next, n, u, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (u = el[getAttribute]('use')) && (u = r[querySelector]('#' + u)) && u.content || el.content;
+            n = el[_z_d].node = (u = el[getAttribute](zuse)) && (u = r[querySelector]('#' + tryEval(el, '`'+u+'`', env))) && u.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -249,7 +242,7 @@ const ZData = (() => {
                 curNode.age = age;
             } else {
                 args.el = el;
-                expand(args);
+                expand(args, env2);
                 args.el = cur[nextEL];
                 curNode = keys[key] = { age, from: args.el };
                 goNodes(args, env2, ({ el }) => el != next);
@@ -478,7 +471,7 @@ const ZData = (() => {
     let loadHTML = (html, p, before, args) => {
         p || (p = $ocument.body);
         let id, fn, name, el = $ocument[createEl](zdata);
-        if (!(id = p[getAttribute]("z-id"))) p[setAttribute]("z-id", (id = ++ids));
+        if (!(id = p[getAttribute]("z-i"))) p[setAttribute]("z-i", (id = ++ids));
         let fns = debounce(() => {
                 fn[forEach]((f) => f());
                 --updating < 0 ? (updating = 0) : 0, startLater();
@@ -504,7 +497,7 @@ const ZData = (() => {
         })[replace](/(<(style)[^>]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/.test(names)) return names; // @keyframes
-                return split(names, /\s*,\s*/).map((n) => `[z-id="${id}"] ` + n).join(",");
+                return split(names, /\s*,\s*/).map((n) => `[z-i="${id}"] ` + n).join(",");
             });
             return s1 + s + s2;
         });
