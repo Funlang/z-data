@@ -152,7 +152,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
         </template>
     </z>
 
-    <template use=t1></template>
+    <template use=#t1></template>
     ```
 
 ## 3.4. 绑定 | data binding

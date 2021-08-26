@@ -1,6 +1,8 @@
 
 2021-08-26
-  * template use to support ${...}
+  * template use
+    + support ${...}
+    * selector (e.g.: #t1)
 
 2021-07-04
   * manual

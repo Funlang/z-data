@@ -145,7 +145,7 @@ TodoMVC:
         </template>
     </z>
 
-    <template use=t1></template>
+    <template use=#t1></template>
     ```
 
 ## 3.4. 绑定

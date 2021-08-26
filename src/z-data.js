@@ -160,7 +160,7 @@ const ZData = (() => {
 
     let expand = ({ p, el, next, n, u, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (u = el[getAttribute](zuse)) && (u = r[querySelector]('#' + tryEval(el, '`'+u+'`', env))) && u.content || el.content;
+            n = el[_z_d].node = (u = el[getAttribute](zuse)) && (u = r[querySelector](tryEval(el, '`'+u+'`', env))) && u.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
