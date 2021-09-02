@@ -262,7 +262,6 @@ const ZData = (() => {
     };
 
     const toCamel = (name) => name[replace](re_2camel, (m, c) => c.toUpperCase());
-    const classNames = {};
     const attrMaps = { css: s_tyle, text: textC, html: "innerHTML" };
     const setAttrs = (args, env, attrNames, nc) => {
         let { el } = args,
@@ -274,11 +273,6 @@ const ZData = (() => {
             if (args.cp) {
                 nodeCache[++cps] = { as: attrNames, ps: props };
                 el[setAttribute]("z-d", cps);
-            }
-            let c = el.className, ocl;
-            if (c && is_object(c, "string")) {
-                c = classNames[c] || (classNames[c] = split(c));
-                c[forEach]((name) => ((ocl || (ocl = {}))[name] = 1));
             }
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
@@ -297,7 +291,6 @@ const ZData = (() => {
                     };
                     if (!ps.b || ms[4] == "!") ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
-                    if (ps.k == c_lass) props.ocl = ocl;
                     args.cp && ps.b && el[removeAttribute](a);
                 }
             });
@@ -310,15 +303,14 @@ const ZData = (() => {
             }
         }
         if (args.cp) return;
-        let oldcls = props.ocl ? { ...props.ocl } : {};
-        let clsChanged = false, i = 0;
+        let i = 0;
         props.ps[forEach]((ps) => {
             if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, env, ps);
                 if (vs[i] !== v) {
                     vs[i] = v;
-                    clsChanged = setValue(el, ps, v, oldcls) || clsChanged;
+                    setValue(el, ps, v);
                 }
                 i++;
                 if (ps.b == 2) {
@@ -339,30 +331,26 @@ const ZData = (() => {
                 }
             }
         });
-        if (clsChanged) {
-            let cls = Obj_keys(oldcls).join(" ");
-            if (zd.oc != cls) el.className = zd.oc = cls;
-        }
     };
 
-    const setValue = (el, ps, value, cls) => {
+    const setValue = (el, ps, value) => {
         if (ps.k == c_lass) {
+            let cl = el.classList;
             if (ps.m && ps.m[length] > 0) {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
                     if (is_object(v, "boolean") || !name.endsWith("-")) {
-                        v ? (cls[name] = 1) : delete cls[name];
-                    } else cls[name + v] = 1;
+                        v ? cl.add(name) : cl.remove(name);
+                    } else cl.add(name + v);
                 });
             } else {
                 if (Array.isArray(value)) {
                 } else if (is_object(value)) {
-                    Obj_keys(value)[forEach]((name) => (value[name] ? (cls[name] = 1) : delete cls[name]));
-                    return true;
+                    Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl.remove(name));
+                    return;
                 } else value = value ? split(value) : [];
-                value[forEach]((name) => (cls[name] = 1));
+                value[forEach]((name) => cl.add(name));
             }
-            return true;
         } else {
             if (ps.k == s_tyle) {
                 if (ps.m && ps.m[length] > 0) {
