@@ -162,7 +162,7 @@ const ZData = (() => {
 
     const expand = ({ p, el, next, n, u, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (u = el[getAttribute](zuse)) && (u = r[querySelector](tryEval(el, '`'+u+'`', env))) && u.content || el.content;
+            n = el[_z_d].node = (u=el[getAttribute](zuse)) && (u=tryEval(el,'`'+u+'`',env)) && (u=r[querySelector](u) || (n=r.parentElement.closest(qdata))&&n[querySelector](u)) && u.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -324,7 +324,7 @@ const ZData = (() => {
                             if (ps.m[includes]("trim")) v += ".trim()";
                             if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
                         }
-                        v = /==/.test(ps.e) ? "this.checked&&(" + ps.e[replace](/==+/, "=") + ")" : ps.e + "=" + v
+                        v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, "=") + ")" : ps.e + "=" + v
                         ps.b2 = { ...ps, e: v, k: event, ev: event, f: nil };
                     }
                     setEvent(args, ps.b2, env);

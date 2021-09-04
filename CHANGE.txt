@@ -1,4 +1,9 @@
 
+2021-09-04~05
+  - this.checked && -> v &&
+  * template use
+    seek the template (use selector) from the z-data comp and then to up z-data for extend template builtin
+
 2021-09-02
   ! refactory code
     className -> classList
