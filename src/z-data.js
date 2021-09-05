@@ -483,7 +483,7 @@ const ZData = (() => {
                 fn = [];
             } else e[textC] = name ? s[replace](name, name + "_" + id) : s;
             return "";
-        })[replace](/(<(style)[^>]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
+        })[replace](/(<(style)[^>@]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
                 if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/.test(names)) return names; // @keyframes
                 return split(names, /\s*,\s*/).map((n) => `[z-i="${id}"] ` + n).join(",");

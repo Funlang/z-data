@@ -1,4 +1,8 @@
 
+2021-09-05
+  * loadHTML()
+    <style @> DONT be scoped
+
 2021-09-04~05
   - this.checked && -> v &&
   * template use
