@@ -57,6 +57,10 @@ TodoMVC:
 
 * https://codepen.io/funlang/pen/OJWrJep
 
+一个表单示例 | z-data form demo:
+
+* https://funlang.org/z-data/?url=./test/z-data-form-demo.html
+
 ## 2.1. z-data studio
 
 可以在线创建/调试/预览 z-data 代码
