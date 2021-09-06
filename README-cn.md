@@ -1,6 +1,6 @@
 # z-data
 
-Z-data 是一个超轻量级的零配置嵌入式微前端框架.
+Z-data 是一个超轻量级的零配置嵌入式前端框架.
 
 [[English](./README-en.md)] [[中文](./README-cn.md)]
 
@@ -55,6 +55,10 @@ TodoMVC:
 复杂数据绑定
 
 * https://codepen.io/funlang/pen/OJWrJep
+
+一个表单示例:
+
+* https://funlang.org/z-data/?url=./test/z-data-form-demo.html
 
 ## 2.1. z-data studio
 

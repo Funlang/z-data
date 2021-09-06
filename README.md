@@ -1,7 +1,7 @@
 # z-data
 
-Z-data 是一个超轻量级的零配置嵌入式微前端框架.
-Z-data is an extremely lightweight zero configuration embedded micro front-end framework.
+Z-data 是一个超轻量级的零配置嵌入式前端框架.
+Z-data is an extremely lightweight zero configuration embedded mini front-end framework.
 
 [[English](./README-en.md)] [[中文](./README-cn.md)]
 

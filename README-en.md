@@ -1,6 +1,6 @@
 # z-data
 
-Z-data is an extremely lightweight zero configuration embedded micro front-end framework.
+Z-data is an extremely lightweight zero configuration embedded mini front-end framework.
 
 [[English](./README-en.md)] [[中文](./README-cn.md)]
 
@@ -55,6 +55,10 @@ TodoMVC:
 Data bindings for complex data:
 
 * https://codepen.io/funlang/pen/OJWrJep
+
+z-data form demo:
+
+* https://funlang.org/z-data/?url=./test/z-data-form-demo.html
 
 ## 2.1. z-data studio
 
