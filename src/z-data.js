@@ -486,7 +486,7 @@ const ZData = (() => {
             return "";
         })[replace](/(<(style)[^>@]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
-                if (/^\s*(@.*|\d+%(\s*,\s*\d+%)*|from|to)\s*$/.test(names)) return names; // @keyframes
+                if (/^\s*(\[z-i|@|\d+%|from|to)\b/.test(names)) return names; // [z-i or @keyframes
                 return split(names, /\s*,\s*/).map((n) => `[z-i="${id}"] ` + n).join(",");
             });
             return s1 + s + s2;
