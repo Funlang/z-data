@@ -4,20 +4,21 @@ const ZData = (() => {
 
     const Attribute = "Attribute", Element = "Element", ElementSibling = Element + "Sibling", ElementChild = Element + "Child";
 
-    const zdata = "z-data", zcomp = "z-comp", znone = "z-none";
-    const zinit = "init",   zargs = "args";
-    const zfor  = "for",    zkey  = "key";
-    const zif   = "if",     zelse = "else";
-    const zuse  = "use",     _z_d = "_z_d",   qdata = `[${zdata}]`;
+    const zdata = "z-data",  zcomp = "z-comp", znone = "z-none";
+    const zinit = "init",    zargs = "args";
+    const zfor  = "for",     zkey  = "key";
+    const zif   = "if",      zelse = "else";
+    const zuse  = "use",      _z_d = "_z_d",   qdata = `[${zdata}]`;
 
-    const getAttribute    = "get"          + Attribute;
-    const setAttribute    = "set"          + Attribute;
-    const removeAttribute = "remove"       + Attribute;
-    const firstEL  = "first"               + ElementChild;
-    const lastEL   = "last"                + ElementChild;
-    const prevEL   = "previous"            + ElementSibling;
-    const nexT     = "next", nextEL = nexT + ElementSibling;
-    const createEl = "create"              + Element;
+    const getAttribute    = "get"  + Attribute;
+    const setAttribute    = "set"  + Attribute, remoVe = "remove";
+    const removeAttribute = remoVe + Attribute;
+    const firstEL  = "first"       + ElementChild;
+    const lastEL   = "last"        + ElementChild;
+    const prevEL   = "previous"    + ElementSibling, nexT = "next";
+    const nextEL   = nexT          + ElementSibling;
+    const createEl = "create"      + Element;
+    const parentEL = "parent"      + Element;
 
     const insert = "insertBefore";
     const forEach = "forEach";
@@ -68,7 +69,7 @@ const ZData = (() => {
         env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
         let init = (self) => {
             updating++, stopObserve($ocument.body);
-            goAnode({ r: el, p: el.parentElement, el }, { ...env, d: el[_z_d].zd }, self || age);
+            goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd }, self || age);
             updating--, observe($ocument.body);
         };
         let initLater = debounce(init);
@@ -114,7 +115,7 @@ const ZData = (() => {
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
-                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el.remove();
+                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el[remoVe]();
                         else loadHTML(html, el, nil, as), el[removeAttribute](zcomp);
                     }).catch(nop);
                 } catch (e) {}
@@ -162,7 +163,7 @@ const ZData = (() => {
 
     const expand = ({ p, el, next, n, u, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (u=el[getAttribute](zuse)) && (u=tryEval(el,'`'+u+'`',env)) && (u=r[querySelector](u) || (n=r.parentElement.closest(qdata))&&n[querySelector](u)) && u.content || el.content;
+            n = el[_z_d].node = (u=el[getAttribute](zuse)) && (u=tryEval(el,'`'+u+'`',env)) && (u=r[querySelector](u) || (n=r[parentEL].closest(qdata))&&n[querySelector](u)) && u.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -185,7 +186,7 @@ const ZData = (() => {
             args, env,
             ({ el }) => el != next,
             ({ el }) => {
-                el.remove();
+                el[remoVe]();
             }
         );
     };
@@ -340,13 +341,13 @@ const ZData = (() => {
                 let v = ps.e === "" ? true : value;
                 ps.m[forEach]((name) => {
                     if (is_object(v, "boolean") || !name.endsWith("-")) {
-                        v ? cl.add(name) : cl.remove(name);
+                        v ? cl.add(name) : cl[remoVe](name);
                     } else cl.add(name + v);
                 });
             } else {
                 if (Array.isArray(value)) {
                 } else if (is_object(value)) {
-                    Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl.remove(name));
+                    Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl[remoVe](name));
                     return;
                 } else value = value ? split(value) : [];
                 value[forEach]((name) => cl.add(name));
@@ -365,7 +366,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            ps.m && ps.m[includes]("attr") ? el[setAttribute](ps.k, value) : el[ps.k] = value;
+            ps.m && ps.m[includes]("attr") ? ps.m[includes]("bool")&&!value ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
         }
     };
 

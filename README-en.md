@@ -210,11 +210,13 @@ builtin attributes with \${...} in their values, will be paused as a string expr
 
 ### 3.4.7. attr
 
-:attr.attr will be attribute, or default are prop (property)
+:xxx.attr will be attribute, or default are prop (property)
+
+:xxx.attr.bool will be boolean attribute
 
 ### 3.4.8. camel
 
-:attr.camel supports camel attributes or properties
+:xxx.camel supports camel attributes or properties
 
 ::value=propName, ::style.value=propName, ::css.value=propName
   ```

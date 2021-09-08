@@ -210,11 +210,13 @@ TodoMVC:
 
 ### 3.4.7. attr
 
-:attr.attr 表示为可视 attribute 属性, 否则默认为不可见 prop 属性
+:xxx.attr 表示为可视 attribute 属性, 否则默认为不可见 prop 属性
+
+:xxx.attr.bool 表示为 boolean attribute 属性
 
 ### 3.4.8. camel
 
-:attr.camel 支持驼峰表示法
+:xxx.camel 支持驼峰表示法
 
 ::value=propName, ::style.value=propName, ::css.value=propName
   ```

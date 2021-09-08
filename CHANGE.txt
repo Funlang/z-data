@@ -1,4 +1,8 @@
 
+2021-09-08
+  + modifier bool, for .attr modifier
+    :xxx.attr.bool xxx is a boolean attribute
+
 2021-09-05
   * loadHTML()
     <style @> DONT be scoped
