@@ -89,8 +89,9 @@ const ZData = (() => {
                 }
             };
             ZData.proxy = (v) => getProxy()(v, cb);
-            zd = tryEval(el, el[getAttribute](zdata) || 0, env) || {};
+            zd = tryEval(el, el._z = el[getAttribute](zdata) || 0, env) || {};
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
+            el[setAttribute](zdata, "");
             if (el[zargs]) zd[zargs] = el[zargs];
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
@@ -292,7 +293,7 @@ const ZData = (() => {
                     };
                     if (!ps.b || ms[4] == "!") ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
-                    args.cp && ps.b && el[removeAttribute](a);
+                    ps.b && el[removeAttribute](a);
                 }
             });
             let f, t;
@@ -525,7 +526,11 @@ const ZData = (() => {
         l(now(), zdata, now() - _n_, --updating);
         observe($ocument.body);
     };
-    $ocument[addEventListener]("DOMContentLoaded", start);
 
-    return { start, loadHTML };
+    const ons = {};
+    const on = (name, fn) => ((ons[name] = ons[name] || []).push(fn), ZData);
+    const call = (name, args) => (ons[name] || [])[forEach]((fn) => fn(args));
+          
+    $ocument[addEventListener]("DOMContentLoaded", start);
+    return { start, loadHTML, on, call };
 })();

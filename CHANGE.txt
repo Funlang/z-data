@@ -1,4 +1,12 @@
 
+2021-09-12
+  + .on(name, fn)
+  + .call(name, args)
+
+2021-09-10
+  * remove z-data string (to el._z) after init
+  * remove bind attrs after init
+
 2021-09-09
   * loadHTML()
     replace scope of style for scoped [z-i...
