@@ -1,4 +1,7 @@
 
+2021-09-13
+  * load z-comp (fix bug for fetch twice)
+
 2021-09-12
   + .on(name, fn)
   + .call(name, args)

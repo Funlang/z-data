@@ -48,7 +48,7 @@ const ZData = (() => {
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
     const re_bind = /^[:@.#!]./;
     const re_attr = /^(?:(:)(:?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
-    const $e_text = (s) => s.indexOf("${") >= 0 && s.indexOf("`") < 0;
+    const $e_text = (s) => s && s.indexOf("${") >= 0 && s.indexOf("`") < 0;
     const re_kebab = /[-_ ]+/g;
     const re_2camel = /-([a-z])/g;
 
@@ -111,17 +111,18 @@ const ZData = (() => {
             if (self === nil && attrs[includes](zdata)) return initComponent(el, env);
             else if (attrs[includes](zcomp) && (exp = el[getAttribute](zcomp))) {
                 try {
+                    el[removeAttribute](zcomp);
                     if (/^([.\/]|https?:)/.test(exp)) res = fetch(exp).then((res) => res.text());
                     else if (/^z:/.test(exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
-                        if (el.localName.charAt(1) == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el[remoVe]();
-                        else loadHTML(html, el, nil, as), el[removeAttribute](zcomp);
+                        if (el.tagName[1] == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el[remoVe]();
+                        else loadHTML(html, el, nil, as);
                     }).catch(nop);
                 } catch (e) {}
                 return;
-            } else if (el.content && "template" == el.localName) {
+            } else if (el.content && "TEMPLATE" == el.tagName) {
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
                 } else if ((exp = el[getAttribute](zif)) || 1 /*attrs[includes](zelse)*/) {
