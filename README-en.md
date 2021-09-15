@@ -212,7 +212,7 @@ builtin attributes with \${...} in their values, will be paused as a string expr
 
 :xxx.attr will be attribute, or default are prop (property)
 
-:xxx.attr.bool will be boolean attribute
+:xxx.attr === false will be boolean attribute
 
 ### 3.4.8. camel
 

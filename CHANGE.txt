@@ -1,4 +1,8 @@
 
+2021-09-15
+  - remove :xxx.attr .bool
+    :xxx.attr.bool -> :xxx.attr (removeAttribute when false)
+
 2021-09-13
   * load z-comp (fix bug for fetch twice)
 

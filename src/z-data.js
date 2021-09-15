@@ -368,7 +368,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            ps.m && ps.m[includes]("attr") ? ps.m[includes]("bool")&&!value ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
+            ps.m && ps.m[includes]("attr") ? value === false ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
         }
     };
 
