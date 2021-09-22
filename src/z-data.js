@@ -403,7 +403,7 @@ const ZData = (() => {
                     }
                     let keys = ms.filter((m) => !re_modifiers.test(m));
                     if (keys[length] == 1) {
-                        if (name[startsWith]("key")) {
+                        if (name[startsWith]("key") && e.key) {
                             let key = keys[0][replace](re_kebab, "");
                             key = { space: " ", slash: "/", gt: ">", eq: "=" }[key] || key;
                             if (key != (e.key.toLowerCase()[replace](re_kebab, "") || " ")) return;

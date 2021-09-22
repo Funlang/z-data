@@ -1,4 +1,7 @@
 
+2021-09-22
+  * fix bug for key event (autocomplete list)
+
 2021-09-15
   - remove :xxx.attr .bool
     :xxx.attr.bool -> :xxx.attr (removeAttribute when false)
