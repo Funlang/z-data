@@ -2,32 +2,46 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>z-data studio</title>
     <meta name="author" content="Wisdom ZHANG" />
     <meta name="description" content="z-data studio, to develop, debug and preview z-data apps and components">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <link rel="stylesheet" href="./res/style.css">
-    <style>
+    <link rel="stylesheet" href="./res/split.css">
+    <script src="./res/split.js"></script>
+    <style keep>
         body {
             overflow: auto;
-            font-family: consolas;
+            font-family: "Microsoft Yahei";
         }
+
         body[minify] {
             white-space: pre-wrap;
+            font-family: consolas;
         }
     </style>
-    <script src="./res/polyfill.js"></script>
-    <script src="./z-data.min.js"></script>
+    <script src="./res/polyfill.js" keep></script>
+    <script src="./z-data.min.js" keep></script>
 </head>
 
 <body>
-    <div z-data !text-align=center !height=100% !background=#f8f8f8 !color=#aaa !display=flex !flex-direction=column
-        !justify-content=center>preview panel</div>
-    </div>
+
 </body>
 
 <script>
-    (window.ZData=ZData).nobserve = true;
+    (window.ZData = ZData).nobserve = true;
+    window.refresh = () => {
+        try {
+            let html = document.location.href.match(/([\?#])(?:(?:(url)|html)=)?(.+)$/);
+            let f = v => (document.body.innerHTML = '', ZData.loadHTML(v, document.body));
+            if (html) {
+                if (html[2]) fetch(window.unescape(html[3])).then(res => res.text()).then(f);
+                else f(window.unescape(html[3]));
+            }
+        } catch (e) { }
+    };
+    refresh();
 </script>
 
 </html>

@@ -10,7 +10,7 @@ body {
     overflow: hidden;
 }
 
-@media screen and (min-width: 768px) {
+/* @media screen and (min-width: 768px) {
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -35,4 +35,4 @@ body {
     :hover::-webkit-scrollbar-button:hover {
         background: #666;
     }
-}
+} */
