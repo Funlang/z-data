@@ -315,7 +315,6 @@ const ZData = (() => {
                     vs[i] = v;
                     setValue(el, ps, v);
                 }
-                i++;
                 if (ps.b == 2) {
                     if (!ps.b2) {
                         v = "this." + ps.k;
@@ -327,11 +326,13 @@ const ZData = (() => {
                             if (ps.m[includes]("trim")) v += ".trim()";
                             if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
                         }
-                        v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, "=") + ")" : ps.e + "=" + v
+                        let vi = "this." + _z_d + ".vs[" + i + "]=";
+                        v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, "=" + vi) + ")" : ps.e + "=" + vi + v
                         ps.b2 = { ...ps, e: v, k: event, ev: event, f: nil };
                     }
                     setEvent(args, ps.b2, env);
                 }
+                i++;
             }
         });
     };
