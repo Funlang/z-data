@@ -311,9 +311,10 @@ const ZData = (() => {
             if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, env, ps);
+                let num = ps.m && ps.m[includes]("number");
                 if (vs[i] !== v) {
                     vs[i] = v;
-                    setValue(el, ps, v);
+                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v);
                 }
                 if (ps.b == 2) {
                     if (!ps.b2) {
@@ -324,10 +325,10 @@ const ZData = (() => {
                             if (ps.m[includes](input)) event = input;
                             else if (ps.m[includes](change)) event = change;
                             if (ps.m[includes]("trim")) v += ".trim()";
-                            if (ps.m[includes]("number")) v = "parseFloat(" + v + ")";
+                            if (num) v = "this.u?this.u.replace(/1/," + v + "):parseFloat(" + v + ")";
                         }
-                        let vi = "this." + _z_d + ".vs[" + i + "]=";
-                        v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, "=" + vi) + ")" : ps.e + "=" + vi + v
+                        let vi = "=this." + _z_d + ".vs[" + i + "]=";
+                        v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, vi) + ")" : ps.e + vi + v
                         ps.b2 = { ...ps, e: v, k: event, ev: event, f: nil };
                     }
                     setEvent(args, ps.b2, env);

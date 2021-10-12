@@ -1,4 +1,7 @@
 
+2021-10-12
+  + unit to .number (input)
+
 2021-09-28
   * fix bug for :: changed value not in vs[i] cache
 
