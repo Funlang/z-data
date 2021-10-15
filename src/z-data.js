@@ -314,7 +314,7 @@ const ZData = (() => {
                 let num = ps.m && ps.m[includes]("number");
                 if (vs[i] !== v) {
                     vs[i] = v;
-                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v);
+                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v === nil ? "" : v);
                 }
                 if (ps.b == 2) {
                     if (!ps.b2) {

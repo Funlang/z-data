@@ -1,4 +1,8 @@
 
+2021-10-15
+  * setValue()
+    value: undefined -> ""
+
 2021-10-12
   + unit to .number (input)
 
