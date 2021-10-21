@@ -257,7 +257,7 @@ passive   passive mode
 
 ```
 self      tag only
-away      tag not
+out       tag not
 window
 document
 ```
@@ -268,7 +268,7 @@ document
 shift
 ctrl
 alt
-meta      or cmd, super
+meta      or cmd
 ```
 
 ### 3.5.4 Keyboard modifier

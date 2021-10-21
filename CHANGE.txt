@@ -1,4 +1,10 @@
 
+2021-10-21
+  * expand()
+  * re_modifiers / setEvent()
+    .away -> .out
+    - .super
+
 2021-10-15
   * setValue()
     value: undefined -> ""

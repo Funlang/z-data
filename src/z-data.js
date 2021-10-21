@@ -44,7 +44,7 @@ const ZData = (() => {
     const now = Date.now;
     const nil = undefined;
 
-    const re_modifiers = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|away|window|document|(shift|ctrl|alt|meta)|(cmd|super))$/;
+    const re_ms = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|out|window|document|(shift|ctrl|alt|meta)|(cmd))$/;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
     const re_bind = /^[:@.#!]./;
     const re_attr = /^(?:(:)(:?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
@@ -163,9 +163,10 @@ const ZData = (() => {
         } else fold(args, env);
     };
 
-    const expand = ({ p, el, next, n, u, r }, env) => {
+    const expand = ({ p, el, next, n, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (u=el[getAttribute](zuse)) && (u=tryEval(el,'`'+u+'`',env)) && (u=r[querySelector](u) || (n=r[parentEL].closest(qdata))&&n[querySelector](u)) && u.content || el.content;
+            n = el[_z_d].node = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
+                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || el.content;
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -390,20 +391,20 @@ const ZData = (() => {
     const setEvent = ({ r, el }, ps, env) => {
         let { a: key, k: name, e: exp, ev, m: ms = [] } = ps;
         if (!el[_z_d][key]) {
-            let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("away") ? $ocument : el;
+            let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("out") ? $ocument : el;
             let fn = (e) => {
                 if (ms[includes]("self") && el != e.target) return;
-                if (ms[includes]("away") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
-                // key and mouse (ctrl, alt, shift, meta, cmd, super)
+                if (ms[includes]("out") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
+                // key and mouse (ctrl, alt, shift, meta, cmd)
                 if (name[startsWith]("key") || name[startsWith]("mouse") || name.endsWith("click")) {
                     for (let modifier of ms) {
-                        let m = re_modifiers.exec(modifier);
+                        let m = re_ms.exec(modifier);
                         if (m && (m[3] || m[4])) {
                             let key = m[3] || (m[4] && "meta");
                             if (!key || !e[key + "Key"]) return;
                         }
                     }
-                    let keys = ms.filter((m) => !re_modifiers.test(m));
+                    let keys = ms.filter((m) => !re_ms.test(m));
                     if (keys[length] == 1) {
                         if (name[startsWith]("key") && e.key) {
                             let key = keys[0][replace](re_kebab, "");
@@ -421,7 +422,7 @@ const ZData = (() => {
             let i = ms.indexOf("debounce");
             if (i >= 0) {
                 i = ms[i + 1];
-                let m = re_modifiers.exec(i);
+                let m = re_ms.exec(i);
                 i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
                 fn = debounce(fn, i >> 0);
             }
