@@ -328,35 +328,59 @@ alias:  space: " ", slash: /, gt: >, eq: =
 ```
 <button>  left, mid, right
 ```
+## 3.6. 动态属性和事件 | Dynamic props and events
 
-## 3.6. 变量 | Variables
+### 3.6.1. 动态属性 | Dynamic props/attrs
 
-### 3.6.1. $el
+    :*={...}
+    :*.attr={...}
+
+  e.g.:
+
+    :*="{
+      min: '1',
+      max: '100'
+    }"
+
+### 3.6.2. 动态事件 | Dynamic events
+
+    @*={...}
+
+  e.g.:
+
+    @*="{
+      input: 'console.log(event)',
+      keydown: 'console.log(event)'
+    }"
+
+## 3.7. 变量 | Variables
+
+### 3.7.1. $el
 
 \$el 组件根节点
 $el z-data root element
 
-### 3.6.2. \$el.$data
+### 3.7.2. \$el.$data
 
 \$el.\$data 组件的包装 data 对象
 \$el.\$data the z-data data object
 
-### 3.6.3. ZData.nobserve (default false)
+### 3.7.3. ZData.nobserve (default false)
 
 ```
 no observe DOM for dynamic creating z-data node
   use ZData.loadHTML(), so observe DOM is not needed.
 ```
 
-## 3.7. 函数 | Function
+## 3.8. 函数 | Function
 
-### 3.7.1. ZData.proxy()
+### 3.8.1. ZData.proxy()
 
 在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
 
 Reactive to the z-data data object, return ZData.proxy() wrapper, and it will reactive when change manual
 
-### 3.7.2. ZData.loadHTML(html, p, before, args)
+### 3.8.2. ZData.loadHTML(html, p, before, args)
 
 动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
 
@@ -365,14 +389,14 @@ Dynamic load html, p - the parent element(default body), before - insert before
 * html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
 * html have script, must run loadHTML. Or you can use :html=... to load html properly
 
-### 3.7.3. el.fireChange()
+### 3.8.3. el.fireChange()
 
 在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
 Change el style out of z-data, for dual-binding, needs to call .fireChange()
 
-## 3.8. 组件 | Component
+## 3.9. 组件 | Component
 
-### 3.8.1. z-comp
+### 3.9.1. z-comp
 
 z-comp 为 ZData 组件
 z-comp is a ZData component
@@ -381,7 +405,7 @@ z-comp is a ZData component
 <tag z-comp=...></tag>
 ```
 
-### 3.8.2. 组件地址 | z-comp URL
+### 3.9.2. 组件地址 | z-comp URL
 
 z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
 z-comp may equal a ./ relative path, or a http(s): resource
@@ -397,7 +421,7 @@ z-comp may be a Promise function, then return a z-comp code
 <tag z-comp="load_z_comp('z-comp-2')"></tag>
 ```
 
-### 3.8.3. 组件加载器 | z-comp loader ZData.get
+### 3.9.3. 组件加载器 | z-comp loader ZData.get
 
 z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
 z-comp supports z:// protocol plugin, ZData.get is exists, z:// will be work
@@ -423,7 +447,7 @@ and apply ZData.get to load table-v1.5.2 component
 <z- z-comp=z://table-v1.5.2></z->
 ```
 
-### 3.8.4. 组件占位符 | z-comp placeholder
+### 3.9.4. 组件占位符 | z-comp placeholder
 
 z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
 z-comp supports keep / remove the placeholder tag, z-xxx or del attribute, then remove itself
@@ -438,7 +462,7 @@ keep the placeholder tag:
 <div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
 ```
 
-### 3.8.5. 组件参数 | z-comp args
+### 3.9.5. 组件参数 | z-comp args
 
 ```html
 <tag z-comp=... args=...></tag>
@@ -451,7 +475,7 @@ and use args.xxx to get the args props, e.g.:
 ></div> 
 ```
 
-### 3.8.6. z-comp demo:
+### 3.9.6. z-comp demo:
 * https://codepen.io/funlang/pen/ExZBPJL
 * https://codepen.io/funlang/pen/RwKzaOo
 

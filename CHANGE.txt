@@ -1,8 +1,14 @@
 
+2021-10-22
+  * setAttrs(), dynamic props/attrs/events supported
+    :*={...}
+    :*.attr={...}
+    @*={...}
+
 2021-10-21
   * expand()
   * re_modifiers / setEvent()
-    .away -> .out
+    * .away -> .out
     - .super
 
 2021-10-15

@@ -283,42 +283,67 @@ alias:  space: " ", slash: /, gt: >, eq: =
 <button>  left, mid, right
 ```
 
-## 3.6. 变量
+## 3.6. 动态属性和事件
 
-### 3.6.1. $el
+### 3.6.1. 动态属性
+
+    :*={...}
+    :*.attr={...}
+
+  e.g.:
+
+    :*="{
+      min: '1',
+      max: '100'
+    }"
+
+### 3.6.2. 动态事件
+
+    @*={...}
+
+  e.g.:
+
+    @*="{
+      input: 'console.log(event)',
+      keydown: 'console.log(event)'
+    }"
+
+## 3.7. 变量
+
+### 3.7.1. $el
 
 \$el 组件根节点
 
-### 3.6.2. \$el.$data
+### 3.7.2. \$el.$data
 
 \$el.\$data 组件的包装 data 对象
 
-### 3.6.3. ZData.nobserve (default false)
+### 3.7.3. ZData.nobserve (default false)
 
 ```
 no observe DOM for dynamic creating z-data node
   use ZData.loadHTML(), so observe DOM is not needed.
 ```
 
-## 3.7. 函数
+## 3.8. 函数
 
-### 3.7.1. ZData.proxy()
+### 3.8.1. ZData.proxy()
 
 在 z-data 获取 data 数据时, 用 ZData.proxy() 包装返回, 以使数据获得响应式
 
-### 3.7.2. ZData.loadHTML(html, p, before, args)
+### 3.8.2. ZData.loadHTML(html, p, before, args)
 
 动态加载 html, p - 需要插入的父节点(默认 body), before - 需要插入该子节点之前
 
 * html 内含有 script 的, 需要用此种方式加载, 否则可以用 :html=... 的方式加载
 
-### 3.7.3. el.fireChange()
+### 3.8.3. el.fireChange()
 
 在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
 
-## 3.8. 组件
+## 3.9. 组件
 
-### 3.8.1. z-comp
+### 3.9.1. z-comp
 
 z-comp 为 ZData 组件
 
@@ -326,7 +351,7 @@ z-comp 为 ZData 组件
 <tag z-comp=...></tag>
 ```
 
-### 3.8.2. 组件地址
+### 3.9.2. 组件地址
 
 z-comp 可以是一个 ./ 相对路径, 或者是一个 http(s): 的网络路径
 
@@ -340,7 +365,7 @@ z-comp 还可以是一个 Promise 函数, 用来加载组件代码
 <tag z-comp="load_z_comp('z-comp-2')"></tag>
 ```
 
-### 3.8.3. 组件加载器
+### 3.9.3. 组件加载器
 
 z-comp 支持 z:// 协议插件, ZData.get 函数存在时, z:// 插件生效
 
@@ -355,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => setTimeout(() => ZData.get =
 <z- z-comp=z://table-v1.5.2></z->
 ```
 
-### 3.8.4. 组件占位符
+### 3.9.4. 组件占位符
 
 z-comp 可以选择保留 / 删除组件占位符, z-xxx 或者含有 del 属性的, 删除占位符
 
@@ -369,7 +394,7 @@ keep the placeholder tag:
 <div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
 ```
 
-### 3.8.5. 组件参数
+### 3.9.5. 组件参数
 
 ```html
 <tag z-comp=... args=...></tag>
@@ -381,7 +406,7 @@ keep the placeholder tag:
 ></div> 
 ```
 
-### 3.8.6. z-comp demo:
+### 3.9.6. z-comp demo:
 * https://codepen.io/funlang/pen/ExZBPJL
 * https://codepen.io/funlang/pen/RwKzaOo
 

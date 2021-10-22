@@ -23,5 +23,5 @@
     "build monaco-html": "uglifyjs -c -m -o z-pen/res/html.min.js z-pen/res/html.js",
     "build sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js"
   },
-  "version": "1.4.4"
+  "version": "1.5.0"
 }

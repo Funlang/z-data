@@ -308,8 +308,9 @@ const ZData = (() => {
         }
         if (args.cp) return;
         let i = 0;
-        props.ps[forEach]((ps) => {
-            if (ps.b == 3) setEvent(args, ps, env);
+        let fn = (ps) => {
+            if (ps.k == "*") for (let k in (ps.K = ps.K || tryEval(el, ps.e, env, ps) || {})) fn({...ps, k, e: ps.K[k], f: nil});
+            else if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e && tryEval(el, ps.e, env, ps);
                 let num = ps.m && ps.m[includes]("number");
@@ -336,7 +337,8 @@ const ZData = (() => {
                 }
                 i++;
             }
-        });
+        };
+        props.ps[forEach](fn);
     };
 
     const setValue = (el, ps, value) => {

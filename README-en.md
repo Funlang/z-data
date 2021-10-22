@@ -4,7 +4,7 @@ Z-data is an extremely lightweight zero configuration embedded mini front-end fr
 
 [[English](./README-en.md)] [[中文](./README-cn.md)]
 
-# 1 Features:
+# 1. Features:
 
 - Without VDOM
 - Zero configuration zero dependency, no compile time
@@ -16,7 +16,7 @@ Z-data is an extremely lightweight zero configuration embedded mini front-end fr
 - Useful syntax sugars, friendly for class and style
 - Run with tailwind, supports production with H5 DOM inline
 
-# 2 Examples:
+# 2. Examples:
 
 ```html
 <div z-data="{name:'hello-world.html',items:{i:1,j:2,k:3}}"
@@ -66,9 +66,9 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
 * https://funlang.org/z-data/
 
-# 3 Usage:
+# 3. Usage:
 
-## 3.1 Install
+## 3.1. Install
 
 - CDN https://cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js
 
@@ -76,7 +76,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
   <script src=//cdn.jsdelivr.net/gh/Funlang/z-data@main/dist/z-data.min.js></script>
   ```
 
-## 3.2 Scope
+## 3.2. Scope
 
   - z- z-data attribute launch a ZData scope
     ```html
@@ -112,7 +112,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     ```
     add z-none to other tag will skip ZData process
 
-## 3.3 template
+## 3.3. template
 
   - template for
 
@@ -152,7 +152,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <template use=#t1></template>
     ```
 
-## 3.4 data binding
+## 3.4. data binding
 
   - : directive a data binding, :: directive a data dual-binding (like modal in some framework)
 
@@ -168,7 +168,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
   :class supports [] {} and string, these will be combine to the classname in order
 
-### 3.4.3 :class shorthand
+### 3.4.3. :class shorthand
 
 :class supports :class.name1.name2=...
   ```
@@ -181,7 +181,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
 :style supports :css shorthand, supports {} and string, the style property will be overwrite in order
 
-### 3.4.5 :style shorthand
+### 3.4.5. :style shorthand
 
 :style supports :style.name.value=...
   ```
@@ -194,7 +194,7 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     #--a-css-var=`'${theCssVarValue}'`
   ```
 
-### 3.4.6 !!! Warning:
+### 3.4.6. !!! Warning:
 
 #### 3.4.6.1. : :: @ . .. \#
 
@@ -236,11 +236,11 @@ builtin attributes with \${...} in their values, will be paused as a string expr
 Note: opt is prop name in data
 ```
 
-## 3.5 event
+## 3.5. event
 
 @ to bind events, supports modifiers
 
-### 3.5.1 Global modifier
+### 3.5.1. Global modifier
 
 ```
 camel     a-camel-name -> aCamelName
@@ -253,7 +253,7 @@ once      once mode, run once only
 passive   passive mode
 ```
 
-### 3.5.2 Scope modifier
+### 3.5.2. Scope modifier
 
 ```
 self      tag only
@@ -262,7 +262,7 @@ window
 document
 ```
 
-### 3.5.3 Keyboard and mouse modifier
+### 3.5.3. Keyboard and mouse modifier
 
 ```
 shift
@@ -271,54 +271,79 @@ alt
 meta      or cmd
 ```
 
-### 3.5.4 Keyboard modifier
+### 3.5.4. Keyboard modifier
 ```
 <key>     enter, escape, space, f1 etc., details refer to:
           https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
 alias:  space: " ", slash: /, gt: >, eq: =
 ```
 
-### 3.5.5 Mouse modifier
+### 3.5.5. Mouse modifier
 ```
 <button>  left, mid, right
 ```
 
-## 3.6 Variables
+## 3.6. Dynamic props and events
 
-### 3.6.1. $el
+### 3.6.1. Dynamic props/attrs
+
+    :*={...}
+    :*.attr={...}
+
+  e.g.:
+
+    :*="{
+      min: '1',
+      max: '100'
+    }"
+
+### 3.6.2. Dynamic events
+
+    @*={...}
+
+  e.g.:
+
+    @*="{
+      input: 'console.log(event)',
+      keydown: 'console.log(event)'
+    }"
+
+## 3.7. Variables
+
+### 3.7.1. $el
 
 $el z-data root element
 
-### 3.6.2. \$el.$data
+### 3.7.2. \$el.$data
 
 \$el.\$data the z-data data object
 
-### 3.6.3. ZData.nobserve (default false)
+### 3.7.3. ZData.nobserve (default false)
 
 ```
 no observe DOM for dynamic creating z-data node
   use ZData.loadHTML(), so observe DOM is not needed.
 ```
 
-## 3.7 Function
+## 3.8. Function
 
-### 3.7.1. ZData.proxy()
+### 3.8.1. ZData.proxy()
 
 Reactive to the z-data data object, return ZData.proxy() wrapper, and it will reactive when change manual
 
-### 3.7.2. ZData.loadHTML(html, p, before, args)
+### 3.8.2. ZData.loadHTML(html, p, before, args)
 
 Dynamic load html, p - the parent element(default body), before - insert before
 
 * html have script, must run loadHTML. Or you can use :html=... to load html properly
 
-### 3.7.3. el.fireChange()
+### 3.8.3. el.fireChange()
 
 Change el style out of z-data, for dual-binding, needs to call .fireChange()
 
-## 3.8 Component
+## 3.9. Component
 
-### 3.8.1. z-comp
+### 3.9.1. z-comp
 
 z-comp is a ZData component
 
@@ -326,7 +351,7 @@ z-comp is a ZData component
 <tag z-comp=...></tag>
 ```
 
-### 3.8.2 z-comp URL
+### 3.9.2. z-comp URL
 
 z-comp may equal a ./ relative path, or a http(s): resource
 
@@ -340,7 +365,7 @@ z-comp may be a Promise function, then return a z-comp code
 <tag z-comp="load_z_comp('z-comp-2')"></tag>
 ```
 
-### 3.8.3 z-comp loader ZData.get
+### 3.9.3. z-comp loader ZData.get
 
 z-comp supports z:// protocol plugin, ZData.get is exists, z:// will be work
 
@@ -355,7 +380,7 @@ and apply ZData.get to load table-v1.5.2 component
 <z- z-comp=z://table-v1.5.2></z->
 ```
 
-### 3.8.4 z-comp placeholder
+### 3.9.4. z-comp placeholder
 
 z-comp supports keep / remove the placeholder tag, z-xxx or del attribute, then remove itself
 
@@ -369,7 +394,7 @@ keep the placeholder tag:
 <div z-comp=https://funlang.org/zdata/test/z-comp-2.html></div>
 ```
 
-### 3.8.5 z-comp args
+### 3.9.5. z-comp args
 
 ```html
 <tag z-comp=... args=...></tag>
@@ -381,11 +406,11 @@ and use args.xxx to get the args props, e.g.:
 ></div> 
 ```
 
-### 3.8.6. z-comp demo:
+### 3.9.6. z-comp demo:
 * https://codepen.io/funlang/pen/ExZBPJL
 * https://codepen.io/funlang/pen/RwKzaOo
 
-# 4 Browser compatibles
+# 4. Browser compatibles
 
 Chrome 61+, Firefox 55+, Opera 48+
 
@@ -393,6 +418,6 @@ Chrome 61+, Firefox 55+, Opera 48+
 
     Chrome 60+, Firefox 55+, Opera 47+
 
-# 5 JOIN US
+# 5. JOIN US
 
 Welcome to join z-data project, a front-end framework for future, Enjoy!
