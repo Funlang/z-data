@@ -412,11 +412,15 @@ keep the placeholder tag:
 
 # 4. 浏览器兼容性
 
-Chrome 61+, Firefox 55+, Opera 48+
+Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
   - Polyfill.js (Element.prototype.getAttributeNames)
 
     Chrome 60+, Firefox 55+, Opera 47+
+
+  - z-data.min.es2015.js
+
+    Chrome 54+, Firefox 50+, Opera 41+
 
 # 5. 加入我们
 
