@@ -136,14 +136,14 @@ const ZData = (() => {
     };
 
     const goNodes = (args, env, cbIf, cbDo) => {
-        for (; args.el && (!cbIf || cbIf(args) !== false); args.el = args[nexT]) {
+        for (; args.el && (!cbIf || cbIf(args.el)); args.el = args[nexT]) {
             args[nexT] = args.el[nextEL];
-            if (!cbDo || cbDo(args, env) === true) goAnode(args, env);
+            if (!cbDo || cbDo(args, env)) goAnode(args, env);
         }
     };
 
-    const isElse = ({ el }) => el.hasAttribute(zelse);
-    const nop = () => {};
+    const isElse = (el) => el.hasAttribute(zelse);
+    const nop = () => 0;
     const goIf = (args, exp, env) => {
         let { p, el } = args;
         if (!exp || tryEval(el, exp, env)) {
@@ -151,12 +151,12 @@ const ZData = (() => {
             if (el[_z_d].fi) {
                 args.el = next;
                 next = el[_z_d].fi[nextEL];
-                goNodes(args, env, ({ el }) => el != next);
+                goNodes(args, env, (el) => el != next);
                 goNodes(args, env, isElse, nop);
             } else {
                 expand(args, env);
                 args.el = args.el[nextEL];
-                goNodes(args, env, ({ el }) => el != next);
+                goNodes(args, env, (el) => el != next);
                 goNodes(args, env, isElse, fold);
             }
             el[_z_d].fi = next ? next[prevEL] : p[lastEL];
@@ -185,13 +185,7 @@ const ZData = (() => {
     };
 
     const remove = (args, next, env) => {
-        goNodes(
-            args, env,
-            ({ el }) => el != next,
-            ({ el }) => {
-                el[remoVe]();
-            }
-        );
+        goNodes(args, env, (el) => el != next, ({el}) => { el[remoVe]() });
     };
 
     const goFor = (args, exp, env) => {
@@ -231,19 +225,14 @@ const ZData = (() => {
                     next[_z_d].skip = 1;
                     args.el = next;
                     next = next[_z_d].t[nextEL];
-                    goNodes(args, env2, ({ el }) => el != next, nop);
+                    goNodes(args, env2, (el) => el != next, nop);
                     moveable = curNode.s != (next = args[nexT]);
                 }
                 args.el = curNode.s;
                 args.el[_z_d].skip = 0;
-                goNodes(
-                    args, env2,
-                    ({ el }) => el != lastNext,
-                    ({ p, el }) => {
-                        if (moveable) p[insert](el, next);
-                        return true;
-                    }
-                );
+                goNodes(args, env2, (el) => el != lastNext);
+                args.el = curNode.s;
+                goNodes(args, env2, (el) => el != lastNext, ({p, el}) => { moveable && p[insert](el, next) });
                 moveable ? (args[nexT] = next) : (next = args[nexT]);
                 curNode.age = age;
             } else {
@@ -251,7 +240,7 @@ const ZData = (() => {
                 expand(args, env2);
                 args.el = cur[nextEL];
                 curNode = keys[key] = { age, s: args.el };
-                goNodes(args, env2, ({ el }) => el != next);
+                goNodes(args, env2, (el) => el != next);
             }
             curNode.s[_z_d].t = curNode.t = cur = next ? next[prevEL] : p[lastEL];
         }

@@ -1,4 +1,10 @@
 
+2022-02-24
+  * goNodes()
+    * cbIf(args) -> cbIf(el)
+  * goFor()
+    + goNodes() before insert
+
 2022-01-26
   * ES2018 => ES2015
   * { ...x, y, z: z } => Object.assign({}, x, {y , z: z})
