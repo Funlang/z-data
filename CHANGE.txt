@@ -1,4 +1,8 @@
 
+2022-02-27
+  * liteProxy
+    * CHANGE proxy chain (proxy -> proxy... -> target) TO proxy handler.cs [cb1, cb2...]
+
 2022-02-24
   * goNodes()
     * cbIf(args) -> cbIf(el)

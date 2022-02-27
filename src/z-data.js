@@ -52,12 +52,33 @@ const ZData = (() => {
     const re_kebab = /[-_ ]+/g;
     const re_2camel = /-([a-z])/g;
 
+    const proxies = new WeakMap();
     const liteProxy = (obj, cb) => {
         if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue && (delete obj[cb.id])) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
             } catch (e) {}
-            return new Proxy(obj, cb);
+            let p = proxies.get(obj); //return new Proxy(obj, cb);
+            if (p) {
+                p.c.cs.push(cb);
+            } else {
+                let c = {
+                    cs: [cb],
+                    set(obj, prop, value, rec) {
+                        this.cs[forEach](c => c.set(obj, prop, value, rec));
+                        return true;
+                    },
+                    deleteProperty(obj, prop) {
+                        let r = true;
+                        this.cs[forEach](c=> r = c.deleteProperty(obj, prop) && r);
+                        return r;
+                    }
+                }
+                p = {p: new Proxy(obj, c), c};
+                proxies.set(obj, p);
+                proxies.set(p.p, p);
+            }
+            return p.p;
         }
         return obj;
     };
