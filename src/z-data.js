@@ -172,7 +172,7 @@ const ZData = (() => {
             if (el[_z_d].fi) {
                 next = el[_z_d].fi[nextEL];
                 (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (el[_z_d].u!=n)
-                    && (fold({...args}, env), expand({...args, next},env),      el[_z_d].u =n);
+                    && (fold(args, env), expand({...args, el, next},env));
                 args.el = el[nextEL];
                 goNodes(args, env, (el) => el != next);
                 goNodes(args, env, isElse, nop);
@@ -188,7 +188,7 @@ const ZData = (() => {
 
     const expand = ({ p, el, next, n, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
+            n = (n=el[getAttribute](zuse)) && (el[_z_d].u=n=tryEval(el,'`'+n+'`',env)) && (
                 n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
@@ -253,8 +253,7 @@ const ZData = (() => {
                 }
                 args.el = curNode.s;
                 args.el[_z_d].skip = 0;
-                goNodes(args, env2, (el) => el != lastNext);
-                args.el = curNode.s;
+                goNodes({...args}, env2, (el) => el != lastNext);
                 goNodes(args, env2, (el) => el != lastNext, ({p, el}) => { moveable && p[insert](el, next) });
                 moveable ? (args[nexT] = next) : (next = args[nexT]);
                 curNode.age = age;
