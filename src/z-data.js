@@ -168,20 +168,18 @@ const ZData = (() => {
     const goIf = (args, exp, env) => {
         let { p, el } = args;
         if (!exp || tryEval(el, exp, env)) {
-            let n, next = args[nexT];
+            let n, next = args[nexT], op = nop;
             if (el[_z_d].fi) {
                 next = el[_z_d].fi[nextEL];
                 (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (el[_z_d].u!=n)
                     && (fold(args, env), expand({...args, el, next},env));
-                args.el = el[nextEL];
-                goNodes(args, env, (el) => el != next);
-                goNodes(args, env, isElse, nop);
             } else {
                 expand(args, env);
-                args.el = args.el[nextEL];
-                goNodes(args, env, (el) => el != next);
-                goNodes(args, env, isElse, fold);
+                op = fold;
             }
+            args.el = el[nextEL];
+            goNodes(args, env, (el) => el != next);
+            goNodes(args, env, isElse, op);
             el[_z_d].fi = next ? next[prevEL] : p[lastEL];
         } else fold(args, env);
     };
