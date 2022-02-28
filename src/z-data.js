@@ -168,10 +168,12 @@ const ZData = (() => {
     const goIf = (args, exp, env) => {
         let { p, el } = args;
         if (!exp || tryEval(el, exp, env)) {
-            let next = args[nexT];
+            let n, next = args[nexT];
             if (el[_z_d].fi) {
-                args.el = next;
                 next = el[_z_d].fi[nextEL];
+                (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (el[_z_d].u!=n)
+                    && (fold({...args}, env), expand({...args, next},env),      el[_z_d].u =n);
+                args.el = el[nextEL];
                 goNodes(args, env, (el) => el != next);
                 goNodes(args, env, isElse, nop);
             } else {
@@ -186,8 +188,8 @@ const ZData = (() => {
 
     const expand = ({ p, el, next, n, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
-                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || el.content;
+            n = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
+                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
