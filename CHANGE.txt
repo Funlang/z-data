@@ -1,4 +1,9 @@
 
+2022-02-28
+  * template use
+    DONT cache
+    * goIf(), expand()
+
 2022-02-27
   * liteProxy
     * CHANGE proxy chain (proxy -> proxy... -> target) TO proxy handler.cs [cb1, cb2...]

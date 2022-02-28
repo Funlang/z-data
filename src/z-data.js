@@ -170,7 +170,7 @@ const ZData = (() => {
         if (!exp || tryEval(el, exp, env)) {
             let next = args[nexT];
             if (el[_z_d].fi) {
-                args.el = next;
+                el[getAttribute](zuse) ? (args[nexT] = el[_z_d].fi[nextEL], expand(args, env), args.el = el[nextEL]) : (args.el = next);
                 next = el[_z_d].fi[nextEL];
                 goNodes(args, env, (el) => el != next);
                 goNodes(args, env, isElse, nop);
@@ -186,8 +186,10 @@ const ZData = (() => {
 
     const expand = ({ p, el, next, n, r }, env) => {
         if (!(n = el[_z_d].node)) {
-            n = el[_z_d].node = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
-                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || el.content;
+            n = (n=el[getAttribute](zuse)) && (n=tryEval(el,'`'+n+'`',env)) && (
+                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n)
+             ) && n.content;
+            n ? remove({el: el[nextEL]}, next) : (el[_z_d].node = n = el.content); // cache if NOT template use
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
