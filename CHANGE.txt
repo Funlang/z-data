@@ -1,4 +1,12 @@
 
+2022-03-03
+  * liteProxy
+    + delete data-aware
+      delete obj[prop];
+
+2022-03-01
+  + z-pen\to-es2015.fun
+
 2022-02-28
   * template use
     DONT cache

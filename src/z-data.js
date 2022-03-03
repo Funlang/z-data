@@ -54,31 +54,29 @@ const ZData = (() => {
 
     const proxies = new WeakMap();
     const liteProxy = (obj, cb) => {
-        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue && (delete obj[cb.id])) {
+        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
             } catch (e) {}
-            let p = proxies.get(obj); //return new Proxy(obj, cb);
-            if (p) {
-                p.c.cs.push(cb);
-            } else {
-                let c = {
-                    cs: [cb],
+            let cs = proxies.get(obj); //return new Proxy(obj, cb);
+            if (!cs) {
+                cs = {
+                    s: {},
                     set(obj, prop, value, rec) {
-                        this.cs[forEach](c => c.set(obj, prop, value, rec));
+                        for (let c in this.s) this.s[c].set(obj, prop, value, rec);
                         return true;
                     },
                     deleteProperty(obj, prop) {
-                        let r = true;
-                        this.cs[forEach](c=> r = c.deleteProperty(obj, prop) && r);
-                        return r;
+                        for (let c in this.s) this.s[c].deleteProperty(obj, prop);
+                        return true;
                     }
                 }
-                p = {p: new Proxy(obj, c), c};
-                proxies.set(obj, p);
-                proxies.set(p.p, p);
+                cs.p = new Proxy(obj, cs);
+                proxies.set(obj, cs);
+                proxies.set(cs.p, cs);
             }
-            return p.p;
+            cs.s[cb.i] = cb;
+            return cs.p;
         }
         return obj;
     };
@@ -97,7 +95,7 @@ const ZData = (() => {
         let zd = el[_z_d].zd;
         if (!zd) {
             let cb = {
-                id: _z_d + now(),
+                i: _z_d + now(),
                 set(obj, prop, value, rec, zdataproxy) {
                     initLater();
                     try {
@@ -106,7 +104,8 @@ const ZData = (() => {
                     return true;
                 },
                 deleteProperty(obj, prop) {
-                    return prop != this.id && delete obj[prop];
+                    initLater();
+                    return delete obj[prop];
                 }
             };
             ZData.proxy = (v) => getProxy()(v, cb);
