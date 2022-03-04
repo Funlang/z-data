@@ -54,7 +54,7 @@ const ZData = (() => {
 
     const proxies = new WeakMap();
     const liteProxy = (obj, cb) => {
-        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue) {
+        if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue && (delete obj[cb.i])) {
             for (let p in obj) try {
                 obj[p] = getProxy()(obj[p], cb);
             } catch (e) {}
@@ -67,8 +67,9 @@ const ZData = (() => {
                         return true;
                     },
                     deleteProperty(obj, prop) {
-                        for (let c in this.s) this.s[c].deleteProperty(obj, prop);
-                        return true;
+                        let r = true;
+                        for (let c in this.s) r = this.s[c].deleteProperty(obj, prop) && r;
+                        return r;
                     }
                 }
                 cs.p = new Proxy(obj, cs);
@@ -104,8 +105,7 @@ const ZData = (() => {
                     return true;
                 },
                 deleteProperty(obj, prop) {
-                    initLater();
-                    return delete obj[prop];
+                    return (prop != this.i) && (initLater(), delete obj[prop]);
                 }
             };
             ZData.proxy = (v) => getProxy()(v, cb);

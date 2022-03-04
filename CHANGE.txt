@@ -1,4 +1,9 @@
 
+2022-03-04
+  * liteProxy
+    + proxy chain back again
+    ! proxy chain + cbs
+
 2022-03-03
   * liteProxy
     + delete data-aware
