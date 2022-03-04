@@ -3,6 +3,8 @@
   * liteProxy
     + proxy chain back again
     ! proxy chain + cbs
+  * loadHTML()
+    load script one by one
 
 2022-03-03
   * liteProxy

@@ -475,12 +475,12 @@ const ZData = (() => {
 
     const loadHTML = (html, p, before, args) => {
         p || (p = $ocument.body);
-        let id, fn, name, el = $ocument[createEl](zdata);
+        let id, fn = [], name, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-i"))) p[setAttribute]("z-i", (id = ++ids));
         let fns = debounce(() => {
-                fn[forEach]((f) => f());
-                --updating < 0 ? (updating = 0) : 0, startLater();
-            });
+            --updating < 0 && (updating = 0);
+            fn[length] && fn.shift()();
+        });
         el[attrMaps["html"]] = html[replace](/<!--[^]*?-->/g, "")
           [replace](/\bz-data\s*=\s*['"]?(\$[\w]+)/, ($0, $1) => (name = $1, $0 + "_" + id))
           [replace](/<(script)([^>]*)>([^]*?)<\/\1>/gi, ($0, $1, src, s) => {
@@ -488,16 +488,16 @@ const ZData = (() => {
             src = m && (m[1] || m[2] || m[3]);
             if ((!src || $(`script[src="${src}"]`)[length]) && !s) return "";
             let e = $ocument[createEl]("script");
+            let fi = (f) => fn.push(() => ($ocument.body[insert](e, nil), f&&f()));
             e[setAttribute](znone, "");
-            let f = () => p[insert](e, before);
-            if (fn && !src) fn.push(f);
-            else f();
             if (src) {
                 e.src = src;
-                e.onload = fns;
-                e.onerror = () => (updating = 0);
-                fn = [];
-            } else e[textC] = name ? s[replace](name, name + "_" + id) : s;
+                e.onload = e.onerror = fns;
+                fi();
+            } else {
+                e[textC] = name ? s[replace](name, name + "_" + id) : s;
+                fi(fns);
+            }
             return "";
         })[replace](/(<(style)[^>@]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
@@ -508,8 +508,9 @@ const ZData = (() => {
         });
         if (args && $(qdata, el)[length]) $(qdata, el)[0][zargs] = args;
         for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
-        if (fn) updating++;
-        else startLater();
+        fn.push(startLater);
+        updating += fn[length];
+        fns();
     };
 
     const stopObserve = (el) => el[_z_d] && el[_z_d].ob && el[_z_d].ob.disconnect();
