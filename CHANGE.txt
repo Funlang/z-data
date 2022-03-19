@@ -1,4 +1,27 @@
 
+2022-03-19
+  * function events
+  fns: {
+    fn($el) {
+      event // the event ctx
+      this // the event element
+      $el // z-data root element
+    }
+  }
+
+2022-03-12
+  * z-json
+    onStringify(), {} --changed-> new WeakMap()
+    + json2css()
+
+2022-03-11
+  * z-json
+    onStringify(), duplicate object ignored
+
+2022-03-07
+  * z-json
+    + qs2json(), json2qs()
+
 2022-03-04
   * liteProxy
     + proxy chain back again

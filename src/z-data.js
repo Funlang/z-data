@@ -86,7 +86,7 @@ const ZData = (() => {
         if (el[_z_d] && (age <= el[_z_d].age || el[_z_d].ing)) return;
         (el[_z_d] || (el[_z_d] = {})).age = age;
         el[_z_d].ing = (el[_z_d].ing || 0) + 1;
-        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
+        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {}, r: el };
         let init = (self) => {
             updating++, stopObserve($ocument.body);
             goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd }, self || age);
@@ -398,7 +398,7 @@ const ZData = (() => {
         };
     };
 
-    const setEvent = ({ r, el }, ps, env) => {
+    const setEvent = ({ el }, ps, env) => {
         let { a: key, k: name, e: exp, ev, m: ms = [] } = ps;
         if (!el[_z_d][key]) {
             let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("out") ? $ocument : el;
@@ -426,7 +426,7 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                return tryEval(e.target, exp, {d: env.d, ks: [...env.ks, "$el"], k: env.k + "$el", ps: [...el[_z_d][key], r]});
+                return tryEval(e.target, exp, {...env, ks: [...env.ks, "$el"], k: env.k + "$el", ps: [...el[_z_d][key], env.r]});
             };
             // debounce
             let i = ms.indexOf("debounce");
@@ -456,7 +456,7 @@ const ZData = (() => {
     const tryEval = (el, exp, env, ps) => {
         return tryCatch(
             () => {
-                if (is_function(exp)) return exp.call(env.d);
+                if (is_function(exp)) return exp.call(el, env.r);
                 return newFun(exp, env.ks, env.k, ps).call(el, env.d, ...Obj_values(env.ps));
             },
             { el, exp }
