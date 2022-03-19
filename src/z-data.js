@@ -67,9 +67,9 @@ const ZData = (() => {
                         return true;
                     },
                     deleteProperty(obj, prop) {
-                        let r = true;
-                        for (let c in this.s) r = this.s[c].deleteProperty(obj, prop) && r;
-                        return r;
+                        let ret = true;
+                        for (let c in this.s) ret = this.s[c].deleteProperty(obj, prop) && ret;
+                        return ret;
                     }
                 }
                 cs.p = new Proxy(obj, cs);
@@ -89,7 +89,7 @@ const ZData = (() => {
         env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
         let init = (self) => {
             updating++, stopObserve($ocument.body);
-            goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd, r: el }, self || age);
+            goAnode({ p: el[parentEL], el }, { ...env, d: el[_z_d].zd, r: el }, self || age);
             updating--, observe($ocument.body);
         };
         let initLater = debounce(init);
@@ -109,7 +109,7 @@ const ZData = (() => {
                 }
             };
             ZData.proxy = (v) => getProxy()(v, cb);
-            zd = tryEval(el, el._z = el[getAttribute](zdata) || 0, env) || {};
+            zd = tryEval(el, el[getAttribute](zdata) || 0, env) || {};
             el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
             el[setAttribute](zdata, "");
             if (el[zargs]) zd[zargs] = el[zargs];
@@ -152,7 +152,7 @@ const ZData = (() => {
             }
         }
         setAttrs(args, env, attrs, nc);
-        goNodes({ cp, r: args.r, p: el, el: (/*cp && el.content ||*/ el)[firstEL] }, env);
+        goNodes({ cp, p: el, el: (/*cp && el.content ||*/ el)[firstEL] }, env);
     };
 
     const goNodes = (args, env, cbIf, cbDo) => {
@@ -183,10 +183,10 @@ const ZData = (() => {
         } else fold(args, env);
     };
 
-    const expand = ({ p, el, next, n, r }, env) => {
+    const expand = ({ p, el, next, n }, env, r) => {
         if (!(n = el[_z_d].node)) {
             n = (n=el[getAttribute](zuse)) && (el[_z_d].u=n=tryEval(el,'`'+n+'`',env)) && (
-                n = r[querySelector](n) || (r=r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
+                n = env.r[querySelector](n) || (r=env.r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
