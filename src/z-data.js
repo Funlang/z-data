@@ -86,10 +86,10 @@ const ZData = (() => {
         if (el[_z_d] && (age <= el[_z_d].age || el[_z_d].ing)) return;
         (el[_z_d] || (el[_z_d] = {})).age = age;
         el[_z_d].ing = (el[_z_d].ing || 0) + 1;
-        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {}, r: el };
+        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
         let init = (self) => {
             updating++, stopObserve($ocument.body);
-            goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd }, self || age);
+            goAnode({ r: el, p: el[parentEL], el }, { ...env, d: el[_z_d].zd, r: el }, self || age);
             updating--, observe($ocument.body);
         };
         let initLater = debounce(init);
