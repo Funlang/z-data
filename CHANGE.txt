@@ -1,4 +1,7 @@
 
+2022-03-25
+  * setAttrs().fn() for *
+
 2022-03-19
   * function events
   fns: {

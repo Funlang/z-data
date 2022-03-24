@@ -73,8 +73,7 @@ const ZData = (() => {
                     }
                 }
                 cs.p = new Proxy(obj, cs);
-                proxies.set(obj, cs);
-                proxies.set(cs.p, cs);
+                proxies.set(obj, cs).set(cs.p, cs);
             }
             cs.s[cb.i] = cb;
             return cs.p;
@@ -317,10 +316,11 @@ const ZData = (() => {
         if (args.cp) return;
         let i = 0;
         let fn = (ps) => {
-            if (ps.k == "*") for (let k in (ps.K = ps.K || tryEval(el, ps.e, env, ps) || {})) fn({...ps, k, e: ps.K[k], f: nil});
+            if (ps.k == "*") for (let k in (ps.K = tryEval(el, ps.e, env, ps) || {})) fn({...ps, k, e: ps.K[k], E: 1, f: nil});
             else if (ps.b == 3) setEvent(args, ps, env);
             else {
-                let v = ps.e && tryEval(el, ps.e, env, ps);
+                let v = ps.e;
+                ps.E || v && (v = tryEval(el, v, env, ps));
                 let num = ps.m && ps.m[includes]("number");
                 if (vs[i] !== v) {
                     vs[i] = v;
