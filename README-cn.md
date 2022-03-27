@@ -79,9 +79,28 @@ TodoMVC:
 ## 3.2. 作用域
 
   - z-data 属性创建 ZData 作用域
+  
     ```html
     <tag z-data=...></tag>
     ```
+    z-data 表达式可以是一个函数表达式, 如:
+
+    ```html
+    <tag z-data="(args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      })()"></tag>
+
+    <tag z-data="args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      }"></tag>
+    ```
+
     z-data 支持一个 init 函数, 在组件初始化时执行
 
     ```html
@@ -93,6 +112,20 @@ TodoMVC:
 
     <script>
       var $xxx = ...
+    </script>
+    ```
+
+    z-data HTML 模块文件 (文件开头是 z-data)
+    
+    ```html
+    z-data
+    <tag init=...></tag>
+
+    <script>
+      // some codes ...
+      return {
+        // some props ...
+      }
     </script>
     ```
 

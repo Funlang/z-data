@@ -1,4 +1,11 @@
 
+2022-03-27
+  * z-data expression
+    can be a function expression
+    * initComponent() and tryEval()
+  + z-data html module (begin with z-data)
+    * loadHTML()
+
 2022-03-25
   * setAttrs().fn() for *
 

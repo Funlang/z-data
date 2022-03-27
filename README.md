@@ -81,9 +81,30 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 ## 3.2. 作用域 | Scope
 
   - z-data 属性创建 ZData 作用域 | z-data attribute launch a ZData scope
+  
     ```html
     <tag z-data=...></tag>
     ```
+
+    z-data 表达式可以是一个函数表达式, 如:
+    z-data expression can be a function expression, e.g.:
+
+    ```html
+    <tag z-data="(args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      })()"></tag>
+
+    <tag z-data="args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      }"></tag>
+    ```
+
     z-data 支持一个 init 函数, 在组件初始化时执行
     z-data supports an init function, will run when initialization
 
@@ -96,6 +117,20 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
     <script>
       var $xxx = ...
+    </script>
+    ```
+
+    z-data HTML 模块文件 (文件开头是 z-data) | z-data html module (begin with z-data)
+
+    ```html
+    z-data
+    <tag init=...></tag>
+
+    <script>
+      // some codes ...
+      return {
+        // some props ...
+      }
     </script>
     ```
 

@@ -82,6 +82,25 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     ```html
     <tag z-data=...></tag>
     ```
+
+    z-data expression can be a function expression, e.g.:
+
+    ```html
+    <tag z-data="(args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      })()"></tag>
+
+    <tag z-data="args=>{
+        // some codes ...
+        return {
+          // some props ...
+        }
+      }"></tag>
+    ```
+
     z-data supports an init function, will run when initialization
 
     ```html
@@ -93,6 +112,20 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
 
     <script>
       var $xxx = ...
+    </script>
+    ```
+
+    z-data html module (begin with z-data)
+    
+    ```html
+    z-data
+    <tag init=...></tag>
+
+    <script>
+      // some codes ...
+      return {
+        // some props ...
+      }
     </script>
     ```
 
