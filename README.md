@@ -86,6 +86,13 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <tag z-data=...></tag>
     ```
 
+    z-data 支持一个 init 函数, 在组件初始化时执行
+    z-data supports an init function, will run when initialization
+
+    ```html
+    <tag z-data=... init=...></tag>
+    ```
+
     z-data 表达式可以是一个函数表达式, 如:
     z-data expression can be a function expression, e.g.:
 
@@ -103,21 +110,6 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
           // some props ...
         }
       }"></tag>
-    ```
-
-    z-data 支持一个 init 函数, 在组件初始化时执行
-    z-data supports an init function, will run when initialization
-
-    ```html
-    <tag z-data=... init=...></tag>
-    ```
-    变量本地化 (模块化) | localize for variables (module)
-    ```html
-    <tag z-data=$xxx init=...></tag>
-
-    <script>
-      var $xxx = ...
-    </script>
     ```
 
     z-data HTML 模块文件 (文件开头是 z-data) | z-data html module (begin with z-data)

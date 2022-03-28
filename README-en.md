@@ -83,6 +83,12 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     <tag z-data=...></tag>
     ```
 
+    z-data supports an init function, will run when initialization
+
+    ```html
+    <tag z-data=... init=...></tag>
+    ```
+
     z-data expression can be a function expression, e.g.:
 
     ```html
@@ -99,20 +105,6 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
           // some props ...
         }
       }"></tag>
-    ```
-
-    z-data supports an init function, will run when initialization
-
-    ```html
-    <tag z-data=... init=...></tag>
-    ```
-    localize for variables (module)
-    ```html
-    <tag z-data=$xxx init=...></tag>
-
-    <script>
-      var $xxx = ...
-    </script>
     ```
 
     z-data html module (begin with z-data)

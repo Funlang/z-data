@@ -1,4 +1,9 @@
 
+2022-03-28
+  * z-data html module
+    - remove z-data=$... support
+    + export default {...} --replaced-> return {...}
+
 2022-03-27
   * z-data expression
     can be a function expression

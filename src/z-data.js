@@ -476,14 +476,13 @@ const ZData = (() => {
 
     const loadHTML = (html, p, before, args, zdatahtml) => {
         p || (p = $ocument.body);
-        let id, fn = [], name, script = '', $el, el = $ocument[createEl](zdata);
+        let id, fn = [], script = '', $el, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-i"))) p[setAttribute]("z-i", (id = ++ids));
         let fns = debounce(() => {
             --updating < 0 && (updating = 0);
             fn[length] && fn.shift()();
         });
         el[attrMaps["html"]] = html[replace](/<!--[^]*?-->/g, "")[replace](/^z-data\s*/, ()=>zdatahtml=1)
-          [replace](/\bz-data\s*=\s*['"]?(\$[\w]+)/, ($0, $1) => (name = $1, $0 + "_" + id))
           [replace](/<(script)([^>]*)>([^]*?)<\/\1>/gi, ($0, $1, src, s) => {
             let m = src.match(/src\s*=\s*(?:'([^']+)|"([^"]+)|(\S+))/);
             src = m && (m[1] || m[2] || m[3]);
@@ -495,10 +494,10 @@ const ZData = (() => {
                 e.src = src;
                 e.onload = e.onerror = fns;
                 fi();
-            } else if (zdatahtml) {
-                script += s;
+            } else if (zdatahtml && !script) {
+                script = s;
             } else {
-                e[textC] = name ? s[replace](name, name + "_" + id) : s;
+                e[textC] = s;
                 fi(fns);
             }
             return "";
@@ -510,7 +509,7 @@ const ZData = (() => {
             return s1 + s + s2;
         });
         $el = el[querySelector](qdata) || el[firstEL];
-        if (zdatahtml && script) $el[setAttribute](zdata, `args=>{${script}}`);
+        if (zdatahtml && script) $el[setAttribute](zdata, `args=>{${script[replace](/\bexport\s+default(?=\s*\{)/, 'return')}}`);
         if (args) $el[zargs] = args;
         for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
         fn.push(startLater);
