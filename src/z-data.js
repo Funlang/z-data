@@ -132,7 +132,7 @@ const ZData = (() => {
                 try {
                     el[removeAttribute](zcomp);
                     if (/^([.\/]|https?:)/.test(exp)) res = fetch(exp).then((res) => res.text());
-                    else if (/^z:/.test(exp) && ZData.get) res = ZData.get(exp[replace](/^z:\/*/, ""))
+                    else if (/^z:/.test(exp) && ZData.get) res = ZData.get(exp);
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
@@ -476,7 +476,7 @@ const ZData = (() => {
 
     const loadHTML = (html, p, before, args, del, zdatahtml) => {
         p || (p = $ocument.body);
-        let id, fn = [], script = '', $el, el = $ocument[createEl](zdata);
+        let id, fn = [], f1, script = '', $el, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-i"))) p[setAttribute]("z-i", (id = ++ids));
         let fns = debounce(() => {
             --updating < 0 && (updating = 0);
@@ -488,12 +488,15 @@ const ZData = (() => {
             src = m && (m[1] || m[2] || m[3]);
             if ((!src || $(`script[src="${src}"]`)[length]) && !s) return "";
             let e = $ocument[createEl]("script");
-            let fi = (f) => fn.push(() => ($ocument.body[insert](e, nil), f&&f()));
+            let fi = (f, run) => (f1 = () => ($ocument.body[insert](e, nil), f&&f()), run ? f1() : fn.push(f1));
             e[setAttribute](znone, "");
             if (src) {
-                e.src = src;
-                e.onload = e.onerror = fns;
-                fi();
+                if (ZData.get) fn.push(() => ZData.get(src).then(s => (e[textC] = s, fi(fns, 1))));
+                else {
+                    e.src = src;
+                    e.onload = e.onerror = fns;
+                    fi();
+                }
             } else if (zdatahtml && !script) {
                 script = s;
             } else {

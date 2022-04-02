@@ -1,6 +1,8 @@
 
 2022-04-02
-  * loadHTML(), insert HTML after all .js on load
+  * loadHTML()
+    insert HTML after all .js on load
+    load js with ZData.get()
 
 2022-03-28
   * z-data html module
