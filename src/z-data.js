@@ -136,7 +136,7 @@ const ZData = (() => {
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
                         let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
-                        if (el.tagName[1] == "-" || attrs[includes]("del")) loadHTML(html, p, el, as), el[remoVe]();
+                        if (el.tagName[1] == "-" || attrs[includes]("del")) loadHTML(html, p, el, as, 1);
                         else loadHTML(html, el, nil, as);
                     }).catch(nop);
                 } catch (e) {}
@@ -474,7 +474,7 @@ const ZData = (() => {
         }
     };
 
-    const loadHTML = (html, p, before, args, zdatahtml) => {
+    const loadHTML = (html, p, before, args, del, zdatahtml) => {
         p || (p = $ocument.body);
         let id, fn = [], script = '', $el, el = $ocument[createEl](zdata);
         if (!(id = p[getAttribute]("z-i"))) p[setAttribute]("z-i", (id = ++ids));
@@ -511,7 +511,11 @@ const ZData = (() => {
         $el = el[querySelector](qdata) || el[firstEL];
         if (zdatahtml && script) $el[setAttribute](zdata, `args=>{${script[replace](/\bexport\s+default(?=\s*\{)/, 'return')}}`);
         if (args) $el[zargs] = args;
-        for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
+        fn.push(() => {
+            for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
+            del && before && before[remoVe]();
+            fns();
+        });
         fn.push(startLater);
         updating += fn[length];
         fns();

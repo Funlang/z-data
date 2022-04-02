@@ -1,4 +1,7 @@
 
+2022-04-02
+  * loadHTML(), insert HTML after all .js on load
+
 2022-03-28
   * z-data html module
     - remove z-data=$... support
