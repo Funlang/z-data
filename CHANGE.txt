@@ -1,4 +1,12 @@
 
+2022-04-05
+  + ZData.ss(s) for style shorthand
+
+2022-04-03
+  * loadHTML()
+    * fix bug for style local (ignore list)
+      prefix with @, \d%
+
 2022-04-02
   * loadHTML()
     insert HTML after all .js on load

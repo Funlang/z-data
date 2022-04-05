@@ -376,7 +376,7 @@ const ZData = (() => {
                 if (is_object(value)) {
                     Obj_keys(value)[forEach]((name) => {
                         if (value[name] === false) el[s_tyle].removeProperty(name);
-                        else name[0] == "-" ? el[s_tyle].setProperty(name, value[name]) : el[s_tyle][name] = value[name];
+                        else name[0] == "-" ? el[s_tyle].setProperty(name, value[name]) : el[s_tyle][ZData.ss(name)] = value[name];
                     });
                     return;
                 }
@@ -506,7 +506,7 @@ const ZData = (() => {
             return "";
         })[replace](/(<(style)[^>@]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
             s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
-                if (/^\s*(@|\d+%|from|to)\b/.test(names)) return names; // @keyframes or [z-i=...
+                if (/^\s*(@|\d+%|from|to)/.test(names)) return names; // @keyframes or [z-i=...
                 return split(names, /\s*,\s*/).map((n) => n[replace](/^(\[z-i=.*?\] )?(.*)/, ($0,$1,$2)=>`[z-i="${id}"] `+$2)).join(",");
             });
             return s1 + s + s2;
@@ -558,5 +558,5 @@ const ZData = (() => {
     const call = (name, args) => (ons[name] || [])[forEach]((fn) => fn(args));
           
     $ocument[addEventListener]("DOMContentLoaded", start);
-    return { start, loadHTML, on, call };
+    return { start, loadHTML, on, call, ss:s=>s };
 })();
