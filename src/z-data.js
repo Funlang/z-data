@@ -288,19 +288,20 @@ const ZData = (() => {
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
                 if (!re_bind.test(a) && !$e_text(v)) return;
-                let ms = re_attr.exec(a); // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
-                let k = ms[4] ? (ms[4] != "." || !ms[5] ? s_tyle : c_lass) : ms[5]; // key/name
+                let ms = re_attr.exec(a), // 1-bind 2 3-event 4-class/css 5-name 6-modifiers
+                    name = ms[5], m4 = ms[4],
+                    k = m4 ? (m4 != "." || !name ? (name = ZData.ss(name), s_tyle) : c_lass) : name; // key/name
                 k = attrMaps[k] || k;
                 if (k) {
                     let modifiers = ms[6] && split(ms[6], ".");
                     let ps = {
                         a,
                         k: k == c_lass || !modifiers || !modifiers[includes]("camel") ? k : toCamel(k),
-                        b: (ms[3] && 3) || (ms[2] && 2) || ((ms[1] || ms[4]) && 1) || nil, // bind 1 2, event 3
-                        m: ms[4] && ms[5] ? [ms[5]].concat(modifiers || []) : modifiers, // modifiers
+                        b: (ms[3] && 3) || (ms[2] && 2) || ((ms[1] || m4) && 1) || nil, // bind 1 2, event 3
+                        m: m4 && name ? [name].concat(modifiers || []) : modifiers, // modifiers
                         e: v, // exp
                     };
-                    if (!ps.b || ms[4] == "!") ps.e = "`" + ps.e + "`";
+                    if (!ps.b || m4 == "!") ps.e = "`" + ps.e + "`";
                     props.ps.push(ps);
                     ps.b && el[removeAttribute](a);
                 }
@@ -376,7 +377,7 @@ const ZData = (() => {
                 if (is_object(value)) {
                     Obj_keys(value)[forEach]((name) => {
                         if (value[name] === false) el[s_tyle].removeProperty(name);
-                        else name[0] == "-" ? el[s_tyle].setProperty(name, value[name]) : el[s_tyle][ZData.ss(name)] = value[name];
+                        else name[0] == "-" ? el[s_tyle].setProperty(name, value[name]) : el[s_tyle][name] = value[name];
                     });
                     return;
                 }
