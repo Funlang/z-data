@@ -1,4 +1,9 @@
 
+2022-04-08
+  + $emit(el, name, detail)
+  * liteProxy
+    performance optimized
+
 2022-04-06
   * ZData.ss(s) for style shorthand
     -> compile time

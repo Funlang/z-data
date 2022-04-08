@@ -219,6 +219,12 @@ Online IDE for creating/debugging/previewing z-data code/app/comp
     #--a-css-var=`'${theCssVarValue}'`
   ```
 
+#### 3.4.5.1 ZData.ss(s)
+
+```
+ZData.ss = (s) => AShorthandMap[s] || s;
+```
+
 ### 3.4.6. !!! Warning:
 
 #### 3.4.6.1. : :: @ . .. \#
@@ -365,6 +371,10 @@ Dynamic load html, p - the parent element(default body), before - insert before
 ### 3.8.3. el.fireChange()
 
 Change el style out of z-data, for dual-binding, needs to call .fireChange()
+
+### 3.8.4. $emit(el, name, detail)
+
+Dispatch an event (name) with detail param to el DOM Element 
 
 ## 3.9. Component
 

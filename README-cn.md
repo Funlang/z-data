@@ -219,6 +219,12 @@ TodoMVC:
     #--a-css-var=`'${theCssVarValue}'`
   ```
 
+#### 3.4.5.1 ZData.ss(s)
+
+```
+ZData.ss = (s) => AShorthandMap[s] || s;
+```
+
 ### 3.4.6. !!! 特别注意
 
 #### 3.4.6.1. : :: @ . .. \#
@@ -365,6 +371,10 @@ no observe DOM for dynamic creating z-data node
 ### 3.8.3. el.fireChange()
 
 在 z-data 之外修改节点 style, 如果是双向绑定, 需要调用该节点的 .fireChange()
+
+### 3.8.4. $emit(el, name, detail)
+
+向 DOM 节点 el 发出名为 name 的事件, 携带 detail 参数
 
 ## 3.9. 组件
 

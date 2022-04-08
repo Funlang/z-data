@@ -1,6 +1,6 @@
 // Copyright (c) 2021 zwd@funlang.org
 const ZData = (() => {
-    var age = 0, cps = 0, _n_, ids = 0, updating = 0;
+    var age = 0, cps = 0, _n_, ids = 0, updating = 0, proxy;
 
     const Attribute = "Attribute", Element = "Element", ElementSibling = Element + "Sibling", ElementChild = Element + "Child";
 
@@ -55,9 +55,6 @@ const ZData = (() => {
     const proxies = new WeakMap();
     const liteProxy = (obj, cb) => {
         if (obj && is_object(obj) && !is_function(obj) && !obj.__ob__ && !obj._isVue && (delete obj[cb.i])) {
-            for (let p in obj) try {
-                obj[p] = getProxy()(obj[p], cb);
-            } catch (e) {}
             let cs = proxies.get(obj); //return new Proxy(obj, cb);
             if (!cs) {
                 cs = {
@@ -75,17 +72,22 @@ const ZData = (() => {
                 cs.p = new Proxy(obj, cs);
                 proxies.set(obj, cs).set(cs.p, cs);
             }
-            cs.s[cb.i] = cb;
+            if (!cs.s[cb.i]) {
+                cs.s[cb.i] = cb;
+                for (let p in obj) try {
+                    obj[p] = proxy(obj[p], cb);
+                } catch (e) {}
+            }
             return cs.p;
         }
         return obj;
     };
-    const getProxy = () => window.ZDataProxy || liteProxy;
+    const $emit = (el, name, detail) => el.dispatchEvent(new CustomEvent(name, {detail, bubbles: true}));
     const initComponent = (el, env) => {
         if (el[_z_d] && (age <= el[_z_d].age || el[_z_d].ing)) return;
         (el[_z_d] || (el[_z_d] = {})).age = age;
         el[_z_d].ing = (el[_z_d].ing || 0) + 1;
-        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {}, ks: [], k: "", d: {} };
+        env = (env && (el[_z_d].env = env)) || el[_z_d].env || { ps: {$emit}, d: {} };
         let init = (self) => {
             updating++, stopObserve($ocument.body);
             goAnode({ p: el[parentEL], el }, { ...env, d: el[_z_d].zd, r: el }, self || age);
@@ -99,7 +101,7 @@ const ZData = (() => {
                 set(obj, prop, value, rec, zdataproxy) {
                     initLater();
                     try {
-                        if (!zdataproxy) obj[prop] = getProxy()(value, cb);
+                        if (!zdataproxy) obj[prop] = proxy(value, cb);
                     } catch (e) {}
                     return true;
                 },
@@ -107,9 +109,10 @@ const ZData = (() => {
                     return (prop != this.i) && (initLater(), delete obj[prop]);
                 }
             };
-            ZData.proxy = (v) => getProxy()(v, cb);
+            proxy = window.ZDataProxy || liteProxy;
+            ZData.proxy = (v) => proxy(v, cb);
             zd = tryEval(el, el[getAttribute](zdata) || 0, env, nil, el[zargs] || {}) || {};
-            el.$data = el[_z_d].zd = zd = getProxy()(zd, cb);
+            el.$data = el[_z_d].zd = zd = proxy(zd, cb);
             el[setAttribute](zdata, "");
             if (el[zargs]) zd[zargs] = el[zargs];
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
@@ -224,8 +227,6 @@ const ZData = (() => {
         if (kvi.k) env2.ps[kvi.k] = nil;
         if (kvi.v) env2.ps[kvi.v] = nil;
         if (kvi.i) env2.ps[kvi.i] = nil;
-        env2.ks = Obj_keys(env2.ps);
-        env2.k = env2.ks.join(",");
         for (let k in items /*of Obj_keys(items)*/) {
             let v = items[k];
             if (kvi.k) env2.ps[kvi.k] = k;
@@ -427,7 +428,7 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                return tryEval(e.target, exp, {...env, ks: [...env.ks, "$el"], k: env.k + "$el", ps: [...el[_z_d][key], env.r]});
+                return tryEval(e.target, exp, {...env, ps: {...el[_z_d][key], $el: env.r}});
             };
             // debounce
             let i = ms.indexOf("debounce");
@@ -442,9 +443,9 @@ const ZData = (() => {
                 passive: ms[includes]("passive"),
             };
             target[addEventListener](name, fn, options);
-            ev && (el.fireChange = el.fireChange || ((name) => el.dispatchEvent(new Event(name || ev))));
+            ev && !el.fireChange && (el.fireChange = () => $emit(el, ev));
         }
-        el[_z_d][key] = Obj_values(env.ps);
+        el[_z_d][key] = {...env.ps};
     };
 
     const Functions = {};
@@ -458,7 +459,7 @@ const ZData = (() => {
         return tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(el, env.r);
-                exp = newFun(exp, env.ks, env.k, ps).call(el, env.d, ...Obj_values(env.ps));
+                exp = newFun(exp, Obj_keys(env.ps), Obj_keys(env.ps).join(','), ps).call(el, env.d, ...Obj_values(env.ps));
                 return args && is_function(exp) ? exp(args) : exp;
             },
             { el, exp }
