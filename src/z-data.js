@@ -440,7 +440,7 @@ const ZData = (() => {
                 i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
                 fn = debounce(fn, i >> 0);
             }
-            let options = ms && {
+            let options = {
                 capture: ms[includes]("capture"),
                 passive: ms[includes]("passive"),
             };
@@ -537,7 +537,7 @@ const ZData = (() => {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
                         for (let i = 0, t; i < ms[length]; i++) {
-                            ignore = ignore && (closest(t = ms[i].target) || closest(t, qdata) && !t[querySelector](qdata));
+                            ignore = ignore && (closest(t = ms[i].target) || !closest(t, qdata) && !t[querySelector](qdata));
                         }
                         if (ignore) return;
                     }

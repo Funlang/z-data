@@ -1,4 +1,7 @@
 
+2022-04-10
+  * observe(), fix issue
+
 2022-04-09
   * loadHTML() and start()
     load / start optimized
