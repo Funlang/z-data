@@ -35,6 +35,7 @@ const ZData = (() => {
     const querySelector = "querySelector";
     const $ocument = document;
     const $ = (selector, el = $ocument) => el[querySelector+"All"](selector);
+    const closest = (el, selector = `[${znone}]`) =>  el.closest(selector);
     const addEventListener = "addEventListener";
     const Obj_keys = Object.keys;
     const Obj_values = Object.values;
@@ -188,7 +189,7 @@ const ZData = (() => {
     const expand = ({ p, el, next, n }, env, r) => {
         if (!(n = el[_z_d].node)) {
             n = (n=el[getAttribute](zuse)) && (el[_z_d].u=n=tryEval(el,'`'+n+'`',env)) && (
-                n = env.r[querySelector](n) || (r=env.r[parentEL].closest(qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
+                n = env.r[querySelector](n) || (r=closest(env.r[parentEL], qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -233,12 +234,13 @@ const ZData = (() => {
             if (kvi.v) env2.ps[kvi.v] = v;
             if (kvi.i) env2.ps[kvi.i] = i++;
             let key = id ? v[id] : akey ? tryEval(el, akey, env2) : kvi.k ? k : v;
-            if (key === nil) continue; // key MUST BE !!!
+            if (key === nil) continue; // key IS NIL !!!
             if (kvi.k) env2.ps[kvi.k] = key;
 
             let next = cur[nextEL];
             let curNode = keys[key];
             if (curNode) {
+                if (curNode.age == age) continue; // key DUPLICATE !!!
                 let lastNext = curNode.t[nextEL];
                 let moveable = curNode.s != next;
                 if (moveable && next && !curNode.s[_z_d].skip) {
@@ -521,7 +523,7 @@ const ZData = (() => {
             del && before && before[remoVe]();
             fns();
         });
-        fn.push(startLater);
+        fn.push(()=>$el && initComponent($el)); // startLater, debounce(()=>initComponent($el))
         updating += fn[length];
         fns();
     };
@@ -535,14 +537,14 @@ const ZData = (() => {
                     if (ms[length] < 100 /* How Many ??? */) {
                         let ignore = true;
                         for (let i = 0, t; i < ms[length]; i++) {
-                            ignore = ignore && ((t = ms[i].target).closest(`[${znone}]`) || !t.closest(qdata) && !t[querySelector](qdata));
+                            ignore = ignore && (closest(t = ms[i].target) || closest(t, qdata) && !t[querySelector](qdata));
                         }
                         if (ignore) return;
                     }
                     startLater();
                 } else initComponent(el);
             }));
-        ZData.nobserve || setTimeout(() => ob.observe(el, { childList: true, subtree: true }));
+        ZData.nobserve || debounce(() => ob.observe(el, { childList: true, subtree: true }));
     };
 
     const startLater = debounce(() => start(nil, 1));
@@ -550,7 +552,7 @@ const ZData = (() => {
         let l = nop;//con.log;
         l((_n_ = now()), onlyObserve || ++age, ++updating);
         stopObserve($ocument.body);
-        $(qdata)[forEach]((el) => initComponent(el));
+        $(qdata)[forEach]((el) => closest(el) || initComponent(el));
         l(now(), zdata, now() - _n_, --updating);
         observe($ocument.body);
     };

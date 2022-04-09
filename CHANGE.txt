@@ -1,4 +1,10 @@
 
+2022-04-09
+  * loadHTML() and start()
+    load / start optimized
+  * goFor()
+    fix - key DUPLICATE !!!
+
 2022-04-08
   + $emit(el, name, detail)
   * liteProxy
