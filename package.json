@@ -22,7 +22,7 @@
     "build moloader": "uglifyjs -c -m -o z-pen/res/moloader.min.js z-pen/res/moloader.js",
     "build monaco-html": "uglifyjs -c -m -o z-pen/res/html.min.js z-pen/res/html.js",
     "build sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js",
-    "build polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfile.min.js z-pen/res/polyfill.js"
+    "build polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfill.min.js z-pen/res/polyfill.js"
   },
-  "version": "1.7.0"
+  "version": "1.8.0"
 }

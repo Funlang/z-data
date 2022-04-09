@@ -126,7 +126,7 @@ const ZData = (() => {
     const goAnode = (args, env, self) => {
         let { p, el, cp } = args, nc;
         let zd = el[_z_d] || (el[_z_d] = {});
-        let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? nc.as : el.getAttributeNames());
+        let attrs = zd.as || (zd.as = (nc = nodeCache[el[getAttribute]("z-d")]) ? (zd.ps = nc.ps, nc.as) : el.getAttributeNames());
         if (attrs[includes](znone)) return;
 
         if (!cp) {
@@ -154,7 +154,7 @@ const ZData = (() => {
                 return;
             }
         }
-        setAttrs(args, env, attrs, nc);
+        setAttrs(args, env, attrs);
         goNodes({ cp, p: el, el: (/*cp && el.content ||*/ el)[firstEL] }, env);
     };
 
@@ -277,11 +277,11 @@ const ZData = (() => {
 
     const toCamel = (name) => name[replace](re_2camel, (m, c) => c.toUpperCase());
     const attrMaps = { css: s_tyle, text: textC, html: "innerHTML" };
-    const setAttrs = (args, env, attrNames, nc) => {
+    const setAttrs = (args, env, attrNames) => {
         let { el } = args,
             zd = el[_z_d],
             vs = zd.vs || (zd.vs = []);
-        let props = zd.ps || (zd.ps = nc && nc.ps);
+        let props = zd.ps;
         if (!props) {
             props = zd.ps = { ps: [] };
             if (args.cp) {
@@ -523,7 +523,7 @@ const ZData = (() => {
             del && before && before[remoVe]();
             fns();
         });
-        fn.push(()=>$el && initComponent($el)); // startLater, debounce(()=>initComponent($el))
+        fn.push(()=>$el && initComponent($el)); // startLater, ()=>$el && initComponent($el)
         updating += fn[length];
         fns();
     };

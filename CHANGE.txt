@@ -4,6 +4,8 @@
     load / start optimized
   * goFor()
     fix - key DUPLICATE !!!
+  * goAnode() and setAttrs()
+    fix - nodeCache[]
 
 2022-04-08
   + $emit(el, name, detail)
