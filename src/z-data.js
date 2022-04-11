@@ -61,12 +61,12 @@ const ZData = (() => {
                 cs = {
                     s: {},
                     set(obj, prop, value, rec) {
-                        for (let c in this.s) this.s[c].set(obj, prop, value, rec);
+                        Obj_keys(this.s)[forEach](c=>this.s[c].set(obj, prop, value, rec));
                         return true;
                     },
                     deleteProperty(obj, prop) {
                         let ret = true;
-                        for (let c in this.s) ret = this.s[c].deleteProperty(obj, prop) && ret;
+                        Obj_keys(this.s)[forEach](c=>ret = this.s[c].deleteProperty(obj, prop) && ret);
                         return ret;
                     }
                 }
@@ -118,7 +118,7 @@ const ZData = (() => {
             if (el[zargs]) zd[zargs] = el[zargs];
             if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
-        init(true);
+        init(1);
         el[_z_d].ing--;
     };
 
@@ -296,12 +296,12 @@ const ZData = (() => {
                     k = m4 ? (m4 != "." || !name ? (name = ZData.ss(name), s_tyle) : c_lass) : name; // key/name
                 k = attrMaps[k] || k;
                 if (k) {
-                    let modifiers = ms[6] && split(ms[6], ".");
+                    let modifiers = ms[6] && split(ms[6], ".") || [];
                     let ps = {
                         a,
-                        k: k == c_lass || !modifiers || !modifiers[includes]("camel") ? k : toCamel(k),
+                        k: k == c_lass || !modifiers[includes]("camel") ? k : toCamel(k),
                         b: (ms[3] && 3) || (ms[2] && 2) || ((ms[1] || m4) && 1) || nil, // bind 1 2, event 3
-                        m: m4 && name ? [name].concat(modifiers || []) : modifiers, // modifiers
+                        m: m4 && name ? [name].concat(modifiers) : modifiers, // modifiers
                         e: v, // exp
                     };
                     if (!ps.b || m4 == "!") ps.e = "`" + ps.e + "`";
@@ -314,6 +314,7 @@ const ZData = (() => {
                 props.ps.push({
                     k: textC,
                     e: "`" + t + "`",
+                    m: [],
                 });
             }
         }
@@ -325,22 +326,20 @@ const ZData = (() => {
             else {
                 let v = ps.e;
                 ps.E || v && (v = tryEval(el, v, env, ps));
-                let num = ps.m && ps.m[includes]("number");
+                let num = ps.m[includes]("number");
                 if (vs[i] !== v) {
+                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v === nil ? "" : v, vs[i]);
                     vs[i] = v;
-                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v === nil ? "" : v);
                 }
                 if (ps.b == 2) {
                     if (!ps.b2) {
                         v = "this." + ps.k;
-                        if (ps.k == s_tyle && ps.m && ps.m[length] > 0) v += "[`" + ps.m[0] + "`]";
+                        if (ps.k == s_tyle && ps.m[length]) v += "[`" + ps.m[0] + "`]";
                         let event = el.type == "text" ? input : change;
-                        if (ps.m) {
-                            if (ps.m[includes](input)) event = input;
-                            else if (ps.m[includes](change)) event = change;
-                            if (ps.m[includes]("trim")) v += ".trim()";
-                            if (num) v = "this.u?this.u.replace(/1/," + v + "):parseFloat(" + v + ")";
-                        }
+                        if (ps.m[includes](input)) event = input;
+                        else if (ps.m[includes](change)) event = change;
+                        if (ps.m[includes]("trim")) v += ".trim()";
+                        if (num) v = "this.u?this.u.replace(/1/," + v + "):parseFloat(" + v + ")";
                         let vi = "=this." + _z_d + ".vs[" + i + "]=";
                         v = /==/.test(ps.e) ? v + "&&(" + ps.e[replace](/==+/, vi) + ")" : ps.e + vi + v
                         ps.b2 = { ...ps, e: v, k: event, ev: event, f: nil };
@@ -353,27 +352,28 @@ const ZData = (() => {
         props.ps[forEach](fn);
     };
 
-    const setValue = (el, ps, value) => {
+    const setValue = (el, ps, value, old) => {
         if (ps.k == c_lass) {
-            let cl = el.classList;
-            if (ps.m && ps.m[length] > 0) {
+            if (ps.m[length]) {
                 let v = ps.e === "" ? true : value;
+                value = {};
                 ps.m[forEach]((name) => {
-                    if (is_object(v, "boolean") || !name.endsWith("-")) {
-                        v ? cl.add(name) : cl[remoVe](name);
-                    } else cl.add(name + v);
+                    if (name.endsWith("-")) {
+                        value[name + v] = 1;
+                        old &&  (value[name + old] = 0);
+                    } else value[name] = v;
                 });
-            } else {
-                if (Array.isArray(value)) {
-                } else if (is_object(value)) {
-                    Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl[remoVe](name));
-                    return;
-                } else value = value ? split(value) : [];
-                value[forEach]((name) => cl.add(name));
             }
+            let cl = el.classList;
+            if (Array.isArray(value)) {
+            } else if (is_object(value)) {
+                Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl[remoVe](name));
+                return;
+            } else value = value ? split(value) : [];
+            value[forEach]((name) => cl.add(name));
         } else {
             if (ps.k == s_tyle) {
-                if (ps.m && ps.m[length] > 0) {
+                if (ps.m[length]) {
                     if (ps.m[length] == 1) value = { [ps.m[0]]: value };
                     else value = { [ps.m[0]]: value && ps.m[1] };
                 }
@@ -385,7 +385,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            ps.m && ps.m[includes]("attr") ? value === false ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
+            ps.m[includes]("attr") ? value === false ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
         }
     };
 
@@ -403,7 +403,7 @@ const ZData = (() => {
     };
 
     const setEvent = ({ el }, ps, env) => {
-        let { a: key, k: name, e: exp, ev, m: ms = [] } = ps;
+        let { a: key, k: name, e: exp, ev, m: ms } = ps;
         if (!el[_z_d][key]) {
             let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("out") ? $ocument : el;
             let fn = (e) => {
@@ -535,7 +535,7 @@ const ZData = (() => {
                 if (updating) return;
                 if (el == $ocument.body) {
                     if (ms[length] < 100 /* How Many ??? */) {
-                        let ignore = true;
+                        let ignore = 1;
                         for (let i = 0, t; i < ms[length]; i++) {
                             ignore = ignore && (closest(t = ms[i].target) || !closest(t, qdata) && !t[querySelector](qdata));
                         }
