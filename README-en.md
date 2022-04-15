@@ -436,7 +436,7 @@ keep the placeholder tag:
 ```
 and use args.xxx to get the args props, e.g.:
 ```html
-<div z-data @mouseover.document=$el.textContent=this&&(this.title||(this.closest('[title]')||{}).title)||''
+<div z-data @mouseover.document=$el.textContent=event.target&&(event.target.title||(event.target.closest('[title]')||{}).title)||''
 #color=args.color #background=args.bgcolor !height=100% !padding=8px
 ></div> 
 ```
