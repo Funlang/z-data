@@ -1,4 +1,11 @@
 
+2022-04-15
+  + attr handler (ZData.ss(name, value))
+    attr atomic css on demand
+      <div m1 hover=m2 a-hover=m3 a&hover=m4 a+hover=m5rem a~not-hover=m6pt after=m7></div>
+  * setEvent()
+    event this -> current element (from e.target)
+
 2022-04-11
   * setValue(), fix issue for .xxx-=yyy
 
