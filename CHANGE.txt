@@ -1,10 +1,16 @@
 
+2022-04-26
+  * expand()
+    * template use (else)
+      DONT cache
+
 2022-04-15
   + attr handler (ZData.ss(name, value))
     attr atomic css on demand
-      <div m1 hover=m2 a-hover=m3 a&hover=m4 a+hover=m5rem a~not-hover=m6pt after=m7></div>
+      <div m1 hover=m2 a-hover=m3 a^hover=m4 a+hover=m5px a~not-hover=m6pt after=m7 p8 mt9%></div>
   * setEvent()
     event this -> current element (from e.target)
+  + atomic css rules
 
 2022-04-11
   * setValue(), fix issue for .xxx-=yyy

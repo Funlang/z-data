@@ -189,7 +189,8 @@ const ZData = (() => {
     const expand = ({ p, el, next, n }, env, r) => {
         if (!(n = el[_z_d].node)) {
             n = (n=el[getAttribute](zuse)) && (el[_z_d].u=n=tryEval(el,'`'+n+'`',env)) && (
-                n = env.r[querySelector](n) || (r=closest(env.r[parentEL], qdata))&&r[querySelector](n) ) && n.content || (el[_z_d].node = el.content);
+                n = env.r[querySelector](n) || (r=closest(env.r[parentEL], qdata))&&r[querySelector](n) ) && n.content || el.content;
+            el[_z_d].u || (el[_z_d].node = n);
             goNodes({ cp: 1, p: n, el: n[firstEL] }); // compile
         }
         for (let c = n[firstEL]; c; c = c[nextEL]) {
@@ -329,7 +330,7 @@ const ZData = (() => {
                 ps.E || v && (v = tryEval(el, v, env, ps));
                 let num = ps.m[includes]("number");
                 if (vs[i] !== v) {
-                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.]/g, "") : v === nil ? "" : v, vs[i]);
+                    setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.-]/g, "") : v === nil ? "" : v, vs[i]);
                     vs[i] = v;
                 }
                 if (ps.b == 2) {
