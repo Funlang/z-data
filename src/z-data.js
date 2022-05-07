@@ -1,6 +1,6 @@
 // Copyright (c) 2021 zwd@funlang.org
 const ZData = (() => {
-    var age = 0, cps = 0, _n_, ids = 0, updating = 0, proxy;
+    var age = 0, cps = 0, ids = 0, updating = 0, proxy;
 
     const Attribute = "Attribute", Element = "Element", ElementSibling = Element + "Sibling", ElementChild = Element + "Child";
 
@@ -41,8 +41,6 @@ const ZData = (() => {
     const Obj_values = Object.values;
     const is_object = (obj, t = "object") => typeof obj == t;
     const is_function = (obj) => is_object(obj, "function");
-    const con = console;
-    const now = Date.now;
     const nil = undefined;
 
     const re_ms = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|out|window|document|(shift|ctrl|alt|meta)|(cmd))$/;
@@ -98,7 +96,7 @@ const ZData = (() => {
         let zd = el[_z_d].zd;
         if (!zd) {
             let cb = {
-                i: _z_d + now(),
+                i: _z_d + Math.random(),
                 set(obj, prop, value, rec, zdataproxy) {
                     initLater();
                     try {
@@ -470,7 +468,7 @@ const ZData = (() => {
         );
     };
 
-    const error = (el, exp, e) => con.warn(`${zdata} error: "${e}"\n\nexp: "${exp}"\nelement:`, el);
+    const error = (el, exp, e) => console.warn(`${zdata} error: "${e}"\n\nexp: "${exp}"\nelement:`, el);
     const tryCatch = (cb, { el, exp }) => {
         try {
             let value = cb();
@@ -510,12 +508,11 @@ const ZData = (() => {
                 fi(fns);
             }
             return "";
-        })[replace](/(<(style)[^>@]*>)([^]+?)(<\/\2>)/gi, ($0, s1, $2, s, s2) => {
-            s = s[replace](/([^{}]+)(?=\{)/g, ($0, names) => {
-                if (/^\s*(@|\d+%|from|to)/.test(names)) return names; // @keyframes or [z-i=...
+        })[replace](/(<style[^>@]*>)([^]*?)(?=<\/style>)/gi, ($0, s1, s) => {
+            return s1 + s[replace](/\s*([^{}]+)(?=\{)/g, ($0, names) => {
+                if (/^[@\d]|^(from|to)\b/.test(names)) return names; // @keyframes or [z-i=...
                 return split(names, /\s*,\s*/).map((n) => n[replace](/^(\[z-i=.*?\] )?(.*)/, ($0,$1,$2)=>`[z-i="${id}"] `+$2)).join(",");
             });
-            return s1 + s + s2;
         });
         $el = el[querySelector](qdata) || el[firstEL];
         if (zdatahtml && script) $el[setAttribute](zdata, `args=>{${script[replace](/\bexport\s+default(?=\s*\{)/, 'return')}}`);
@@ -551,11 +548,10 @@ const ZData = (() => {
 
     const startLater = debounce(() => start(nil, 1));
     const start = (e, onlyObserve) => {
-        let l = nop;//con.log;
-        l((_n_ = now()), onlyObserve || ++age, ++updating);
+        onlyObserve || ++age, ++updating;
         stopObserve($ocument.body);
         $(qdata)[forEach]((el) => closest(el) || initComponent(el));
-        l(now(), zdata, now() - _n_, --updating);
+        --updating;
         observe($ocument.body);
     };
 
