@@ -59,12 +59,12 @@ const ZData = (() => {
                 cs = {
                     s: {},
                     set(obj, prop, value, rec) {
-                        Obj_keys(this.s)[forEach](c=>this.s[c].set(obj, prop, value, rec));
+                        for (let c in this.s) this.s[c].set(obj, prop, value, rec);
                         return true;
                     },
                     deleteProperty(obj, prop) {
-                        let ret = true;
-                        Obj_keys(this.s)[forEach](c=>ret = this.s[c].deleteProperty(obj, prop) && ret);
+                        let c, ret = true;
+                        for (c in this.s) ret = this.s[c].deleteProperty(obj, prop) && ret;
                         return ret;
                     }
                 }
@@ -367,7 +367,7 @@ const ZData = (() => {
             let cl = el.classList;
             if (Array.isArray(value)) {
             } else if (is_object(value)) {
-                Obj_keys(value)[forEach]((name) => value[name] ? cl.add(name) : cl[remoVe](name));
+                for (let name in value) value[name] ? cl.add(name) : cl[remoVe](name);
                 return;
             } else value = value ? split(value) : [];
             value[forEach]((name) => cl.add(name));

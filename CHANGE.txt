@@ -1,4 +1,7 @@
 
+2022-05-16
+  * Object.keys(...).forEach -> for (...in...)
+
 2022-05-07
   * cb.i --Date.now()-> Math.random()
 
