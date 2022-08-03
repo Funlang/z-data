@@ -516,7 +516,7 @@ const ZData = (() => {
         });
         $el = el[querySelector](qdata) || el[firstEL];
         if (zdatahtml && script) $el[setAttribute](zdata, `args=>{${script[replace](/\bexport\s+default(?=\s*\{)/, 'return')}}`);
-        if (args) $el[zargs] = args;
+        if ($el && args) $el[zargs] = args;
         fn.push(() => {
             for (let e = el[firstEL], n = e && e[nextEL]; e; e = n, n = n && n[nextEL]) p[insert](e, before);
             del && before && before[remoVe]();
@@ -558,7 +558,7 @@ const ZData = (() => {
     const ons = {};
     const on = (name, fn) => ((ons[name] = ons[name] || []).push(fn), ZData);
     const call = (name, args) => (ons[name] || [])[forEach]((fn) => fn(args));
-          
+
     $ocument[addEventListener]("DOMContentLoaded", start);
     return { start, loadHTML, on, call, ss:s=>s };
 })();
