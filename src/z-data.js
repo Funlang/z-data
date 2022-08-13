@@ -408,7 +408,7 @@ const ZData = (() => {
             let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("out") ? $ocument : el;
             let fn = (e) => {
                 if (ms[includes]("self") && el != e.target) return;
-                if (ms[includes]("out") && (el.contains(e.target) || (el.offsetWidth < 1 && el.offsetHeight < 1))) return;
+                if (ms[includes]("out") && el.contains(e.target)) return;
                 // key and mouse (ctrl, alt, shift, meta, cmd)
                 if (name[startsWith]("key") || name[startsWith]("mouse") || name.endsWith("click")) {
                     for (let modifier of ms) {
