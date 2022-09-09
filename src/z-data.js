@@ -453,7 +453,7 @@ const ZData = (() => {
     const Functions = {};
     const newFun = (exp, ks, k, ps) => {
         let f = (ps && ps.f) || Functions[(k += exp)] ||
-            (Functions[k] = new Function(["$z_d", ...ks], "let re$u1T;with($z_d){re$u1T=" + exp + "};return re$u1T"));
+            (Functions[k] = new Function(["$2D", ...ks], "let R3$;with($2D){R3$=" + exp + "};return R3$"));
         ps && !ps.f && (ps.f = f);
         return f;
     };
@@ -468,7 +468,7 @@ const ZData = (() => {
         );
     };
 
-    const error = (el, exp, e) => console.warn(`${zdata} error: "${e}"\n\nexp: "${exp}"\nelement:`, el);
+    const error = (el, exp, e) => console.warn(`E ${zdata}: ${e} [${exp}]`, el);
     const tryCatch = (cb, { el, exp }) => {
         try {
             let value = cb();
@@ -533,7 +533,7 @@ const ZData = (() => {
             (el[_z_d].ob = new MutationObserver((ms) => {
                 if (updating) return;
                 if (el == $ocument.body) {
-                    if (ms[length] < 100 /* How Many ??? */) {
+                    if (ms[length] < 99 /* How Many ??? */) {
                         let ignore = 1;
                         for (let i = 0, t; i < ms[length]; i++) {
                             ignore = ignore && (closest(t = ms[i].target) || !closest(t, qdata) && !t[querySelector](qdata));
@@ -560,5 +560,5 @@ const ZData = (() => {
     const call = (name, args) => (ons[name] || [])[forEach]((fn) => fn(args));
 
     $ocument[addEventListener]("DOMContentLoaded", start);
-    return { start, loadHTML, on, call, ss:s=>s };
+    return { start, loadHTML, on, call, ss:s=>s, deb: debounce };
 })();

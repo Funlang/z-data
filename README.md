@@ -432,6 +432,11 @@ Change el style out of z-data, for dual-binding, needs to call .fireChange()
 向 DOM 节点 el 发出名为 name 的事件, 携带 detail 参数
 Dispatch an event (name) with detail param to el DOM Element 
 
+### 3.8.5. ZData.deb(fn, ms)
+
+延迟运行
+Debounce
+
 ## 3.9. 组件 | Component
 
 ### 3.9.1. z-comp

@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js && z-pen\\to-es2015.fun",
+    "build z-data-all": "uglifyjs -c -m -o src/z-data.min.all.js -- src/z-data.min.es2015.js src/z-json.js",
     "build z-minifier": "uglifyjs -c -m -o z-pen/z-minifier.min.js z-pen/z-minifier.js",
     "build z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js",
     "build moloader": "uglifyjs -c -m -o z-pen/res/moloader.min.js z-pen/res/moloader.js",
@@ -24,5 +25,5 @@
     "build sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js",
     "build polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfill.min.js z-pen/res/polyfill.js"
   },
-  "version": "1.8.0"
+  "version": "1.9.0"
 }

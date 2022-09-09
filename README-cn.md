@@ -376,6 +376,11 @@ no observe DOM for dynamic creating z-data node
 
 向 DOM 节点 el 发出名为 name 的事件, 携带 detail 参数
 
+### 3.8.5. ZData.deb(fn, ms)
+
+延迟运行
+Debounce
+
 ## 3.9. 组件
 
 ### 3.9.1. z-comp

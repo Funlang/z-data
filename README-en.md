@@ -376,6 +376,10 @@ Change el style out of z-data, for dual-binding, needs to call .fireChange()
 
 Dispatch an event (name) with detail param to el DOM Element 
 
+### 3.8.5. ZData.deb(fn, ms)
+
+Debounce
+
 ## 3.9. Component
 
 ### 3.9.1. z-comp
