@@ -60,6 +60,19 @@ TodoMVC:
 
 * https://funlang.org/z-data/?url=./test/z-data-form-demo.html
 
+z-cloak example:
+
+```html
+z-data
+<div z-cloak :z-cloak.attr=false>z-cloak example</div>
+
+<style>
+  [z-cloak] {
+    display: none;
+  }
+</style>
+```
+
 ## 2.1. z-data studio
 
 可以在线创建/调试/预览 z-data 代码
