@@ -143,7 +143,8 @@ const ZData = (() => {
                     }).catch(nop);
                 } catch (e) {}
                 return;
-            } else if (el.content && "TEMPLATE" == el.tagName) {
+            } else if ("template" == el.localName) {
+                el.content || (el.content = $ocument.createDocumentFragment())[insert](el[firstEL], nil);
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
                 } else if ((exp = el[getAttribute](zif)) || 1 /*attrs[includes](zelse)*/) {

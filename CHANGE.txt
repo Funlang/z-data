@@ -1,4 +1,8 @@
 
+2022-10-15
+  * goAnode()/146,+147
+    support template in svg
+
 2022-09-09
   + .deb(fn, ms), debounce
 
