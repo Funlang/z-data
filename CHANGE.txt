@@ -1,4 +1,9 @@
 
+2022-10-16
+  + syntax sugar to .attr
+    :!tag-attr  -> :tag-attr.attr
+    ::!tag-attr -> ::tag-attr.attr
+
 2022-10-15
   * goAnode()/146,+147
     support template in svg
