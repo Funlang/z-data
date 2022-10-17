@@ -259,10 +259,10 @@ ZData.ss = (s) => AShorthandMap[s] || s;
 :xxx.attr === false 表示为 boolean attribute 属性
 
 #### 3.4.7.1. attr 简写
-
+```
 :!tag-attr  -> :tag-attr.attr
 ::!tag-attr -> ::tag-attr.attr
-
+```
 ### 3.4.8. camel
 
 :xxx.camel 支持驼峰表示法

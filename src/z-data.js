@@ -297,13 +297,13 @@ const ZData = (() => {
                     k = attrMaps[k] || k;
                     if (k) {
                         let modifiers = ms[7] && split(ms[7], ".") || [];
-                        ms[3] && modifiers.push("attr");
                         let ps = {
                             a,
                             k: k == c_lass || !modifiers[includes]("camel") ? k : toCamel(k),
                             b: (ms[4] && 3) || (ms[2] && 2) || ((ms[1] || m5) && 1) || nil, // bind 1 2, event 4
                             m: m5 && name ? [name].concat(modifiers) : modifiers, // modifiers
                             e: v, // exp
+                            A: ms[3] || modifiers[includes]("attr"),
                         };
                         if (!ps.b || m5 == "!") ps.e = "`" + ps.e + "`";
                         props.ps.push(ps);
@@ -387,7 +387,7 @@ const ZData = (() => {
                     return;
                 }
             }
-            ps.m[includes]("attr") ? value === false ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
+            ps.A ? value === false ? el[removeAttribute](ps.k) : el[setAttribute](ps.k, value) : el[ps.k] = value;
         }
     };
 

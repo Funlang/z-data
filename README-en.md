@@ -259,10 +259,10 @@ builtin attributes with \${...} in their values, will be paused as a string expr
 :xxx.attr === false will be boolean attribute
 
 #### 3.4.7.1. attr shorthand
-
+```
 :!tag-attr  -> :tag-attr.attr
 ::!tag-attr -> ::tag-attr.attr
-
+```
 ### 3.4.8. camel
 
 :xxx.camel supports camel attributes or properties
