@@ -332,7 +332,7 @@ alias:  space: " ", slash: /, gt: >, eq: =
 <button>  left, mid, right
 ```
 
-## 3.6. Dynamic props and events
+## 3.6. Dynamic props / events and custom directive
 
 ### 3.6.1. Dynamic props/attrs
 
@@ -356,6 +356,25 @@ alias:  space: " ", slash: /, gt: >, eq: =
       input: 'console.log(event)',
       keydown: 'console.log(event)'
     }"
+
+### 3.6.3. Custom directive
+
+    z-d-...=...
+
+  e.g.:
+
+    z-d-rules-of-validate="[
+      val => !!val || 'Name is required!',
+      val => val.length > 5 || 'The field need 5 or more characters',
+    ]"
+
+  will be reformed and apply to
+
+    rulesOfValidate({
+      e: el,
+      v: val, // attr value of z-d-rules-of-validate
+      m: modifiers
+    })
 
 ## 3.7. Variables
 

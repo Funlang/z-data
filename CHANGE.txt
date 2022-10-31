@@ -1,4 +1,8 @@
 
+2022-10-30
+  + custom directive, z-d-...=...
+    * re_bind, re_attr, setAttrs()
+
 2022-10-17
   * :! and .attr
     ps.A

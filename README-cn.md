@@ -332,7 +332,7 @@ alias:  space: " ", slash: /, gt: >, eq: =
 <button>  left, mid, right
 ```
 
-## 3.6. 动态属性和事件
+## 3.6. 动态属性/事件和自定义指令
 
 ### 3.6.1. 动态属性
 
@@ -356,6 +356,25 @@ alias:  space: " ", slash: /, gt: >, eq: =
       input: 'console.log(event)',
       keydown: 'console.log(event)'
     }"
+
+### 3.6.3. 自定义指令
+
+    z-d-...=...
+
+  e.g.:
+
+    z-d-rules-of-validate="[
+      val => !!val || 'Name is required!',
+      val => val.length > 5 || 'The field need 5 or more characters',
+    ]"
+
+  会翻译成调用如下形式的函数
+
+    rulesOfValidate({
+      e: el,
+      v: val, // attr value of z-d-rules-of-validate
+      m: modifiers
+    })
 
 ## 3.7. 变量
 

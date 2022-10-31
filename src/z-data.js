@@ -45,8 +45,8 @@ const ZData = (() => {
 
     const re_ms = /^(?:camel|prevent|stop|debounce|(\d+)(?:(m?)s)|capture|once|passive|self|out|window|document|(shift|ctrl|alt|meta)|(cmd))$/;
     const re_for = /^(?:\s*(?:(\w+)\s*:\s*)?(\w*)(?:\s*,\s*(\w+))?\s+in\s+)?(.+)$/;
-    const re_bind = /^[:@.#!]./;
-    const re_attr = /^(?:(:)(:?)(!?)|(@)|([.#!]))?([^.]*)(?:[.]([^.].*))?$/;
+    const re_bind = /^[:@.#!].|^z-d-/;
+    const re_attr = /^(?:(:)(:?)(!?)|(@)|([.#!])|(z-d-))?([^.]*)(?:[.]([^.].*))?$/;
     const $e_text = (s) => s && s.indexOf("${") >= 0 && s.indexOf("`") < 0;
     const re_kebab = /[-_ ]+/g;
     const re_2camel = /-([a-z])/g;
@@ -291,18 +291,18 @@ const ZData = (() => {
             attrNames[forEach]((a) => {
                 let v = el[getAttribute](a);
                 if (re_bind.test(a) || $e_text(v)) {
-                    let ms = re_attr.exec(a), // 1-bind 2 3-attr 4-event 5-class/css 6-name 7-modifiers
-                        name = ms[6], m5 = ms[5],
+                    let ms = re_attr.exec(a), // 1-bind 2 3-attr 4-event 5-class/css 6-zd- 7-name 8-modifiers
+                        name = ms[7], m5 = ms[5], m6 = ms[6],
                         k = m5 ? (m5 != "." || !name ? (name = ZData.ss(name), s_tyle) : c_lass) : name; // key/name
                     k = attrMaps[k] || k;
                     if (k) {
-                        let modifiers = ms[7] && split(ms[7], ".") || [];
+                        let modifiers = ms[8] && split(ms[8], ".") || [];
                         let ps = {
                             a,
-                            k: k == c_lass || !modifiers[includes]("camel") ? k : toCamel(k),
-                            b: (ms[4] && 3) || (ms[2] && 2) || ((ms[1] || m5) && 1) || nil, // bind 1 2, event 4
-                            m: m5 && name ? [name].concat(modifiers) : modifiers, // modifiers
-                            e: v, // exp
+                            k: m6 ? nil : k == c_lass || !modifiers[includes]("camel") ? k : toCamel(k),
+                            b: (ms[4] && 3) || (ms[2] && 2) || ((ms[1] || m5 || m6) && 1) || nil, // bind 1 2, event 4
+                            m: m5 && name ? [name, ...modifiers] : modifiers, // modifiers
+                            e: m6 ? `${toCamel(k)}({e:this,v:${v||true},m:{${modifiers.map(a=>a+':1').join()}}})` : v, // exp
                             A: ms[3] || modifiers[includes]("attr"),
                         };
                         if (!ps.b || m5 == "!") ps.e = "`" + ps.e + "`";
@@ -329,7 +329,7 @@ const ZData = (() => {
                 let v = ps.e;
                 ps.E || v && (v = tryEval(el, v, env, ps));
                 let num = ps.m[includes]("number");
-                if (vs[i] !== v) {
+                if (ps.k && vs[i] !== v) {
                     setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.-]/g, "") : v === nil ? "" : v, vs[i]);
                     vs[i] = v;
                 }
