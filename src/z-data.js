@@ -110,11 +110,11 @@ const ZData = (() => {
             };
             proxy = window.ZDataProxy || liteProxy;
             ZData.proxy = (v) => proxy(v, cb);
-            zd = tryEval(el, el[getAttribute](zdata) || 0, env, nil, el[zargs] || {}) || {};
+            zd = tryEval(el, el[getAttribute](zdata), env, nil, el[zargs] || {}) || {};
             el.$data = el[_z_d].zd = zd = proxy(zd, cb);
             el[setAttribute](zdata, "");
             if (el[zargs]) zd[zargs] = el[zargs];
-            if (el[getAttribute](zinit)) tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
+            tryEval(el, el[getAttribute](zinit), { ...env, d: zd });
         }
         init(1);
         el[_z_d].ing--;
@@ -137,7 +137,7 @@ const ZData = (() => {
                     else if (/^z:/.test(exp) && ZData.get) res = ZData.get(exp);
                     else res = tryEval(el, exp, env);
                     res.then((html) => {
-                        let as = attrs[includes](zargs) && tryEval(el, el[getAttribute](zargs), env);
+                        let as = tryEval(el, el[getAttribute](zargs), env);
                         if (el.tagName[1] == "-" || attrs[includes]("del")) loadHTML(html, p, el, as, 1);
                         else loadHTML(html, el, nil, as);
                     }).catch(nop);
@@ -327,7 +327,7 @@ const ZData = (() => {
             else if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e;
-                ps.E || v && (v = tryEval(el, v, env, ps));
+                ps.E || (v = tryEval(el, v, env, ps), ps.k || (ps.e = nil));
                 let num = ps.m[includes]("number");
                 if (ps.k && vs[i] !== v) {
                     setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.-]/g, "") : v === nil ? "" : v, vs[i]);
@@ -460,7 +460,7 @@ const ZData = (() => {
         return f;
     };
     const tryEval = (el, exp, env, ps, args) => {
-        return tryCatch(
+        return exp && tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(el, env.r);
                 exp = newFun(exp, Obj_keys(env.ps), Obj_keys(env.ps).join(','), ps).call(el, env.d, ...Obj_values(env.ps));

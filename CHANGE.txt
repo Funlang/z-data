@@ -1,4 +1,11 @@
 
+2022-11-05
+  * tryEval()
+    exp && ...
+  * setAttrs.fn()
+    + , ps.k || (ps.e = nil)
+      call only once (for z-d-...)
+
 2022-10-30
   + custom directive, z-d-...=...
     * re_bind, re_attr, setAttrs()
