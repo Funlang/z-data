@@ -1,4 +1,9 @@
 
+2022-11-06
+  * setAttrs.fn()
+    + , ps.k ? nil : 1
+      supports z-d- closure function
+
 2022-11-05
   * tryEval()
     exp && ...

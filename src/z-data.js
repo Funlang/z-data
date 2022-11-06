@@ -327,7 +327,7 @@ const ZData = (() => {
             else if (ps.b == 3) setEvent(args, ps, env);
             else {
                 let v = ps.e;
-                ps.E || (v = tryEval(el, v, env, ps), ps.k || (ps.e = nil));
+                ps.E || (v = tryEval(el, v, env, ps, ps.k ? nil : 1), ps.k || (ps.e = nil));
                 let num = ps.m[includes]("number");
                 if (ps.k && vs[i] !== v) {
                     setValue(el, ps, num && el.u && is_object(v, "string") ? v[replace](/[^\d.-]/g, "") : v === nil ? "" : v, vs[i]);
