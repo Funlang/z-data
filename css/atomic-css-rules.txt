@@ -1,0 +1,60 @@
+
+s         = \w+                                                                 # 小写字母, 正则表达式, 在规则中使用时换成大写
+ss        = [\w\-]+
+n         = -?(\d*\.)?\d+|--\w+
+u         = \w+|%
+PM        = {p: 'padding', m: 'margin'}                                         # 大写, 缩写列表, 在规则左侧时为 p|m, 在规则右侧时展开为 PM[pm]
+HW        = {h: 'height', w: 'width'}
+XN        = {x: 'max', n: 'min'}
+LTRB      = {l: 'left', t: 'top', r: 'right', b: 'bottom'}
+FSLH      = {font: 'font-size', lh: 'line-height', gap: 'gap', gapr: 'row-gap', gapc: 'column-gap', brad: 'border-radius'}
+OOZ       = {op: 'opacity', ord: 'order', z: 'z-index'}
+POS       = {pos: 'position', d: 'display', cs: 'cursor', v: 'visibility', ws: 'white-space', us: 'user-select', pe: 'pointer-events'}
+OF        = {o: 'overflow'}
+COLOR     = {b: 'background', c: 'color'}
+IF        = (s, set, b = '-', a = '') => s ? b + (set[s]||s) + a : ''           # 大写, 函数, 可以应用在规则右侧
+NUMS      = (num, unit) => /^--/.test(num) ? `var(${num})` : `${unit ? num : num / 4}${unit || 'rem'}`
+MINW      = {sm: 640, s: 640, md: 768, m: 768, lg: 1024, l: 1024, xl: 1280, '2xl': 1536, xxl: 1536}
+
+# 规则, 左侧为 BNF 形正则式, (名称 类型), 方括号 [] 表示可选; 规则右式中 {} 翻译为 ${}, [] 翻译为可选的 ${IF(...)}
+# padding/margin
+(pm PM) [side LTRB] (num N) [unit U] = {pm}[-side]:{NUMS(num,unit)}
+# 上式翻译为下式
+# /^(?<pm>p|m)(?<side>l|t|r|b)?(?<num>-?(\d*\.)?\d+)(?<unit>\w+|%)?$/, `${PM[pm]}${IF(side,LTRB)}:${NUMS(num,unit)}`
+
+# 合并式规则, 翻译成多条短语, 可以再次应用规则
+(pm [pm]) x (any) => {pm}l{any} {pm}r{any}
+(pm [pm]) y (any) => {pm}t{any} {pm}b{any}
+
+# max/min - height/width, font-size/line-height
+[xn XN] (hw HW) (num N) [unit U] = [xn-]{hw}:{NUMS(num,unit)}
+(fslh FSLH) (num N) [unit U] = {fslh}:{NUMS(num,unit)}
+# left/top/right/bottom
+(side LTRB) (num N) [unit U] = {side}:{NUMS(num,unit)}
+# opacity/order/z-index
+(ooz OOZ) (num N) = {ooz}:{/^--/.test(num) ? `var(${num})` : num > 1 && ooz == 'op' ? num / 100 : num}
+# position/display/overflow
+(pos POS) - (value SS) = {pos}:{value}
+(of OF) [xy x|y] - (value S) = {of}[-xy]:{value}
+# content/color/background
+(name content) [value -\S+] = {name}:'{value ? value.substr(1) : ''}'
+(name COLOR) (color #[0-9a-fA-F]+|--\w+) = {name}:{/^--/.test(color) ? `var(${color})` : color}
+
+# brad - border-radius
+(a brad) (side LTRB) (sidE LTRB) (num N) [unit U] = border-{side}-{sidE}-radius:{NUMS(num,unit)}
+(a brad) (side [tb]) (any) => brad{side}l{any} brad{side}r{any}
+
+# 属性样式语法
+# 1. 空属性, 表达 样式和值, 用 正则表达式 可以直接替换
+# 2. 属性=值, 表达为 修饰符=样式和值 组
+#    修饰符主要分为 3 种:
+#    1. 伪类, 后修饰符, 如 hover=m1, after="p1 text-center", 用于 :hover, :after 等
+#    2. 父/前 伪类, 前修饰符, 如 a-hover=m1, a~not-hover=d-none 等
+#    3. 媒体查询类
+# 3. 属性=值, 表达为 分组=样式和值 组, 如
+#    bg="... ... ...", animate="... ... ..."
+#
+
+media = ((?<media>sm?|md?|lg?|xl|[2x]xl|print):)?
+state = ((?<before>(?!not)\w+)(?<to>[-+~\^]))?(?<not>not-)?(?<after>hover|focus(-\w+)?|active|after|before|(first|last)(-\w+)*)
+group = (?<group>bd|bl|bt|br|bb|bg|a|al|font|flex|grid|mask)
