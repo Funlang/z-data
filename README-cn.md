@@ -499,6 +499,10 @@ Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
     Chrome 54+, Firefox 50+, Opera 41+
 
+  - z-data.min.all.js
+
+    Chrome 64+, Firefox 78+, Opera 51+, iOS 11+, Android 8+
+
 # 5. 加入我们
 
 欢迎加入 z-data 项目, 一起工作, Enjoy!

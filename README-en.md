@@ -498,6 +498,10 @@ Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
     Chrome 54+, Firefox 50+, Opera 41+
 
+  - z-data.min.all.js
+
+    Chrome 64+, Firefox 78+, Opera 51+, iOS 11+, Android 8+
+
 # 5. JOIN US
 
 Welcome to join z-data project, a front-end framework for future, Enjoy!
