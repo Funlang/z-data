@@ -1,8 +1,12 @@
 
+2023-03-29
+  * z-data.min.all.js for es2015 (es6)
+    Chrome 54+, Firefox 50+, Opera 41+, iOS 10+, Android 7+
+
 2022-11-06
   * setAttrs.fn()
     + , ps.k ? nil : 1
-      supports z-d- closure function
+      supports z-d- inner closure function
 
 2022-11-05
   * tryEval()

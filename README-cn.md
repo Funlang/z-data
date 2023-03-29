@@ -501,7 +501,7 @@ Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
   - z-data.min.all.js
 
-    Chrome 64+, Firefox 78+, Opera 51+, iOS 11+, Android 8+
+    Chrome 54+, Firefox 50+, Opera 41+, iOS 10+, Android 7+
 
 # 5. 加入我们
 
