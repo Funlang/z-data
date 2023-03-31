@@ -503,6 +503,10 @@ Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
     Chrome 54+, Firefox 50+, Opera 41+, iOS 10+, Android 7+
 
+  - z-data.min.all.es5.js
+
+    Chrome 49+, Firefox 43+, Opera 36+, iOS 10+, Android 6+
+
 # 5. 加入我们
 
 欢迎加入 z-data 项目, 一起工作, Enjoy!

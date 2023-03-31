@@ -455,7 +455,7 @@ const ZData = (() => {
     const Functions = {};
     const newFun = (exp, ks, k, ps) => {
         let f = (ps && ps.f) || Functions[(k += exp)] ||
-            (Functions[k] = new Function(["$2D", ...ks], "let R3$;with($2D){R3$=" + exp + "};return R3$"));
+            (Functions[k] = new Function(["$2D", ...ks], "var R3$;with($2D){R3$=" + exp + "};return R3$"));
         ps && !ps.f && (ps.f = f);
         return f;
     };

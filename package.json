@@ -11,19 +11,23 @@
   },
   "type": "module",
   "main": "dist/z-data.min.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
-    "uglify-js": "^3.13.5"
+    "uglify-js": "^3.13.5",
+    "babel-preset-env": "^1.7.0"
   },
   "scripts": {
-    "build z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js && z-pen\\to-es2015.fun",
-    "build z-data-all": "z-pen\\to-es2015-z-json.fun && uglifyjs -c -m -o src/z-data.min.all.js -- src/z-data.min.es2015.js src/z-json.es2015.js",
-    "build z-minifier": "uglifyjs -c -m -o z-pen/z-minifier.min.js z-pen/z-minifier.js",
-    "build z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js",
-    "build moloader": "uglifyjs -c -m -o z-pen/res/moloader.min.js z-pen/res/moloader.js",
-    "build monaco-html": "uglifyjs -c -m -o z-pen/res/html.min.js z-pen/res/html.js",
-    "build sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js",
-    "build polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfill.min.js z-pen/res/polyfill.js"
+    "z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js && z-pen\\to-es2015.fun",
+    "z-data-all": "z-pen\\to-es2015-z-json.fun && uglifyjs -c -m -o src/z-data.min.all.js -- src/z-data.min.es2015.js src/z-json.es2015.js",
+    "z-data-es5": "babel --minified src/z-data.min.es2015.js -o src/z-data.min.es5.js && uglifyjs -c -m -o src/z-data.min.es5.js src/z-data.min.es5.js",
+    "z-data-all-es5": "babel --minified src/z-data.min.all.js -o src/z-data.min.all.es5.js && uglifyjs -c -m -o src/z-data.min.all.es5.js src/z-data.min.all.es5.js",
+    "z-minifier": "uglifyjs -c -m -o z-pen/z-minifier.min.js z-pen/z-minifier.js",
+    "z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js",
+    "moloader": "uglifyjs -c -m -o z-pen/res/moloader.min.js z-pen/res/moloader.js",
+    "monaco-html": "uglifyjs -c -m -o z-pen/res/html.min.js z-pen/res/html.js",
+    "sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js",
+    "polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfill.min.js z-pen/res/polyfill.js"
   },
   "version": "2.0.0"
 }
