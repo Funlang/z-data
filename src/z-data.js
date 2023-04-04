@@ -439,8 +439,8 @@ const ZData = (() => {
             if (i >= 0) {
                 i = ms[i + 1];
                 let m = re_ms.exec(i);
-                i = m && m[1] ? (m[2] ? m[1] : m[1] * 1000) : 250;
-                fn = debounce(fn, i >> 0);
+                i = m && m[1] ? (m[2] ? +m[1] : m[1] * 1000) : 250;
+                fn = debounce(fn, i);
             }
             let options = {
                 capture: ms[includes]("capture"),
