@@ -563,21 +563,17 @@ and use args.xxx to get the args props, e.g.:
 
 Chrome 61+, Firefox 55+, Opera 48+, ES2018
 
-  - Polyfill.js (Element.prototype.getAttributeNames)
-
-    Chrome 60+, Firefox 55+, Opera 47+
-
   - z-data.min.es2015.js
 
-    Chrome 54+, Firefox 50+, Opera 41+
+    Chrome 49+, Firefox 44+, Opera 36+, iOS 10+, Android 7+
 
   - z-data.min.all.js
 
-    Chrome 54+, Firefox 50+, Opera 41+, iOS 10+, Android 7+
+    Chrome 49+, Firefox 47+, Opera 36+, iOS 10+, Android 7+
 
   - z-data.min.all.es5.js
 
-    Chrome 49+, Firefox 43+, Opera 36+, iOS 10+, Android 6+
+    Chrome 49+, Firefox 43+, Opera 36+, iOS 10+, Android 7+
 
 # 5. 加入我们 | JOIN US
 
