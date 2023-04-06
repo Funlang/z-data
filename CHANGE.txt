@@ -1,6 +1,7 @@
 
 2023-04-06
   Chrome 61+, Firefox 55+, Opera 48+, ES2018
+
   - z-data.min.es2015.js
     Chrome 49+, Firefox 44+, Opera 36+, iOS 10+, Android 7+
   - z-data.min.all.js
