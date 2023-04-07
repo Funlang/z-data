@@ -561,16 +561,25 @@ and use args.xxx to get the args props, e.g.:
 
 # 4. 浏览器兼容性 | Browser compatibles
 
-Chrome 61+, Firefox 55+, Opera 48+, ES2018
+-  *z-data.js, z-data.min.js* ***(MAIN)***
+  ```
+  Chrome 61, Firefox 55, Opera 48, ES2018
+  ```
 
-  - z-data.min.es2015.js
-    Chrome 49+, Firefox 44+, Opera 36+, iOS 10+, Android 7+
+-  *z-data.min.es2015.js*
+  ```
+  Chrome 49, Firefox 44, Opera 36, iOS 10, Android 7
+  ```
 
-  - z-data.min.all.js
-    Chrome 49+, Firefox 47+, Opera 36+, iOS 10+, Android 7+
+-  *z-data.min.all.js*
+  ```
+  Chrome 49, Firefox 44, Opera 36, iOS 10, Android 7
+  ```
 
-  - z-data.min.all.es5.js
-    Chrome 49+, Firefox 43+, Opera 36+, iOS 10+, Android 7+
+-  *z-data.min.all.es5.js*
+  ```
+  Chrome 49, Firefox 43, Opera 36, iOS 10, Android 7
+  ```
 
 # 5. 加入我们 | JOIN US
 
