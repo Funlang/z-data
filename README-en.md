@@ -488,12 +488,12 @@ and use args.xxx to get the args props, e.g.:
 
 # 4. Browser compatibles
 
--  z-data.js, z-data.min.js
+-  `z-data.js`, `z-data.min.js`
   ```
   2017: Chrome 61, Firefox 55, Opera 48
   ```
 
--  z-data.min.es2015.js, z-data.min.all.js
+-  `z-data.min.es2015.js`, `z-data.min.all.js`
   ```
   2016: Chrome 49, Firefox 44, Opera 36, iOS 10, Android 7
   ```
