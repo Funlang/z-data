@@ -37,7 +37,7 @@ MINW      = {sm: 640, s: 640, md: 768, m: 768, lg: 1024, l: 1024, xl: 1280, '2xl
 (pos POS) - (value SS) = {pos}:{value}
 (of OF) [xy x|y] - (value S) = {of}[-xy]:{value}
 # content/color/background
-(name content) [value -\S+] = {name}:'{value ? value.substr(1) : ''}'
+(name content) [value -\S+] = {name}:'{value ? value.slice(1) : ''}'
 (name COLOR) (color #[0-9a-fA-F]+|--\w+) = {name}:{/^--/.test(color) ? `var(${color})` : color}
 
 # brad - border-radius

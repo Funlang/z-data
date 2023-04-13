@@ -17,8 +17,8 @@
     "uglify-js": "^3.13.5"
   },
   "scripts": {
-    "z-data": "uglifyjs -c -m -o src/z-data.min.js src/z-data.js && z-pen\\to-es2015.fun",
-    "z-data-all": "z-pen\\to-es2015-z-json.fun && uglifyjs -c -m -o src/z-data.min.all.js -- src/z-data.min.es2015.js src/z-json.es2015.js",
+    "z-data": "uglifyjs -c -m webkit -o src/z-data.min.js src/z-data.js && z-pen\\to-es2015.fun && z-pen\\to-es2015.fun -src",
+    "z-data-all": "z-pen\\to-es2015-z-json.fun && uglifyjs -c -m webkit -o src/z-data.min.all.js -- src/z-data.min.es2015.js src/z-json.es2015.js",
     "z-minifier": "uglifyjs -c -m -o z-pen/z-minifier.min.js z-pen/z-minifier.js",
     "z-template": "uglifyjs -c -m -o src/z-template.min.js src/z-template.js",
     "moloader": "uglifyjs -c -m -o z-pen/res/moloader.min.js z-pen/res/moloader.js",
@@ -26,5 +26,5 @@
     "sdrag": "uglifyjs -c -m -o z-pen/res/sdrag.min.js z-pen/res/sdrag.js",
     "polyfill.js": "uglifyjs -c -m -o z-pen/res/polyfill.min.js z-pen/res/polyfill.js"
   },
-  "version": "2.0.0"
+  "version": "2.2.0"
 }
