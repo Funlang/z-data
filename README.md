@@ -568,7 +568,7 @@ and use args.xxx to get the args props, e.g.:
 
 -  `z-data.min.es2015.js`, `z-data.min.all.js`
   ```
-  2016: Chrome 49, Firefox 44, Opera 36, iOS 10, Android 7
+  2016: Chrome 49, Firefox 44, Opera 36, Safari 10, iOS 10, Android 7
   ```
 
 # 5. 加入我们 | JOIN US
