@@ -563,7 +563,7 @@ and use args.xxx to get the args props, e.g.:
 
 -  `z-data.js`, `z-data.min.js`
   ```
-  2017: Chrome 61, Firefox 55, Opera 48
+  2017: Chrome 61, Firefox 55, Opera 48, Safari 11, iOS 11, Android 8
   ```
 
 -  `z-data.min.es2015.js`, `z-data.min.all.js`
