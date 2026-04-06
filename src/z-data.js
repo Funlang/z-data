@@ -453,9 +453,9 @@ const ZData = (() => {
     };
 
     const Functions = {};
-    const newFun = (exp, ks, k, ps) => {
-        let f = (ps && ps.f) || Functions[(k += exp)] ||
-            (Functions[k] = new Function(["$2D", ...ks], "var R3$;with($2D){R3$=" + exp + "};return R3$"));
+    const newFun = (exp, ps) => {
+        let f = (ps && ps.f) || Functions[exp] ||
+            (Functions[exp] = new Function("$2D", "$3P", "with($2D){with($3P){return (" + exp + ")}}"));
         ps && !ps.f && (ps.f = f);
         return f;
     };
@@ -463,7 +463,7 @@ const ZData = (() => {
         return exp && tryCatch(
             () => {
                 if (is_function(exp)) return exp.call(el, env.r);
-                exp = newFun(exp, Obj_keys(env.ps), Obj_keys(env.ps).join(','), ps).call(el, env.d, ...Obj_values(env.ps));
+                exp = newFun(exp, ps).call(el, env.d, env.ps);
                 return args && is_function(exp) ? exp(args) : exp;
             },
             { el, exp }
