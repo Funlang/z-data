@@ -143,7 +143,7 @@ const ZData = (() => {
                     }).catch(nop);
                 } catch (e) {}
                 return;
-            } else if ("template" == el.localName) {
+            } else if ("TEMPLATE" == (zd.n || (zd.n = el.tagName))) {
                 el.content || (el.content = $ocument.createDocumentFragment())[insert](el[firstEL], nil);
                 if ((exp = el[getAttribute](zfor))) {
                     goFor(args, exp, env);
@@ -405,8 +405,8 @@ const ZData = (() => {
     };
 
     const setEvent = ({ el }, ps, env) => {
-        let { a: key, k: name, e: exp, ev, m: ms } = ps;
-        if (!el[_z_d][key]) {
+        let { a: key, k: name, e: exp, ev, m: ms } = ps, zd = el[_z_d];
+        if (!zd[key]) {
             let target = ms[includes]("window") ? window : ms[includes]("document") || ms[includes]("out") ? $ocument : el;
             let fn = (e) => {
                 if (ms[includes]("self") && el != e.target) return;
@@ -432,7 +432,7 @@ const ZData = (() => {
                 if (ms[includes]("prevent")) e.preventDefault();
                 if (ms[includes]("stop")) e.stopPropagation();
                 if (ms[includes]("once")) target.removeEventListener(name, fn, options);
-                return tryEval(el, exp, {...env, ps: {...el[_z_d][key], $el: env.r}});
+                return tryEval(el, exp, {...env, ps: {...zd[key], $el: env.r}});
             };
             // debounce
             let i = ms.indexOf("debounce");
@@ -449,7 +449,7 @@ const ZData = (() => {
             target[addEventListener](name, fn, options);
             ev && !el[i='fireChange'] && (el[i] = () => $emit(el, ev));
         }
-        el[_z_d][key] = {...env.ps};
+        zd[key] = {...env.ps};
     };
 
     const Functions = {};

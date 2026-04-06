@@ -1,4 +1,7 @@
 
+2026-04-06
+  * goAnode(), setEvent()
+
 2023-09-09
   * json2css()
     + filter, backdrop-filter
