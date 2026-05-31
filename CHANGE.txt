@@ -1,4 +1,12 @@
 
+2026-05-30/31
+  * observe()
+    * debounce(...)()
+                   ^^
+      bug from 2022-04-09
+  * .debounce
+    + .\d+ (default ms)
+
 2026-04-06
   * newFun()
 
